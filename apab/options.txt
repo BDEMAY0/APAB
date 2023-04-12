@@ -1,6 +1,0 @@
-nom_entreprise : 
-niveau_diffusion : 
-ip : 192.168.6.0
-masque_sous_reseau : 24
-gateway : 
-ip_ex : 

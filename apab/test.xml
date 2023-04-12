@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE nmaprun>
-<?xml-stylesheet href="file:///usr/bin/../share/nmap/nmap.xsl" type="text/xsl"?>
-<!-- Nmap 7.93 scan initiated Fri Apr  7 18:55:32 2023 as: nmap -sV -oX test.xml -p 1-49152 -&#45;script vuln 192.168.6.0/24 -->
-<nmaprun scanner="nmap" args="nmap -sV -oX test.xml -p 1-49152 -&#45;script vuln 192.168.6.0/24" start="1680886532" startstr="Fri Apr  7 18:55:32 2023" version="7.93" xmloutputversion="1.05">
-<scaninfo type="connect" protocol="tcp" numservices="49152" services="1-49152"/>
