@@ -1,0 +1,42 @@
+{
+    "nmaprun": {
+        "@scanner": "nmap",
+        "@args": "nmap -sV -oX test.xml -p 1-49152 --script vuln 192.168.6.0/24",
+        "@start": "1680711068",
+        "@startstr": "Wed Apr  5 18:11:08 2023",
+        "@version": "7.93",
+        "@xmloutputversion": "1.05",
+        "scaninfo": {
+            "@type": "connect",
+            "@protocol": "tcp",
+            "@numservices": "49152",
+            "@services": "1-49152"
+        },
+        "verbose": {
+            "@level": "0"
+        },
+        "debugging": {
+            "@level": "0"
+        },
+        "prescript": {
+            "script": {
+                "@id": "broadcast-avahi-dos",
+                "@output": "\n  Discovered hosts:\n    224.0.0.251\n  After NULL UDP avahi packet DoS (CVE-2011-1002).\n  Hosts are all up (not vulnerable).\n"
+            }
+        },
+        "runstats": {
+            "finished": {
+                "@time": "1680711208",
+                "@timestr": "Wed Apr  5 18:13:28 2023",
+                "@summary": "Nmap done at Wed Apr  5 18:13:28 2023; 256 IP addresses (0 hosts up) scanned in 139.83 seconds",
+                "@elapsed": "139.83",
+                "@exit": "success"
+            },
+            "hosts": {
+                "@up": "0",
+                "@down": "256",
+                "@total": "256"
+            }
+        }
+    }
+}

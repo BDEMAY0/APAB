@@ -1,0 +1,6 @@
+banniere: False
+vuln_version: False
+detect_pg_auth: False
+bf_wl: False
+ssh_bf: False
+partage_fichier: False
