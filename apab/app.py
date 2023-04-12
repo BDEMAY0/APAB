@@ -9,7 +9,7 @@ import kivytransitions.transitions
 from kivymd.theming import ThemeManager
 from kivymd.uix.menu import MDDropdownMenu
 from kivy.metrics import dp
-from kivymd.uix.list import OneLineIconListItem
+from kivymd.uix.list import OneLineListItem
 
 Window.keyboard_anim_args = {"d":.2,"t":"linear"}
 Config.set('kivy','keyboard_mode','dock')
@@ -28,19 +28,20 @@ class Option(Screen):
                 i= i+1
             file.close()
 
-    def on_kv_post(self, base_widget):
+    def drop(self):
         self.menu = MDDropdownMenu(
             caller=self.ids.niveau_diffusion,
-            items=[{"viewclass": "OneLineIconListItem", "text": "Non Classifie", "on_release": lambda x="Non Classifie": self.set_item(x)}, 
-            {"viewclass": "OneLineIconListItem", "text": "Usage interne", "on_release": lambda x="Usage interne": self.set_item(x)},
-            {"viewclass": "OneLineIconListItem", "text": "Diffusion Restreinte", "on_release": lambda x="Diffusion Restreinte": self.set_item(x)},
-            {"viewclass": "OneLineIconListItem", "text": "Secret", "on_release": lambda x="Secret": self.set_item(x)}
+            items=[{"viewclass": "OneLineListItem", "text": "Non Classifie", "on_release": lambda x="Non Classifie": self.set_item(x)}, 
+            {"viewclass": "OneLineListItem", "text": "Usage interne", "on_release": lambda x="Usage interne": self.set_item(x)},
+            {"viewclass": "OneLineListItem", "text": "Diffusion Restreinte", "on_release": lambda x="Diffusion Restreinte": self.set_item(x)},
+            {"viewclass": "OneLineListItem", "text": "Secret", "on_release": lambda x="Secret": self.set_item(x)}
             ],
-            position="bottom",
-            width_mult=4,
+            position='bottom',
+            width_mult=3,
+            border_margin=dp(12),
+            radius=[12, 12, 12, 12],
+            elevation=4,
         )
-    
-    def drop(self):
         self.menu.open()
 
     def set_item(self, text__item):
