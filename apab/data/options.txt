@@ -1,0 +1,6 @@
+nom_entreprise : 
+niveau_diffusion : 
+ip : 
+masque_sous_reseau : 
+gateway : 
+ip_ex : 

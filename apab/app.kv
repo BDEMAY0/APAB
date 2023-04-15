@@ -1,0 +1,266 @@
+#:import MDScreen kivymd.uix.screen.MDScreen
+#:import MDTopAppBar kivymd.uix.toolbar.MDTopAppBar
+#:import MDFloatingActionButton kivymd.uix.button.MDFloatingActionButton
+#:import MDTextField kivymd.uix.textfield.MDTextField
+#:import MDCheckbox kivymd.uix.selectioncontrol.MDCheckbox
+#:import FadeTransition kivy.uix.screenmanager
+#:import sm kivy.uix.screenmanager
+
+ScreenManagement:
+    transition: sm.FadeTransition()
+    Accueil:
+        name: 'Accueil'
+    Option:
+        name: 'Option'
+    PentestScreen:
+        name: "PentestScreen"
+    LoadScreen:
+        name: "LoadScreen"
+
+
+<Accueil>:
+    MDScreen:
+        md_bg_color: app.theme_cls.bg_light
+        MDTopAppBar:
+            title: "Accueil - APAB"
+            pos_hint: { "top": 1 }
+        RelativeLayout:
+            MDFillRoundFlatIconButton:
+                elevation_normal: 12
+                icon: "cog"
+                font_size: "24sp"
+                text: 'Option'
+                pos: 165,40
+                on_release:
+                    app.root.current = 'Option'
+            MDFillRoundFlatIconButton:
+                icon: "lan-connect"
+                font_size: "24sp"
+                text: 'Pentest Réseau & Système'
+                pos: 65,90
+                on_release:
+                    app.root.current = 'PentestScreen'
+
+
+<Option>:
+    ScrollView:
+        MDBoxLayout:
+            md_bg_color: app.theme_cls.bg_light
+            orientation: "vertical"
+            adaptive_height: True
+            padding: dp(100)
+            spacing: dp(75)
+            MDBoxLayout:
+                MDTextField:
+                    font_size: "18sp"
+                    hint_font_size: "18sp"
+                    line_color_normal: 1,1,1
+                    hint_text_color_normal: 1,1,1
+                    hint_text: "Nom de l’entreprise:"
+                    id: nom_entreprise
+            MDBoxLayout:
+                MDTextField:
+                    line_color_normal: 1,1,1
+                    hint_text_color_normal: 1,1,1
+                    hint_text: 'Niveau de diffusion:'
+                    id: niveau_diffusion
+                    on_focus: if self.focus: root.drop()
+            MDBoxLayout:
+                MDTextField:
+                    line_color_normal: 1,1,1
+                    hint_text_color_normal: 1,1,1
+                    hint_text: 'IP:'
+                    id: ip
+            MDBoxLayout:
+                MDTextField:
+                    line_color_normal: 1,1,1
+                    hint_text_color_normal: 1,1,1
+                    hint_text: 'Masque de sous-réseau:'
+                    id: masque_sous_reseau
+            MDBoxLayout:
+                MDTextField:
+                    line_color_normal: 1,1,1
+                    hint_text_color_normal: 1,1,1
+                    hint_text: 'Gateway:'
+                    id: gateway
+            BoxLayout:
+                MDTextField:
+                    line_color_normal: 1,1,1
+                    hint_text_color_normal: 1,1,1
+                    hint_text: 'IP exclu:'
+                    id: ip_ex
+            MDBoxLayout:
+                orientation: 'vertical'
+                MDFillRoundFlatButton:
+                    pos_hint: {'center_x': .5, 'center_y': .5}
+                    text: 'Sauvegarder'
+                    font_size: "24sp"
+                    on_release:
+                        root.save_options([nom_entreprise, niveau_diffusion, ip, masque_sous_reseau, gateway, ip_ex], ["nom_entreprise", "niveau_diffusion", "ip", "masque_sous_reseau", "gateway", "ip_ex"])
+                        app.root.current = 'Accueil'
+            MDBoxLayout:
+                orientation: 'vertical'
+                MDFillRoundFlatButton:
+                    pos_hint: {'center_x': .5, 'center_y': .5}
+                    text: 'Retour'
+                    font_size: "24sp"
+                    on_release:
+                        app.root.current = 'Accueil'
+
+<PentestScreen>:
+    ScrollView:
+        MDBoxLayout:
+            md_bg_color: app.theme_cls.bg_light
+            orientation: "vertical"
+            adaptive_height: True
+            padding: dp(100)
+            spacing: dp(75)
+            MDGridLayout:
+                cols: 2
+                height: 15
+                size_hint_y: None
+                MDLabel:
+                    text: "Bannière :"
+                MDCheckbox:
+                    size_hint: None, None
+                    color_active: "white"
+                    size: "48dp", "48dp"
+                    id: banniere
+            MDGridLayout:
+                cols: 2
+                height: 15
+                size_hint_y: None
+                MDLabel:
+                    text: "Vulnérabilité versions :"
+                MDCheckbox:
+                    size_hint: None, None
+                    color_active: "white"
+                    size: "48dp", "48dp"
+                    id: vuln_version
+            MDGridLayout:
+                cols: 2
+                height: 15
+                size_hint_y: None
+                MDLabel:
+                    text: "Detection page d'authentification :"
+                MDCheckbox:
+                    size_hint: None, None
+                    color_active: "white"
+                    size: "48dp", "48dp"
+                    id: detect_pg_auth
+            MDGridLayout:
+                cols: 2
+                height: 15
+                size_hint_y: None
+                MDLabel:
+                    text: "Bruteforce Wordlist :"
+                MDCheckbox:
+                    size_hint: None, None
+                    color_active: "white"
+                    size: "48dp", "48dp"
+                    id: bf_wl
+            MDGridLayout:
+                cols: 2
+                height: 15
+                size_hint_y: None
+                MDLabel:
+                    text: "SSH Bruteforce :"
+                MDCheckbox:
+                    size_hint: None, None
+                    color_active: "white"
+                    size: "48dp", "48dp"
+                    id: ssh_bf
+            MDGridLayout:
+                cols: 2
+                height: 15
+                size_hint_y: None
+                MDLabel:
+                    text: "Partage de fichier :"
+                MDCheckbox:
+                    size_hint: None, None
+                    color_active: "white"
+                    size: "48dp", "48dp"
+                    id: partage_fichier
+            MDGridLayout:
+                cols: 2
+                height: 15
+                size_hint_y: None
+                MDLabel:
+                    text: "Scan de port :"
+                MDCheckbox:
+                    size_hint: None, None
+                    color_active: "white"
+                    size: "48dp", "48dp"
+                    id: scan_port
+            MDGridLayout:
+                cols: 2
+                height: 15
+                size_hint_y: None
+                MDLabel:
+                    text: "DOS :"
+                MDCheckbox:
+                    size_hint: None, None
+                    color_active: "white"
+                    size: "48dp", "48dp"
+                    id: dos
+            MDGridLayout:
+                cols: 2
+                height: 15
+                size_hint_y: None
+                MDLabel:
+                    text: "DHCP Starvation :"
+                MDCheckbox:
+                    size_hint: None, None
+                    color_active: "white"
+                    size: "48dp", "48dp"
+                    id: dhcp_starvation
+            MDGridLayout:
+                cols: 2
+                height: 50
+                size_hint_y: None
+                MDLabel:
+                    text: "WIFI :"
+                MDCheckbox:
+                    size_hint: None, None
+                    color_active: "white"
+                    size: "48dp", "48dp"
+                    id: wifi
+            MDBoxLayout:
+                orientation: 'vertical'
+                MDFillRoundFlatButton:
+                    pos_hint: {'center_x': .5, 'center_y': .5}
+                    text: 'Lancer le test'
+                    font_size: "24sp"
+                    on_release:
+                        root.check_checkbox([banniere, vuln_version, detect_pg_auth, bf_wl, ssh_bf, partage_fichier, scan_port, dos, dhcp_starvation, wifi], ["banniere", "vuln_version", "detect_pg_auth", "bf_wl", "ssh_bf", "partage_fichier", "scan_port", "dos", "dhcp_starvation", "wifi"], root.file_name)
+                        root.start_loading()
+                        app.root.current= 'LoadScreen'
+            MDBoxLayout:
+                orientation: 'vertical'
+                MDFillRoundFlatButton:
+                    pos_hint: {'center_x': .5, 'center_y': .5}
+                    text: 'Retour'
+                    font_size: "24sp"
+                    on_release:
+                        app.root.current = 'Accueil'
+
+<LoadScreen>:
+
+    MDScreen:
+
+        MDBoxLayout:
+            md_bg_color: app.theme_cls.bg_light
+            orientation: "vertical"
+            padding: dp(100)
+            MDLabel:
+                text: 'Test(s) en cours...'
+                halign: 'center'
+
+            MDProgressBar:
+                id: progress_bar
+                type: "determinate"
+                running_duration: 2
+                pos_hint: {"center_y": .5}
+                size_hint_y: None
+                color: 0,0,1,1
+
