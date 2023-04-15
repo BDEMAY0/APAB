@@ -1,4 +1,0 @@
-scan_port: True
-dos: True
-dhcp_starvation: False
-wifi: False

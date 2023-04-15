@@ -1,6 +1,0 @@
-nom_entreprise : 
-niveau_diffusion : Diffusion Restreinte
-ip : 
-masque_sous_reseau : 
-gateway : 
-ip_ex : 
