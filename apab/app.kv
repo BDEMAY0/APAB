@@ -120,12 +120,12 @@ ScreenManagement:
                 height: 15
                 size_hint_y: None
                 MDLabel:
-                    text: "Bannière :"
+                    text: "Entête HTTP :"
                 MDCheckbox:
                     size_hint: None, None
                     color_active: "white"
                     size: "48dp", "48dp"
-                    id: banniere
+                    id: entete_web
             MDGridLayout:
                 cols: 2
                 height: 15
@@ -136,29 +136,7 @@ ScreenManagement:
                     size_hint: None, None
                     color_active: "white"
                     size: "48dp", "48dp"
-                    id: vuln_version
-            MDGridLayout:
-                cols: 2
-                height: 15
-                size_hint_y: None
-                MDLabel:
-                    text: "Detection page d'authentification :"
-                MDCheckbox:
-                    size_hint: None, None
-                    color_active: "white"
-                    size: "48dp", "48dp"
-                    id: detect_pg_auth
-            MDGridLayout:
-                cols: 2
-                height: 15
-                size_hint_y: None
-                MDLabel:
-                    text: "Bruteforce Wordlist :"
-                MDCheckbox:
-                    size_hint: None, None
-                    color_active: "white"
-                    size: "48dp", "48dp"
-                    id: bf_wl
+                    id: cve
             MDGridLayout:
                 cols: 2
                 height: 15
@@ -180,24 +158,13 @@ ScreenManagement:
                     size_hint: None, None
                     color_active: "white"
                     size: "48dp", "48dp"
-                    id: partage_fichier
+                    id: share_folder
             MDGridLayout:
                 cols: 2
                 height: 15
                 size_hint_y: None
                 MDLabel:
-                    text: "Scan de port :"
-                MDCheckbox:
-                    size_hint: None, None
-                    color_active: "white"
-                    size: "48dp", "48dp"
-                    id: scan_port
-            MDGridLayout:
-                cols: 2
-                height: 15
-                size_hint_y: None
-                MDLabel:
-                    text: "DOS :"
+                    text: "Attaque DOS :"
                 MDCheckbox:
                     size_hint: None, None
                     color_active: "white"
@@ -232,7 +199,7 @@ ScreenManagement:
                     text: 'Lancer le test'
                     font_size: "24sp"
                     on_release:
-                        root.check_checkbox([banniere, vuln_version, detect_pg_auth, bf_wl, ssh_bf, partage_fichier, scan_port, dos, dhcp_starvation, wifi], ["banniere", "vuln_version", "detect_pg_auth", "bf_wl", "ssh_bf", "partage_fichier", "scan_port", "dos", "dhcp_starvation", "wifi"], root.file_name)
+                        root.check_checkbox([entete_web, cve, ssh_bf, share_folder, dos, dhcp_starvation, wifi], ["entete_web", "cve", "ssh_bf", "share_folder", "dos", "dhcp_starvation", "wifi"], root.file_name)
                         root.start_loading()
                         app.root.current= 'LoadScreen'
             MDBoxLayout:

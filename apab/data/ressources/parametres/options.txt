@@ -1,0 +1,6 @@
+nom_entreprise : hgf
+niveau_diffusion : Usage interne
+ip : 
+masque_sous_reseau : 
+gateway : 
+ip_ex : 

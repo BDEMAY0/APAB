@@ -23,7 +23,7 @@ class Option(Screen):
 
     def save_options(self, options, name):
         i=0
-        with open("data/options.txt", "w") as file:
+        with open("data/ressources/parametres/options.txt", "w") as file:
             for option in options:
                 file.write(f"{name[i]} : {option.text}\n")
                 i= i+1
@@ -54,12 +54,13 @@ class PentestScreen(Screen):
 
     def __init__(self, **kwargs):
         super(PentestScreen, self).__init__(**kwargs)
-        self.file_name= "data/pentest.txt"
+        self.file_name= "data/ressources/parametres/pentest.txt"
 
     def check_checkbox(self, instance, name, file_name):
         with open(file_name, "w") as file:
             for i in range(0, len(name)):
                 file.write(f'{name[i]} : {instance[i].active}\n')
+            file.write(f'En cours : chargement\n')
             file.close()
 
     def start_loading(self):
@@ -70,7 +71,7 @@ class PentestScreen(Screen):
         self.thread_bar.start()
 
     def start_test(self):
-        subprocess.run(['python', 'nmapjson.py'])
+        subprocess.run(['python', 'data/nmapjson.py'])
 
     def stop_thread(self):
         self.thread_bar.join()
@@ -79,15 +80,24 @@ class PentestScreen(Screen):
     def progress_bar(self):
         self.progress_bar_var = self.manager.get_screen('LoadScreen').ids.progress_bar
         self.progress_bar_var.start()
-        while True:
+        state = 1
+        while state == 1:
             try:
-                with open("data/options.txt", "r") as file:
-                    file.close()
+                with open("data/ressources/parametres/pentest.txt", "r") as f:
+                    for line in f:
+                        key, value = line.strip().split(" :")
+                        if key == "En cours" and value != " chargement":
+                            self.progress_bar_var.stop()
+                            self.manager.current = "Accueil"
+                            self.stop_thread()
+                            state = 0
+                    f.close()
             except:
                 self.progress_bar_var.stop()
                 self.manager.current = "Accueil"
                 self.stop_thread()
-                break
+                state = 0
+                print("Error file not found ...")
 
 
 class LoadScreen(Screen):
