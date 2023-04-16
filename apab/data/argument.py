@@ -33,3 +33,11 @@ def entete_web(parser):
             web_threads.append(w)
             for w in web_threads:
                 w.join()
+
+
+def check_tls(parser):
+    for host in parser.host_info_list:
+        for infoSV in host.ports:
+            if infoSV['service_name'] == 'https':
+                tls = l_check_tls(parser)
+                print(tls)
