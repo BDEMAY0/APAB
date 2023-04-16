@@ -37,7 +37,9 @@ def entete_web(parser):
 
 def check_tls(parser):
     for host in parser.host_info_list:
+        hostname = host.hostname
         for infoSV in host.ports:
+            port = infoSV['port_id']
             if infoSV['service_name'] == 'https':
-                tls = l_check_tls(parser)
-                print(tls)
+                tls = l_check_tls(hostname, port)
+                return tls
