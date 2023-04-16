@@ -1,4 +1,5 @@
 from Package_Attack.Hack_Web import Entete
+from Package_Attack.Hack_Web import TLSSecurityChecker
 from Package_Attack.CVE import CVEAnalysis
 from Package_Attack.Bruteforce import Bruteforce_ssh
 
@@ -13,8 +14,8 @@ from Package_Attack.Bruteforce import Bruteforce_ssh
 def l_bruteforce_ssh(host, port):
     if port["port_id"] == "22":
         bf = Bruteforce_ssh(host.ip_address, '../ressources/ssh/usernames.txt', 'ressources/ssh/passwords.txt')
-        result = bf.start()
-        print(result)
+        bf_status = bf.start()
+        return bf_status
 
 
 # Fonction pour lancer l'attaque du serveur Web d'un hôte
@@ -22,8 +23,8 @@ def l_entete(host, port):
     if port["port_id"] == "80" or port["port_id"] == "443":
         #récup de l'entete
         hw = Entete(host.ip_address, port["port_id"])
-        result = hw.get_banner()
-        print(result)
+        entete = hw.get_banner()
+        return entete
 
 
 # Fonction pour extraire les informations CVE des hôtes à partir du fichier JSON
@@ -33,3 +34,9 @@ def l_exctact_cve(parser):
     results_by_host = cve_analysis.run_analysis()
     my_cve = cve_analysis.display_results(results_by_host)
     return my_cve
+
+
+def l_check_tls(hostname, ports):
+    # Fonction pour lancer l'attaque pour check le protocole du certificat
+    tls = TLSSecurityChecker(hostname, ports)
+    return tls
