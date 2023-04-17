@@ -183,7 +183,7 @@ ScreenManagement:
                     id: dhcp_starvation
             MDGridLayout:
                 cols: 2
-                height: 50
+                height: 15
                 size_hint_y: None
                 MDLabel:
                     text: "WIFI :"
@@ -192,6 +192,17 @@ ScreenManagement:
                     color_active: "white"
                     size: "48dp", "48dp"
                     id: wifi
+            MDGridLayout:
+                cols: 2
+                height: 50
+                size_hint_y: None
+                MDLabel:
+                    text: "Certificat TLS :"
+                MDCheckbox:
+                    size_hint: None, None
+                    color_active: "white"
+                    size: "48dp", "48dp"
+                    id: check_tls
             MDBoxLayout:
                 orientation: 'vertical'
                 MDFillRoundFlatButton:
@@ -199,9 +210,8 @@ ScreenManagement:
                     text: 'Lancer le test'
                     font_size: "24sp"
                     on_release:
-                        root.check_checkbox([entete_web, cve, ssh_bf, share_folder, dos, dhcp_starvation, wifi], ["entete_web", "cve", "ssh_bf", "share_folder", "dos", "dhcp_starvation", "wifi"], root.file_name)
+                        root.check_checkbox([entete_web, cve, ssh_bf, share_folder, dos, dhcp_starvation, wifi, check_tls], ["entete_web", "cve", "ssh_bf", "share_folder", "dos", "dhcp_starvation", "wifi", "check_tls"], root.file_name)
                         root.start_loading()
-                        app.root.current= 'LoadScreen'
             MDBoxLayout:
                 orientation: 'vertical'
                 MDFillRoundFlatButton:

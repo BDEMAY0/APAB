@@ -1,10 +1,14 @@
 from Package_Manage.Parser import NmapParser
+import os
 
 # Le point d'entrée du programme
 if __name__ == "__main__":
 
-    # Nom du fichier JSON contenant les résultats de Nmap
-    nmap_output_file = "ressources/nmap/output.json"
+    # Chemin du répertoire courant
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Chemin absolu pour le fichier output.json
+    nmap_output_file = os.path.join(current_dir, "ressources", "nmap", "output.json")
 
     # Création d'un objet NmapParser et chargement du fichier JSON
     parser = NmapParser(nmap_output_file)

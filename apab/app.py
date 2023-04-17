@@ -10,6 +10,8 @@ from kivymd.theming import ThemeManager
 from kivymd.uix.menu import MDDropdownMenu
 from kivy.metrics import dp
 from kivymd.uix.list import OneLineListItem
+import queue
+from kivy.clock import Clock
 
 Window.keyboard_anim_args = {"d":.2,"t":"linear"}
 Config.set('kivy','keyboard_mode','dock')
@@ -55,6 +57,11 @@ class PentestScreen(Screen):
     def __init__(self, **kwargs):
         super(PentestScreen, self).__init__(**kwargs)
         self.file_name= "data/ressources/parametres/pentest.txt"
+        self.message_queue = queue.Queue()
+
+    def on_enter(self, *args):
+        super(PentestScreen, self).on_enter(*args)
+        Clock.schedule_interval(self.check_loading_finished, 0.5)
 
     def check_checkbox(self, instance, name, file_name):
         with open(file_name, "w") as file:
@@ -64,6 +71,9 @@ class PentestScreen(Screen):
             file.close()
 
     def start_loading(self):
+        self.stop_event = threading.Event()
+        self.parent.current= 'LoadScreen'
+
         self.thread_test = threading.Thread(target=self.start_test)
         self.thread_test.start()
 
@@ -73,32 +83,34 @@ class PentestScreen(Screen):
     def start_test(self):
         subprocess.run(['python', 'data/nmapjson.py'])
 
-    def stop_thread(self):
-        self.thread_bar.join()
-        self.thread_test.join()
+    def check_loading_finished(self, dt):
+        try:
+            message = self.message_queue.get_nowait()
+            if message == "finished":
+                self.manager.current = "Accueil"
+                self.stop_event.set()
+                self.progress_bar_var.stop()
+                Clock.unschedule(self.check_loading_finished)
+        except queue.Empty:
+            pass
 
     def progress_bar(self):
         self.progress_bar_var = self.manager.get_screen('LoadScreen').ids.progress_bar
         self.progress_bar_var.start()
-        state = 1
-        while state == 1:
+
+        while not self.stop_event.is_set():
             try:
                 with open("data/ressources/parametres/pentest.txt", "r") as f:
                     for line in f:
                         key, value = line.strip().split(" :")
                         if key == "En cours" and value != " chargement":
-                            self.progress_bar_var.stop()
-                            self.manager.current = "Accueil"
-                            self.stop_thread()
-                            state = 0
+                            self.message_queue.put("finished")
+                            self.stop_event.set()
                     f.close()
             except:
-                self.progress_bar_var.stop()
-                self.manager.current = "Accueil"
-                self.stop_thread()
-                state = 0
+                self.message_queue.put("finished")
+                self.stop_event.set()
                 print("Error file not found ...")
-
 
 class LoadScreen(Screen):
     pass

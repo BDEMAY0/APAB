@@ -2,8 +2,8 @@
     "nmaprun": {
         "@scanner": "nmap",
         "@args": "nmap -sV -oX data/ressources/nmap/test.xml /",
-        "@start": "1681571988",
-        "@startstr": "Sat Apr 15 17:19:48 2023",
+        "@start": "1681761152",
+        "@startstr": "Mon Apr 17 21:52:32 2023",
         "@version": "7.93",
         "@xmloutputversion": "1.05",
         "scaninfo": {
@@ -25,10 +25,10 @@
         },
         "runstats": {
             "finished": {
-                "@time": "1681571988",
-                "@timestr": "Sat Apr 15 17:19:48 2023",
-                "@summary": "Nmap done at Sat Apr 15 17:19:48 2023; 0 IP addresses (0 hosts up) scanned in 0.40 seconds",
-                "@elapsed": "0.40",
+                "@time": "1681761153",
+                "@timestr": "Mon Apr 17 21:52:33 2023",
+                "@summary": "Nmap done at Mon Apr 17 21:52:33 2023; 0 IP addresses (0 hosts up) scanned in 0.29 seconds",
+                "@elapsed": "0.29",
                 "@exit": "success"
             },
             "hosts": {
