@@ -3,6 +3,7 @@ from Package_Attack.Hack_Web import TLSSecurityChecker
 from Package_Attack.CVE import CVEAnalysis
 from Package_Attack.Bruteforce import Bruteforce_ssh
 from Package_Attack.MacFlooding import MacFlooding
+from Package_Attack.DhcpStarvation import DhcpStarvation
 
 """
  Le fichier Lancheur.py est le fichier principal qui gère l'exécution de tous les modules. 
@@ -43,11 +44,23 @@ def l_check_tls(hostname, ports):
     return tls
     
     
-def l_mac_flooding():
+def l_mac_flooding(interface):
     #Fonction pour lancer l'attaque de flooding MAC sur les commutateurs
-    interface = "eth0" # Remplacer eth0 par l'interface réseau sur laquelle vous voulez effectuer l'attaque
     num_packets = 1000 # Nombre de paquets de MAC flooding à envoyer
     num_threads = 100 # Nombre de threads à utiliser pour envoyer les paquets
 
     mac_flooding = MacFlooding(interface, num_packets, num_threads)
     mac_flooding.run()
+    
+def l_dhcp_starvation(interface):
+    #Fonction pour lancer l'attaque de DHCP starvation sur les serveurs DHCP
+    num_requests = 10000 # Nombre de demandes DHCP à envoyer
+    num_threads = 100 # Nombre de threads à utiliser pour envoyer les demandes DHCP
+    dhcp_starvation = DhcpStarvation(interface, num_requests, num_threads)
+    dhcp_starvation.run_attack()
+    dhcp_failed = dhcp_starvation.check_dhcp_failure(timeout=10)
+
+    if dhcp_failed:
+        return False
+    else:
+        return True
