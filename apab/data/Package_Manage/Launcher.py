@@ -16,8 +16,8 @@ from Package_Attack.DhcpStarvation import DhcpStarvation
 def l_bruteforce_ssh(host, port):
     if port["port_id"] == "22":
         bf = Bruteforce_ssh(host.ip_address, '../ressources/ssh/usernames.txt', 'ressources/ssh/passwords.txt')
-        bf_status = bf.start()
-        return bf_status
+        attack_success = bf.start()
+
 
 
 # Fonction pour lancer l'attaque du serveur Web d'un hôte
@@ -41,7 +41,8 @@ def l_exctact_cve(parser):
 def l_check_tls(hostname, ports):
     # Fonction pour lancer l'attaque pour check le protocole du certificat
     tls = TLSSecurityChecker(hostname, ports)
-    return tls
+    attack_success = tls.check()
+
     
     
 def l_mac_flooding(interface):
@@ -50,7 +51,7 @@ def l_mac_flooding(interface):
     num_threads = 100 # Nombre de threads à utiliser pour envoyer les paquets
 
     mac_flooding = MacFlooding(interface, num_packets, num_threads)
-    mac_flooding.run()
+    attack_succes = mac_flooding.run()
     
 def l_dhcp_starvation(interface):
     #Fonction pour lancer l'attaque de DHCP starvation sur les serveurs DHCP
@@ -58,9 +59,9 @@ def l_dhcp_starvation(interface):
     num_threads = 100 # Nombre de threads à utiliser pour envoyer les demandes DHCP
     dhcp_starvation = DhcpStarvation(interface, num_requests, num_threads)
     dhcp_starvation.run_attack()
-    dhcp_failed = dhcp_starvation.check_dhcp_failure(timeout=10)
+    attack_succes = dhcp_starvation.check_dhcp_failure(timeout=10)
 
-    if dhcp_failed:
-        return False
-    else:
-        return True
+        
+def l_stp_attack(interfaces):
+    attack = STPAttack(interface=interfaces, num_packets=1000, priority=0)
+    attack_succes = attack.run()
