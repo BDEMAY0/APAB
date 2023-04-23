@@ -43,3 +43,8 @@ def check_tls(parser):
             if infoSV['service_name'] == 'https':
                 tls = l_check_tls(hostname, port)
                 return tls
+                
+       
+def mac_flooding():
+    flood = l_mac_flooding()
+    return flood
