@@ -49,12 +49,9 @@ class TLSSecurityChecker:
             print(f"Chiffrement utilisé: {cipher}, {bits} bits")
 
             if protocol_version in ["SSLv2", "SSLv3", "TLSv1", "TLSv1.1"]:
-                print("\nAttention: Le protocole SSL/TLS utilisé est obsolète et pourrait présenter des risques de sécurité.")
+            #Protocole vulnérable
+                return True
 
         except Exception as e:
-            print(f"Erreur lors de la vérification de la sécurité SSL/TLS pour {self.hostname}: {e}")
+            return f"Erreur lors de la vérification de la sécurité SSL/TLS pour {self.hostname}: {e}"
 
-
-hostname = "ajdioqdivnoidn.com"  # Remplacez par le nom de domaine du site Web que vous souhaitez vérifier
-checker = TLSSecurityChecker(hostname)
-checker.check()
