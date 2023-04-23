@@ -5,7 +5,6 @@ from Package_Manage.Launcher import *
 def cve(parser):
     # Extraction des CVEs
     my_cve = l_exctact_cve(parser)
-    print(my_cve)
 
 
 def ssh_bf(parser):
@@ -42,9 +41,8 @@ def check_tls(parser):
             port = infoSV['port_id']
             if infoSV['service_name'] == 'https':
                 tls = l_check_tls(hostname, port)
-                return tls
+
                 
        
 def mac_flooding():
     flood = l_mac_flooding()
-    return flood
