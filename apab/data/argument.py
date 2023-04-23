@@ -1,6 +1,7 @@
 import threading
 from Package_Manage.Launcher import *
 
+interface = "eth0"
 
 def cve(parser):
     # Extraction des CVEs
@@ -44,5 +45,9 @@ def check_tls(parser):
 
                 
        
-def mac_flooding():
-    flood = l_mac_flooding()
+def mac_flooding(parser):
+    flood = l_mac_flooding(interface)
+
+
+def dhcp_starvation(parser):
+    starvation = l_dhcp_starvation(interface)
