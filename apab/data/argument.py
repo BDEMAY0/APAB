@@ -51,3 +51,6 @@ def mac_flooding(parser):
 
 def dhcp_starvation(parser):
     starvation = l_dhcp_starvation(interface)
+    
+def stp_attack(parser):
+    stp = l_stp_attack(interfaces)
