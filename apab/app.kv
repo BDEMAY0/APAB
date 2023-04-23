@@ -5,17 +5,20 @@
 #:import MDCheckbox kivymd.uix.selectioncontrol.MDCheckbox
 #:import FadeTransition kivy.uix.screenmanager
 #:import sm kivy.uix.screenmanager
+#:import MDFileManager kivymd.uix.filemanager.MDFileManager
 
 ScreenManagement:
     transition: sm.FadeTransition()
     Accueil:
         name: 'Accueil'
+    PentestScreen:
+        name: 'PentestScreen'
     Option:
         name: 'Option'
-    PentestScreen:
-        name: "PentestScreen"
+    Configuration:
+        name: 'Configuration'
     LoadScreen:
-        name: "LoadScreen"
+        name: 'LoadScreen'
 
 
 <Accueil>:
@@ -26,86 +29,36 @@ ScreenManagement:
             pos_hint: { "top": 1 }
         RelativeLayout:
             MDFillRoundFlatIconButton:
+                icon: "lan-connect"
+                font_size: "24sp"
+                text: 'Pentest'
+                pos: 160,190
+                on_release:
+                    app.root.current = 'PentestScreen'
+            MDFillRoundFlatIconButton:
+                icon: "folder"
+                font_size: "24sp"
+                text: 'Rapport'
+                pos: 157.5,140
+                on_release:
+                    app.file_manager_open()
+            MDFillRoundFlatIconButton:
                 elevation_normal: 12
                 icon: "cog"
                 font_size: "24sp"
                 text: 'Option'
-                pos: 165,40
+                pos: 165,90
                 on_release:
                     app.root.current = 'Option'
             MDFillRoundFlatIconButton:
-                icon: "lan-connect"
+                elevation_normal: 12
+                icon: "ip"
                 font_size: "24sp"
-                text: 'Pentest Réseau & Système'
-                pos: 65,90
+                text: 'Configuration'
+                pos: 130,40
                 on_release:
-                    app.root.current = 'PentestScreen'
-
-
-<Option>:
-    ScrollView:
-        MDBoxLayout:
-            md_bg_color: app.theme_cls.bg_light
-            orientation: "vertical"
-            adaptive_height: True
-            padding: dp(100)
-            spacing: dp(75)
-            MDBoxLayout:
-                MDTextField:
-                    font_size: "18sp"
-                    hint_font_size: "18sp"
-                    line_color_normal: 1,1,1
-                    hint_text_color_normal: 1,1,1
-                    hint_text: "Nom de l’entreprise:"
-                    id: nom_entreprise
-            MDBoxLayout:
-                MDTextField:
-                    line_color_normal: 1,1,1
-                    hint_text_color_normal: 1,1,1
-                    hint_text: 'Niveau de diffusion:'
-                    id: niveau_diffusion
-                    on_focus: if self.focus: root.drop()
-            MDBoxLayout:
-                MDTextField:
-                    line_color_normal: 1,1,1
-                    hint_text_color_normal: 1,1,1
-                    hint_text: 'IP:'
-                    id: ip
-            MDBoxLayout:
-                MDTextField:
-                    line_color_normal: 1,1,1
-                    hint_text_color_normal: 1,1,1
-                    hint_text: 'Masque de sous-réseau:'
-                    id: masque_sous_reseau
-            MDBoxLayout:
-                MDTextField:
-                    line_color_normal: 1,1,1
-                    hint_text_color_normal: 1,1,1
-                    hint_text: 'Gateway:'
-                    id: gateway
-            BoxLayout:
-                MDTextField:
-                    line_color_normal: 1,1,1
-                    hint_text_color_normal: 1,1,1
-                    hint_text: 'IP exclu:'
-                    id: ip_ex
-            MDBoxLayout:
-                orientation: 'vertical'
-                MDFillRoundFlatButton:
-                    pos_hint: {'center_x': .5, 'center_y': .5}
-                    text: 'Sauvegarder'
-                    font_size: "24sp"
-                    on_release:
-                        root.save_options([nom_entreprise, niveau_diffusion, ip, masque_sous_reseau, gateway, ip_ex], ["nom_entreprise", "niveau_diffusion", "ip", "masque_sous_reseau", "gateway", "ip_ex"])
-                        app.root.current = 'Accueil'
-            MDBoxLayout:
-                orientation: 'vertical'
-                MDFillRoundFlatButton:
-                    pos_hint: {'center_x': .5, 'center_y': .5}
-                    text: 'Retour'
-                    font_size: "24sp"
-                    on_release:
-                        app.root.current = 'Accueil'
+                    app.root.current = 'Configuration'
+            
 
 <PentestScreen>:
     ScrollView:
@@ -194,6 +147,28 @@ ScreenManagement:
                     id: wifi
             MDGridLayout:
                 cols: 2
+                height: 15
+                size_hint_y: None
+                MDLabel:
+                    text: "Mac Flooding :"
+                MDCheckbox:
+                    size_hint: None, None
+                    color_active: "white"
+                    size: "48dp", "48dp"
+                    id: mac_flooding
+            MDGridLayout:
+                cols: 2
+                height: 15
+                size_hint_y: None
+                MDLabel:
+                    text: "STP Attaque :"
+                MDCheckbox:
+                    size_hint: None, None
+                    color_active: "white"
+                    size: "48dp", "48dp"
+                    id: stp_attack
+            MDGridLayout:
+                cols: 2
                 height: 50
                 size_hint_y: None
                 MDLabel:
@@ -210,7 +185,7 @@ ScreenManagement:
                     text: 'Lancer le test'
                     font_size: "24sp"
                     on_release:
-                        root.check_checkbox([entete_web, cve, ssh_bf, share_folder, dos, dhcp_starvation, wifi, check_tls], ["entete_web", "cve", "ssh_bf", "share_folder", "dos", "dhcp_starvation", "wifi", "check_tls"], root.file_name)
+                        root.check_checkbox([entete_web, cve, ssh_bf, share_folder, dos, dhcp_starvation, wifi, check_tls, mac_flooding, stp_attack], ["entete_web", "cve", "ssh_bf", "share_folder", "dos", "dhcp_starvation", "wifi", "check_tls", "mac_flooding", "stp_attack"], root.file_name)
                         root.start_loading()
             MDBoxLayout:
                 orientation: 'vertical'
@@ -221,10 +196,148 @@ ScreenManagement:
                     on_release:
                         app.root.current = 'Accueil'
 
+
+<Option>:
+    ScrollView:
+        MDBoxLayout:
+            md_bg_color: app.theme_cls.bg_light
+            orientation: "vertical"
+            adaptive_height: True
+            padding: dp(100)
+            spacing: dp(75)
+            MDBoxLayout:
+                MDTextField:
+                    font_size: "18sp"
+                    line_color_normal: 1,1,1
+                    hint_text_color_normal: 1,1,1
+                    hint_text: "Nom de l’entreprise:"
+                    id: nom_entreprise
+            MDBoxLayout:
+                MDTextField:
+                    font_size: "18sp"
+                    line_color_normal: 1,1,1
+                    hint_text_color_normal: 1,1,1
+                    hint_text: 'Niveau de diffusion:'
+                    id: niveau_diffusion
+                    on_focus: if self.focus: root.drop(self)
+            MDBoxLayout:
+                MDTextField:
+                    font_size: "18sp"
+                    line_color_normal: 1,1,1
+                    hint_text_color_normal: 1,1,1
+                    hint_text: 'IP réseau:'
+                    id: ip
+                    helper_text: "Ip du réseau à pentest"
+                    helper_text_mode: "persistent"
+            MDBoxLayout:
+                MDTextField:
+                    font_size: "18sp"
+                    line_color_normal: 1,1,1
+                    hint_text_color_normal: 1,1,1
+                    hint_text: 'Masque de sous-réseau:'
+                    id: masque_sous_reseau
+            MDBoxLayout:
+                MDTextField:
+                    font_size: "18sp"
+                    line_color_normal: 1,1,1
+                    hint_text_color_normal: 1,1,1
+                    hint_text: 'Gateway:'
+                    id: gateway
+            BoxLayout:
+                MDTextField:
+                    font_size: "18sp"
+                    line_color_normal: 1,1,1
+                    hint_text_color_normal: 1,1,1
+                    hint_text: 'IP exclu:'
+                    id: ip_ex
+                    helper_text: "Pour selectionner une range d'IP: X.X.X.X-X"
+                    helper_text_mode: "persistent"
+            MDBoxLayout:
+                orientation: 'vertical'
+                MDFillRoundFlatButton:
+                    pos_hint: {'center_x': .5, 'center_y': .5}
+                    text: 'Sauvegarder'
+                    font_size: "24sp"
+                    on_release:
+                        root.save_options([nom_entreprise, niveau_diffusion, ip, masque_sous_reseau, gateway, ip_ex], ["nom_entreprise", "niveau_diffusion", "ip", "masque_sous_reseau", "gateway", "ip_ex"])
+                        app.root.current = 'Accueil'
+            MDBoxLayout:
+                orientation: 'vertical'
+                MDFillRoundFlatButton:
+                    pos_hint: {'center_x': .5, 'center_y': .5}
+                    text: 'Retour'
+                    font_size: "24sp"
+                    on_release:
+                        app.root.current = 'Accueil'
+
+<Configuration>
+    ScrollView:
+        MDBoxLayout:
+            md_bg_color: app.theme_cls.bg_light
+            orientation: "vertical"
+            adaptive_height: True
+            padding: dp(100)
+            spacing: dp(75)
+            MDGridLayout:
+                cols: 2
+                height: 50
+                size_hint_y: None
+                MDLabel:
+                    text: "DHCP :"
+                MDSwitch:
+                    active: True
+                    size_hint: None, None
+                    color_active: "white"
+                    size: "48dp", "48dp"
+                    id: dhcp_configuration
+                    on_active: root.toggle_visibility(self, self.active)
+            MDBoxLayout:
+                MDTextField:
+                    opacity: 0
+                    font_size: "18sp"
+                    line_color_normal: 1,1,1
+                    hint_text_color_normal: 1,1,1
+                    hint_text: 'IP :'
+                    id: ip_configuration
+                    helper_text: "Ip de boitier de pentest"
+                    helper_text_mode: "persistent"
+            MDBoxLayout:
+                MDTextField:
+                    opacity: 0
+                    font_size: "18sp"
+                    line_color_normal: 1,1,1
+                    hint_text_color_normal: 1,1,1
+                    hint_text: 'Masque de sous-réseau:'
+                    id: masque_sous_reseau_configuration
+            MDBoxLayout:
+                MDTextField:
+                    opacity: 0
+                    font_size: "18sp"
+                    line_color_normal: 1,1,1
+                    hint_text_color_normal: 1,1,1
+                    hint_text: 'Gateway:'
+                    id: gateway_configuration
+            MDBoxLayout:
+                orientation: 'vertical'
+                MDFillRoundFlatButton:
+                    pos_hint: {'center_x': .5, 'center_y': .5}
+                    text: 'Sauvegarder'
+                    font_size: "24sp"
+                    on_release:
+                        root.save_configuration([dhcp_configuration, ip_configuration, masque_sous_reseau_configuration, gateway_configuration], ["dhcp", "ip", "masque_sous_reseau", "gateway"])
+                        app.root.current = 'Accueil'
+            MDBoxLayout:
+                orientation: 'vertical'
+                MDFillRoundFlatButton:
+                    pos_hint: {'center_x': .5, 'center_y': .5}
+                    text: 'Retour'
+                    font_size: "24sp"
+                    on_release:
+                        app.root.current = 'Accueil'
+
+
 <LoadScreen>:
-
     MDScreen:
-
         MDBoxLayout:
             md_bg_color: app.theme_cls.bg_light
             orientation: "vertical"
@@ -232,7 +345,6 @@ ScreenManagement:
             MDLabel:
                 text: 'Test(s) en cours...'
                 halign: 'center'
-
             MDProgressBar:
                 id: progress_bar
                 type: "determinate"
