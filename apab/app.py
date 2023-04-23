@@ -12,6 +12,12 @@ from kivy.metrics import dp
 from kivymd.uix.list import OneLineListItem
 import queue
 from kivy.clock import Clock
+from kivymd.uix.filemanager import MDFileManager
+import os
+from kivymd.uix.screen import MDScreen
+from kivymd.uix.dialog import MDDialog
+from kivymd.uix.textfield import MDTextField
+from kivymd.uix.button import MDFlatButton
 
 Window.keyboard_anim_args = {"d":.2,"t":"linear"}
 Config.set('kivy','keyboard_mode','dock')
@@ -31,9 +37,9 @@ class Option(Screen):
                 i= i+1
             file.close()
 
-    def drop(self):
+    def drop(self, instance):
         self.menu = MDDropdownMenu(
-            caller=self.ids.niveau_diffusion,
+            caller=instance,
             items=[{"viewclass": "OneLineListItem", "text": "Non Classifie", "on_release": lambda x="Non Classifie": self.set_item(x)}, 
             {"viewclass": "OneLineListItem", "text": "Usage interne", "on_release": lambda x="Usage interne": self.set_item(x)},
             {"viewclass": "OneLineListItem", "text": "Diffusion Restreinte", "on_release": lambda x="Diffusion Restreinte": self.set_item(x)},
@@ -112,14 +118,170 @@ class PentestScreen(Screen):
                 self.stop_event.set()
                 print("Error file not found ...")
 
+class Configuration(Screen):
+    
+    def save_configuration(self, options, name):
+        if options[0].active == True:
+            with open("/etc/network/interfaces", "w") as f:
+                line = ["# This file describes the network interfaces available on your system\n",
+                            "# and how to activate them. For more information, see interfaces(5).\n",
+                            "\n",
+                            "source /etc/network/interfaces.d/*\n",
+                            "\n",
+                            "# The loopback network interface\n",
+                            "auto lo\n",
+                            "iface lo inet loopback\n",
+                            "\n",
+                            "allow hotplug\n",
+                            "\n",
+                            "auto eth0\n",
+                            "iface eth0 inet dhcp\n",
+                            "\n",
+                            "auto eth1\n",
+                            "iface eth1 inet dhcp"]
+                f.writelines(line)
+                f.close()
+        else:
+            with open("/etc/network/interfaces", "w") as f:
+                line =["# This file describes the network interfaces available on your system\n",
+                            "# and how to activate them. For more information, see interfaces(5).\n",
+                            "\n",
+                            "source /etc/network/interfaces.d/*\n",
+                            "\n",
+                            "# The loopback network interface\n",
+                            "auto lo\n",
+                            "iface lo inet loopback\n",
+                            "\n",
+                            "allow hotplug\n",
+                            "\n",
+                            "auto eth0\n",
+                            "iface eth0 inet static\n",
+                            f'address {options[1].text}\n',
+                            f'netmask {options[2].text}\n',
+                            f'gateway {options[3].text}\n',
+                            "\n",
+                            "auto eth1\n",
+                            "iface eth1 inet dhcp"]
+                f.writelines(line)
+                f.close()
+
+    def toggle_visibility(self, instance, value):
+        # Modifier l'opacité des champs texte et boutons en fonction de l'état du bouton Switch
+        ip_configuration = self.ids.ip_configuration
+        masque_sous_reseau_configuration = self.ids.masque_sous_reseau_configuration
+        gateway_configuration = self.ids.gateway_configuration
+
+        if value:
+            ip_configuration.opacity = 0
+            masque_sous_reseau_configuration.opacity = 0
+            gateway_configuration.opacity = 0
+        else:
+            ip_configuration.opacity = 1
+            masque_sous_reseau_configuration.opacity = 1
+            gateway_configuration.opacity = 1
+
 class LoadScreen(Screen):
     pass
-
 
 class ScreenManagement(ScreenManager):
     pass
 
 class MenuApp(MDApp):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.manager_open = False
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager,
+            select_path=self.select_path,
+        )
+        self.file_manager.ids.toolbar.right_action_items=[]
+        self.file_manager.ids.toolbar.left_action_items=[]
+
+    def file_manager_open(self):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        folder = os.path.join(current_dir, "data", "rapport")
+        path = os.path.expanduser(folder)
+        self.file_manager.show(path)  # output manager to the screen
+        self.manager_open = True
+        self.file_manager.ids.toolbar.title = "Rapports"
+
+    def exit_manager(self, *args):
+        current_path = self.file_manager.current_path
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        folder = os.path.join(current_dir, "data", "rapport")
+        path = os.path.expanduser(folder)
+
+        if current_path == path:
+            self.manager_open = False
+            self.file_manager.close()
+        else:
+            self.file_manager.back()
+
+    def rename_file(self, old_path, new_name):
+        new_path = os.path.join(os.path.dirname(old_path), new_name)
+        os.rename(old_path, new_path)
+        self.file_manager_open()
+
+    def delete_file(self, path):
+        os.remove(path)
+        self.file_manager_open()
+
+    def show_file(self, path):
+        subprocess.run(["xdg-open", path], check=True)
+
+
+    def select_path(self, path):
+        if path[-3:] == "pdf":
+            def rename_callback():
+                self.file_menu.dismiss()
+                def close_rename_dialog(*args):
+                    rename_dialog.dismiss()
+
+                def rename_action(*args):
+                    self.rename_file(path, rename_input.text)
+                    close_rename_dialog()
+
+                rename_dialog = MDDialog(
+                    title="Renommer le fichier",
+                    type="custom",
+                    content_cls=MDTextField(
+                        hint_text="Nouveau nom",
+                        text=os.path.basename(path),
+                    ),
+                    buttons=[
+                        MDFlatButton(text="Annuler", on_release=close_rename_dialog),
+                        MDFlatButton(text="Renommer", on_release=rename_action),
+                    ],
+                )
+                rename_input = rename_dialog.content_cls
+                rename_dialog.open()
+
+            def delete_callback():
+                self.file_menu.dismiss()
+                self.delete_file(path)
+
+            def open_callback():
+                self.file_menu.dismiss()
+                subprocess.run(["xdg-open", path], check=True)
+
+            self.file_menu = MDDropdownMenu(
+                caller=self.file_manager,
+                items=[
+                    {"viewclass": "OneLineListItem", "text": "Ouvrir", "on_release": open_callback},
+                    {"viewclass": "OneLineListItem", "text": "Renommer", "on_release": rename_callback},
+                    {"viewclass": "OneLineListItem", "text": "Supprimer", "on_release": delete_callback},        
+                ],
+                position='bottom',
+                width_mult=3,
+                border_margin=dp(12),
+                radius=[12, 12, 12, 12],
+                elevation=4,
+            )
+            self.file_menu.open()
+        else:
+            self.file_manager.close()
+
     def build(self):
         Window.size = (480, 320)
         Window.fullscreen = False
