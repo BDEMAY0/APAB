@@ -225,7 +225,7 @@ ScreenManagement:
                     font_size: "18sp"
                     line_color_normal: 1,1,1
                     hint_text_color_normal: 1,1,1
-                    hint_text: 'IP réseau:'
+                    hint_text: 'IP réseau à tester:'
                     id: ip
                     helper_text: "Ip du réseau à pentest"
                     helper_text_mode: "persistent"
@@ -241,16 +241,16 @@ ScreenManagement:
                     font_size: "18sp"
                     line_color_normal: 1,1,1
                     hint_text_color_normal: 1,1,1
-                    hint_text: 'Gateway:'
+                    hint_text: 'Passerelle:'
                     id: gateway
             BoxLayout:
                 MDTextField:
                     font_size: "18sp"
                     line_color_normal: 1,1,1
                     hint_text_color_normal: 1,1,1
-                    hint_text: 'IP exclu:'
+                    hint_text: 'IP exclu des tests:'
                     id: ip_ex
-                    helper_text: "Pour selectionner une range d'IP: X.X.X.X-X"
+                    helper_text: "Pour selectionner une range d'IP ex: 192.168.0.1-10"
                     helper_text_mode: "persistent"
             MDBoxLayout:
                 orientation: 'vertical'
@@ -299,7 +299,7 @@ ScreenManagement:
                     hint_text_color_normal: 1,1,1
                     hint_text: 'IP :'
                     id: ip_configuration
-                    helper_text: "Ip de boitier de pentest"
+                    helper_text: "Ip du boitier de pentest"
                     helper_text_mode: "persistent"
             MDBoxLayout:
                 MDTextField:
@@ -315,7 +315,7 @@ ScreenManagement:
                     font_size: "18sp"
                     line_color_normal: 1,1,1
                     hint_text_color_normal: 1,1,1
-                    hint_text: 'Gateway:'
+                    hint_text: 'Passerelle:'
                     id: gateway_configuration
             MDBoxLayout:
                 orientation: 'vertical'
