@@ -32,7 +32,10 @@ class Option(Screen):
 
     def save_options(self, options, name):
         i=0
-        with open("data/ressources/parametres/options.txt", "w") as file:
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        folder = os.path.join(current_dir, "data", "ressources", "parametres", "options.txt")
+        path = os.path.expanduser(folder)
+        with open(path, "w") as file:
             for option in options:
                 file.write(f"{name[i]} : {option.text}\n")
                 i= i+1
@@ -63,7 +66,10 @@ class PentestScreen(Screen):
 
     def __init__(self, **kwargs):
         super(PentestScreen, self).__init__(**kwargs)
-        self.file_name= "data/ressources/parametres/pentest.txt"
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        folder = os.path.join(current_dir, "data", "ressources", "parametres", "pentest.txt")
+        path = os.path.expanduser(folder)
+        self.file_name= path
         self.message_queue = queue.Queue()
 
     def on_enter(self, *args):
@@ -88,7 +94,10 @@ class PentestScreen(Screen):
         self.thread_bar.start()
 
     def start_test(self):
-        subprocess.run(['python', 'data/nmapjson.py'])
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        folder = os.path.join(current_dir, "data", "nmapjson.py")
+        path = os.path.expanduser(folder)
+        subprocess.run(['python', path])
 
     def check_loading_finished(self, dt):
         try:
@@ -107,7 +116,10 @@ class PentestScreen(Screen):
 
         while not self.stop_event.is_set():
             try:
-                with open("data/ressources/parametres/pentest.txt", "r") as f:
+                current_dir = os.path.dirname(os.path.abspath(__file__))
+                folder = os.path.join(current_dir, "data", "ressources", "parametres", "pentest.txt")
+                path = os.path.expanduser(folder)
+                with open(path, "r") as f:
                     for line in f:
                         key, value = line.strip().split(" :")
                         if key == "En cours" and value != " chargement":
