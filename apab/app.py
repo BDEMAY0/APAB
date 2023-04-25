@@ -18,6 +18,7 @@ from kivymd.uix.screen import MDScreen
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.button import MDFlatButton
+import shutil
 
 Window.keyboard_anim_args = {"d":.2,"t":"linear"}
 Config.set('kivy','keyboard_mode','dock')
@@ -230,6 +231,27 @@ class MenuApp(MDApp):
     def show_file(self, path):
         subprocess.run(["xdg-open", path], check=True)
 
+    def extract_file(self, path):
+        # Parcours des dossiers dans '/media'
+        for folder in os.listdir('/media'):
+            media_path = os.path.join('/media', folder)
+
+            # Parcours des périphériques de stockage connectés
+            for device in os.listdir(media_path):
+                device_path = os.path.join(media_path, device)
+
+                # Vérification que le chemin est un dossier (pour éviter les fichiers montés)
+                if os.path.isdir(device_path):
+                    # Copie du fichier vers le périphérique de stockage
+                    try:
+                        shutil.copy(path, device_path)
+                        print(f'Fichier copié avec succès vers {device_path}')
+                        return True
+                    except Exception as e:
+                        print(f'Erreur lors de la copie : {e}')
+                        return False
+        print("Aucun périphérique de stockage trouvé.")
+        return False       
 
     def select_path(self, path):
         if path[-3:] == "pdf":
@@ -265,15 +287,20 @@ class MenuApp(MDApp):
                 self.file_menu.dismiss()
                 subprocess.run(["xdg-open", path], check=True)
 
+            def extract_callback():
+                self.file_menu.dismiss()
+                self.extract_file(path)
+
             self.file_menu = MDDropdownMenu(
                 caller=self.file_manager,
                 items=[
                     {"viewclass": "OneLineListItem", "text": "Ouvrir", "on_release": open_callback},
                     {"viewclass": "OneLineListItem", "text": "Renommer", "on_release": rename_callback},
-                    {"viewclass": "OneLineListItem", "text": "Supprimer", "on_release": delete_callback},        
+                    {"viewclass": "OneLineListItem", "text": "Supprimer", "on_release": delete_callback},
+                    {"viewclass": "OneLineListItem", "text": "Extraire", "on_release": extract_callback},        
                 ],
                 position='bottom',
-                width_mult=3,
+                width_mult=4,
                 border_margin=dp(12),
                 radius=[12, 12, 12, 12],
                 elevation=4,
