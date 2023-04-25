@@ -217,6 +217,13 @@ ScreenManagement:
                     font_size: "18sp"
                     line_color_normal: 1,1,1
                     hint_text_color_normal: 1,1,1
+                    hint_text: "Mail entreprise:"
+                    id: mail_entreprise
+            MDBoxLayout:
+                MDTextField:
+                    font_size: "18sp"
+                    line_color_normal: 1,1,1
+                    hint_text_color_normal: 1,1,1
                     hint_text: 'Niveau de diffusion:'
                     id: niveau_diffusion
                     on_focus: if self.focus: root.drop(self)
@@ -259,7 +266,7 @@ ScreenManagement:
                     text: 'Sauvegarder'
                     font_size: "24sp"
                     on_release:
-                        root.save_options([nom_entreprise, niveau_diffusion, ip, masque_sous_reseau, gateway, ip_ex], ["nom_entreprise", "niveau_diffusion", "ip", "masque_sous_reseau", "gateway", "ip_ex"])
+                        root.save_options([nom_entreprise, mail_entreprise, niveau_diffusion, ip, masque_sous_reseau, gateway, ip_ex], ["nom_entreprise", "mail_entreprise", "niveau_diffusion", "ip", "masque_sous_reseau", "gateway", "ip_ex"])
                         app.root.current = 'Accueil'
             MDBoxLayout:
                 orientation: 'vertical'
