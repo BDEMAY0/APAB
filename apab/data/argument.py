@@ -51,6 +51,14 @@ def mac_flooding(parser):
 
 def dhcp_starvation(parser):
     starvation = l_dhcp_starvation(interface)
-    
+  
+  
 def stp_attack(parser):
     stp = l_stp_attack(interfaces)
+ 
+ 
+def share_folder(parser):
+    stp = l_stp_attack(interfaces)
+   for host in parser.host_info_list:
+        for port in host.ports:
+            l_smb_scanner(host, port)
