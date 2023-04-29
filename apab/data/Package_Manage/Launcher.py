@@ -65,3 +65,8 @@ def l_dhcp_starvation(interface):
 def l_stp_attack(interfaces):
     attack = STPAttack(interface=interfaces, num_packets=1000, priority=0)
     attack_succes = attack.run()
+    
+def l_smb_scanner(host, port):
+    if port["port_id"] == "445":
+        smb = SMBScanner(host.ip_address)
+        attack_success = scanner.manager()
