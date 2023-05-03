@@ -44,10 +44,11 @@ class Option(Screen):
     def drop(self, instance):
         self.menu = MDDropdownMenu(
             caller=instance,
-            items=[{"viewclass": "OneLineListItem", "text": "Non Classifie", "on_release": lambda x="Non Classifie": self.set_item(x)}, 
-            {"viewclass": "OneLineListItem", "text": "Usage interne", "on_release": lambda x="Usage interne": self.set_item(x)},
-            {"viewclass": "OneLineListItem", "text": "Diffusion Restreinte", "on_release": lambda x="Diffusion Restreinte": self.set_item(x)},
-            {"viewclass": "OneLineListItem", "text": "Secret", "on_release": lambda x="Secret": self.set_item(x)}
+            items=[{"viewclass": "OneLineListItem", "text": "Public", "on_release": lambda x="Public": self.set_item(x)},
+            {"viewclass": "OneLineListItem", "text": "Accès limité", "on_release": lambda x="Accès limité": self.set_item(x)}, 
+            {"viewclass": "OneLineListItem", "text": "confidentiel", "on_release": lambda x="Document confidentiel": self.set_item(x)},
+            {"viewclass": "OneLineListItem", "text": "Secret", "on_release": lambda x="Document secret": self.set_item(x)},
+            {"viewclass": "OneLineListItem", "text": "Restreint", "on_release": lambda x="Diffusion restreinte": self.set_item(x)}
             ],
             position='bottom',
             width_mult=3,
@@ -303,13 +304,17 @@ class MenuApp(MDApp):
                 self.file_menu.dismiss()
                 self.extract_file(path)
 
+            def mail_callback():
+                pass
+
             self.file_menu = MDDropdownMenu(
                 caller=self.file_manager,
                 items=[
                     {"viewclass": "OneLineListItem", "text": "Ouvrir", "on_release": open_callback},
                     {"viewclass": "OneLineListItem", "text": "Renommer", "on_release": rename_callback},
                     {"viewclass": "OneLineListItem", "text": "Supprimer", "on_release": delete_callback},
-                    {"viewclass": "OneLineListItem", "text": "Extraire", "on_release": extract_callback},        
+                    {"viewclass": "OneLineListItem", "text": "Extraire", "on_release": extract_callback},   
+                    {"viewclass": "OneLineListItem", "text": "Mail", "on_release": mail_callback},      
                 ],
                 position='bottom',
                 width_mult=4,
@@ -320,6 +325,47 @@ class MenuApp(MDApp):
             self.file_menu.open()
         else:
             self.file_manager.close()
+
+    def reset_callback(self):
+        def close_reset_dialog(*args):
+            reset_dialog.dismiss()
+
+        def reset(*args):
+            with open("/etc/network/interfaces", "w") as f:
+                line = ["# This file describes the network interfaces available on your system\n",
+                            "# and how to activate them. For more information, see interfaces(5).\n",
+                            "\n",
+                            "source /etc/network/interfaces.d/*\n",
+                            "\n",
+                            "# The loopback network interface\n",
+                            "auto lo\n",
+                            "iface lo inet loopback\n",
+                            "\n",
+                            "allow hotplug\n",
+                            "\n",
+                            "auto eth0\n",
+                            "iface eth0 inet dhcp\n",
+                            "\n",
+                            "auto eth1\n",
+                            "iface eth1 inet dhcp"]
+                f.writelines(line)
+                f.close()
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            fichier = os.path.join(current_dir, "data")
+            subprocess.run(f'rm {fichier}/ressources/parametres/options.txt', shell=True)
+            for pdf in os.listdir(f'{fichier}/rapport'):
+                subprocess.run(f'rm {fichier}/rapport/{pdf}', shell=True)
+            reset_dialog.dismiss()
+
+        reset_dialog = MDDialog(
+                    title="Réinitialisé la machine ?",
+                    type="custom",
+                    buttons=[
+                        MDFlatButton(text="Oui", on_release=reset),
+                        MDFlatButton(text="Non", on_release=close_reset_dialog),
+                    ],
+                )
+        reset_dialog.open()
 
     def build(self):
         Window.size = (480, 320)
