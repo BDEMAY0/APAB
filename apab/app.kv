@@ -27,6 +27,7 @@ ScreenManagement:
         MDTopAppBar:
             title: "Accueil - APAB"
             pos_hint: { "top": 1 }
+            right_action_items: [["delete", lambda x: app.reset_callback()]]
         RelativeLayout:
             MDFillRoundFlatIconButton:
                 icon: "lan-connect"
