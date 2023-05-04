@@ -1,4 +1,5 @@
 nom_entreprise : hgf
+mail_entreprise : 
 niveau_diffusion : Usage interne
 ip : 
 masque_sous_reseau : 
