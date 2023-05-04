@@ -32,7 +32,7 @@ msg['Subject'] = EMAIL_SUBJECT
 msg.attach(MIMEText(EMAIL_MESSAGE))
 
 # ajout de la pièce jointe
-with open("rapport_audit_pentest.pdf", "rb") as f:
+with open("rapport_audit_pentest.zip", "rb") as f:
     attachment = MIMEApplication(f.read(), _subtype="pdf")
     attachment.add_header("Content-Disposition", "attachment", filename="rapport_APAB.pdf")
     msg.attach(attachment)
