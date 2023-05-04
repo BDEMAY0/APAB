@@ -39,5 +39,7 @@ path_output = os.path.expanduser(folder)
 with open(path_output, 'w') as json_file:
     json_file.write(json_output)
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+main = os.path.join(current_dir, "main.py")
 subprocess.run(f'rm {path_xml}', shell=True)
-subprocess.run(['python', 'main.py'])
+subprocess.run(['python', main])
