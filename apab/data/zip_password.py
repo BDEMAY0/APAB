@@ -11,7 +11,7 @@ mot_de_passe = ''.join(random.choice(caracteres) for i in range(20))
 
 inpt = "rapport_audit_pentest.pdf"
 pre = None
-oupt = "output.zip"
+oupt = "rapport_audit_pentest.zip"
 com_lvl = 5
 
 # compressing file
