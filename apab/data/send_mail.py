@@ -10,7 +10,7 @@ path_options = os.path.expanduser(folder)
 with open(path_options, "r") as f:
     for line in f:
         key, value = line.strip().split(" :")
-        if key == "mail":
+        if key == "mail_entreprise":
             mail = value.replace(" ", "")
         elif key == "niveau_diffusion":
             niveau_diffusion = value.replace(" ", "")
