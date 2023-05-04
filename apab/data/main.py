@@ -14,9 +14,18 @@ if __name__ == "__main__":
     parser = NmapParser(nmap_output_file)
 
     #Récupère les attaques cochés de l'application
-    with open("data/ressources/parametres/pentest.txt", "r") as f:
-        for line in f:
+    with open("data/ressources/parametres/pentest.txt", "r+") as f:
+        for i, line in f:
             key, value = line.strip().split(" :")
             if value == " True":
                 globals()[key](parser)
+            if key == "En cours":
+                lignes[i] = "En cours : finis"
+                break
+        f.seek(0)
+        f.writelines(lignes)
+                    
+                
+ 
+    
 
