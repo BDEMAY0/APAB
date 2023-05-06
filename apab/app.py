@@ -149,10 +149,7 @@ class Configuration(Screen):
                             "allow hotplug\n",
                             "\n",
                             "auto eth0\n",
-                            "iface eth0 inet dhcp\n",
-                            "\n",
-                            "auto eth1\n",
-                            "iface eth1 inet dhcp"]
+                            "iface eth0 inet dhcp\n"]
                 f.writelines(line)
                 f.close()
         else:
@@ -172,10 +169,7 @@ class Configuration(Screen):
                             "iface eth0 inet static\n",
                             f'address {options[1].text}\n',
                             f'netmask {options[2].text}\n',
-                            f'gateway {options[3].text}\n',
-                            "\n",
-                            "auto eth1\n",
-                            "iface eth1 inet dhcp"]
+                            f'gateway {options[3].text}\n']
                 f.writelines(line)
                 f.close()
 
@@ -344,10 +338,7 @@ class MenuApp(MDApp):
                             "allow hotplug\n",
                             "\n",
                             "auto eth0\n",
-                            "iface eth0 inet dhcp\n",
-                            "\n",
-                            "auto eth1\n",
-                            "iface eth1 inet dhcp"]
+                            "iface eth0 inet dhcp\n"]
                 f.writelines(line)
                 f.close()
             current_dir = os.path.dirname(os.path.abspath(__file__))
