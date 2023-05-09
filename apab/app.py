@@ -299,7 +299,24 @@ class MenuApp(MDApp):
                 self.extract_file(path)
 
             def mail_callback():
-                pass
+
+                def close_pass_dialog(*args):
+                    pass_dialog.dismiss()
+
+                current_dir = os.path.dirname(os.path.abspath(__file__))
+                folder = os.path.join(current_dir, "data")
+                path_mail = os.path.expanduser(folder)
+                passwd = subprocess.run(['python', f'{path_mail}/zip_password.py'], capture_output=True, text=True)
+                subprocess.run(['python', f'{path_mail}/send_mail.py'])
+                pass_dialog = MDDialog(
+                    title=f'Le mot de passe du fichier envoyer est : \n{passwd.stdout}\n\n Ce mot de passe ne sera plus accessible à la cloture de la popup',
+                    type="custom",
+                    buttons=[
+                        MDFlatButton(text="Fermer la popup", on_release=close_pass_dialog),
+                    ],
+                )
+                pass_dialog.open()
+
 
             self.file_menu = MDDropdownMenu(
                 caller=self.file_manager,
