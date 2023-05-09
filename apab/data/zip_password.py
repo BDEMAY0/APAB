@@ -15,10 +15,9 @@ oupt = "rapport_audit_pentest.zip"
 com_lvl = 5
 
 # compressing file
-pyminizip.compress(inpt, None, oupt,
-                   mot_de_passe, com_lvl)
+pyminizip.compress(inpt, None, oupt,mot_de_passe, com_lvl)
 
-return mot_de_passe
+print(mot_de_passe)
 
 
 
