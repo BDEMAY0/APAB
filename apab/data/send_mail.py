@@ -36,8 +36,8 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # ajout de la pièce jointe
 with open(f'{current_dir}/ressources/mail/rapport_audit_pentest.zip', "rb") as f:
-    attachment = MIMEApplication(f.read(), _subtype="pdf")
-    attachment.add_header("Content-Disposition", "attachment", filename="rapport_APAB.pdf")
+    attachment = MIMEApplication(f.read(), _subtype="zip")
+    attachment.add_header("Content-Disposition", "attachment", filename="rapport_APAB.zip")
     msg.attach(attachment)
 
 # envoi du message
