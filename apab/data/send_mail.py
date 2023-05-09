@@ -1,5 +1,6 @@
 import os
 import smtplib
+import subprocess
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
@@ -31,8 +32,10 @@ msg['To'] = EMAIL_TO
 msg['Subject'] = EMAIL_SUBJECT
 msg.attach(MIMEText(EMAIL_MESSAGE))
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
 # ajout de la pièce jointe
-with open("rapport_audit_pentest.zip", "rb") as f:
+with open(f'{current_dir}/ressources/mail/rapport_audit_pentest.zip', "rb") as f:
     attachment = MIMEApplication(f.read(), _subtype="pdf")
     attachment.add_header("Content-Disposition", "attachment", filename="rapport_APAB.pdf")
     msg.attach(attachment)
@@ -44,4 +47,7 @@ s.login(SMTP_USERNAME, SMTP_PASSWORD)
 s.sendmail(EMAIL_FROM, EMAIL_TO, msg.as_string())
 s.quit()
 
-print("Rapport envoyé avec succès")
+current_dir = os.path.dirname(os.path.abspath(__file__))
+dir_zip = os.path.join(current_dir, "ressources", "mail", "rapport_audit_pentest.zip")
+path_zip = os.path.expanduser(dir_zip)
+subprocess.run(f'rm {path_zip}', shell=True)
