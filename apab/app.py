@@ -136,42 +136,21 @@ class Configuration(Screen):
     
     def save_configuration(self, options, name):
         if options[0].active == True:
-            with open("/etc/network/interfaces", "w") as f:
-                line = ["# This file describes the network interfaces available on your system\n",
-                            "# and how to activate them. For more information, see interfaces(5).\n",
-                            "\n",
-                            "source /etc/network/interfaces.d/*\n",
-                            "\n",
-                            "# The loopback network interface\n",
-                            "auto lo\n",
-                            "iface lo inet loopback\n",
-                            "\n",
-                            "allow hotplug\n",
-                            "\n",
-                            "auto eth0\n",
-                            "iface eth0 inet dhcp\n"]
-                f.writelines(line)
+            with open('/etc/dhcpcd.conf', 'r') as f:
+                lines = f.readlines()
+            with open('/etc/dhcpcd.conf', 'w') as f:
+                for line in lines:
+                    if f'interface eth0' in line:
+                        break
+                    f.write(line)
                 f.close()
         else:
-            with open("/etc/network/interfaces", "w") as f:
-                line =["# This file describes the network interfaces available on your system\n",
-                            "# and how to activate them. For more information, see interfaces(5).\n",
-                            "\n",
-                            "source /etc/network/interfaces.d/*\n",
-                            "\n",
-                            "# The loopback network interface\n",
-                            "auto lo\n",
-                            "iface lo inet loopback\n",
-                            "\n",
-                            "allow hotplug\n",
-                            "\n",
-                            "auto eth0\n",
-                            "iface eth0 inet static\n",
-                            f'address {options[1].text}\n',
-                            f'netmask {options[2].text}\n',
-                            f'gateway {options[3].text}\n']
-                f.writelines(line)
+            config_line = f'interface eth0\nstatic ip_address={options[1].text}/{options[2].text}\nstatic routers={options[3].text}\n'
+            with open('/etc/dhcpcd.conf', 'a') as f:
+                f.write(config_line)
                 f.close()
+        os.system('sudo systemctl daemon-reload')
+        os.system('sudo systemctl restart dhcpcd')
 
     def toggle_visibility(self, instance, value):
         # Modifier l'opacité des champs texte et boutons en fonction de l'état du bouton Switch
