@@ -321,22 +321,14 @@ class MenuApp(MDApp):
             reset_dialog.dismiss()
 
         def reset(*args):
-            with open("/etc/network/interfaces", "w") as f:
-                line = ["# This file describes the network interfaces available on your system\n",
-                            "# and how to activate them. For more information, see interfaces(5).\n",
-                            "\n",
-                            "source /etc/network/interfaces.d/*\n",
-                            "\n",
-                            "# The loopback network interface\n",
-                            "auto lo\n",
-                            "iface lo inet loopback\n",
-                            "\n",
-                            "allow hotplug\n",
-                            "\n",
-                            "auto eth0\n",
-                            "iface eth0 inet dhcp\n"]
-                f.writelines(line)
-                f.close()
+            with open('/etc/dhcpcd.conf', 'w') as f:
+                for line in lines:
+                    if f'interface eth0' in line:
+                        break
+                    f.write(line)
+            f.close()
+            os.system('sudo systemctl daemon-reload')
+            os.system('sudo systemctl restart dhcpcd')
             current_dir = os.path.dirname(os.path.abspath(__file__))
             fichier = os.path.join(current_dir, "data")
             subprocess.run(f'rm {fichier}/ressources/parametres/options.txt', shell=True)
