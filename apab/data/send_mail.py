@@ -23,7 +23,7 @@ SMTP_PASSWORD = "gsgeduzejuyichtk"
 EMAIL_FROM = "projetannuel.apab@gmail.com"
 EMAIL_TO = mail
 EMAIL_SUBJECT = f'{niveau_diffusion} PROJET APAB'
-EMAIL_MESSAGE = "Bonjour, \n Vous trouverez ci-joint le rapport issue de nos tests.\n Cordialemennt,\n APAB"
+EMAIL_MESSAGE = "Bonjour, \n\nVous trouverez ci-joint le rapport issue de nos tests.\n\nCordialement,\n\nSociété APAB"
 
 # création du message
 msg = MIMEMultipart()
