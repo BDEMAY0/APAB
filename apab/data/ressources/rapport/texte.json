@@ -1,1 +1,51 @@
+{
+  "entete_web": {
+    "titre": "Entête Web",
+    "description": "La partie entete_web concerne les vulnérabilités liées à l'en-tête HTTP d'un site web.",
+    "constat": "Un mauvais en-tête HTTP peut exposer des informations sensibles ou permettre des attaques telles que l'injection de scripts.",
+    "remediation": "Pour remédier à ce problème, assurez-vous de configurer correctement l'en-tête HTTP en appliquant les directives de sécurité recommandées."
+  },
+  "cve": {
+    "titre": "CVE",
+    "description": "La partie cve concerne les vulnérabilités connues et répertoriées dans la base de données Common Vulnerabilities and Exposures (CVE).",
+    "constat": "L'exploitation des vulnérabilités CVE connues peut permettre à un attaquant de compromettre un système.",
+    "remediation": "Il est essentiel de suivre les avis de sécurité, les correctifs et les mises à jour émis par les fournisseurs pour résoudre les vulnérabilités CVE identifiées."
+  },
+  "ssh_bf": {
+    "titre": "SSH Bruteforce",
+    "description": "La partie ssh_bf concerne les attaques de force brute contre les serveurs SSH (Secure Shell).",
+    "constat": "Les attaques de force brute peuvent permettre à un attaquant de deviner les mots de passe et d'accéder illégalement à un serveur SSH.",
+    "remediation": "Pour se protéger contre les attaques de force brute, il est recommandé de configurer des politiques de mots de passe solides, de limiter les tentatives de connexion et d'utiliser des méthodes d'authentification supplémentaires, telles que les clés SSH."
+  },
+  "share_folder": {
+    "titre": "Partage de Fichiers",
+    "description": "La partie share_folder concerne les partages de fichiers mal configurés ou non sécurisés.",
+    "constat": "Un partage de fichiers mal configuré peut permettre à des utilisateurs non autorisés d'accéder, de modifier ou de supprimer des fichiers sensibles.",
+    "remediation": "Il est important de restreindre l'accès aux partages de fichiers en utilisant des autorisations appropriées, des mots de passe forts et en limitant les droits d'accès des utilisateurs."
+  },
+  "dos": {
+    "titre": "Attaque DoS",
+    "description": "La partie dos concerne les attaques par déni de service (DoS) visant à rendre un service ou une ressource indisponible.",
+    "constat": "Les attaques DoS peuvent entraîner une interruption de service, un ralentissement ou une incapacité à accéder à un système ou à un réseau.",
+    "remediation": "Pour se prémunir contre les attaques DoS, il est nécessaire de mettre en place des mécanismes de détection et de filtrage du trafic suspect, ainsi que des capacités de mitigation pour réduire l'impact des attaques."
+  },
+  "dhcp_starvation": {
+    "titre": "Saturation DHCP",
+    "description": "La partie dhcp_starvation concerne les attaques de saturation du pool DHCP (Dynamic Host Configuration Protocol).",
+    "constat": "Les attaques de saturation DHCP peuvent épuiser les adresses IP disponibles dans le pool DHCP, empêchant ainsi les nouveaux périphériques de se connecter au réseau.",
+    "remediation": "Pour prévenir les attaques de saturation DHCP, il est recommandé de surveiller et de limiter le nombre de demandes DHCP par périphérique, d'appliquer des stratégies de contrôle d'accès et de configurer des mécanismes de détection d'anomalies."
+  },
+  "wifi": {
+    "titre": "Wifi",
+    "description": "La partie wifi concerne les vulnérabilités et les menaces liées aux réseaux sans fil.",
+    "constat": "Un réseau Wi-Fi mal configuré ou non sécurisé peut permettre à des attaquants de compromettre les données, d'intercepter le trafic ou de mener des attaques d'usurpation d'identité.",
+    "remediation": "Pour sécuriser un réseau Wi-Fi, il est recommandé d'utiliser des protocoles de sécurité forts (comme WPA2/WPA3), de désactiver les fonctionnalités non nécessaires (comme le WPS) et de mettre en place des mesures de contrôle d'accès et de chiffrement appropriées."
+  },
+  "check_tls": {
+    "titre": "check tls",
+    "description": "La partie check_tls concerne les vérifications de sécurité relatives au protocole TLS (Transport Layer Security).",
+    "constat": "Une mauvaise configuration ou des vulnérabilités dans les protocoles TLS peuvent exposer les communications à des attaques telles que le détournement ou l'interception des données.",
+    "remediation": "Pour renforcer la sécurité des communications TLS, il est essentiel de suivre les bonnes pratiques de configuration, de mettre à jour régulièrement les versions TLS et d'effectuer des tests de vulnérabilité pour détecter les éventuelles faiblesses dans la configuration du protocole."
+}
+}
 
