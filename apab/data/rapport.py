@@ -169,43 +169,50 @@ check_tls = True
 
 vuln_i = 1
 
-def rapport_by_test(title, description, constat, data_result, recommandations) :
-  global vuln_i
-  title = Paragraph(f'Vulnérabilité {vuln_i} : {title}  <BR/><BR/>', subheader_style)
-  elements.append(title)
-  #Description de l'attaque
-  desc = Paragraph(f'<b>Description :</b><BR/><BR/>\
-     {description} <BR/><BR/>\
-  ', normal_style)
-  elements.extend([desc, Spacer(1, 0.5 * 50)])
-  #Constat de l'attaque
-  const = Paragraph(f'<b>Constat :</b><BR/><BR/>\
-     {constat} <BR/><BR/>\
-     Ci dessous la liste des hôtes impactés : <BR/>\
-  ', normal_style)
-  elements.extend([const, Spacer(1, 0.5 * 50)])
-  
-  table_data_result = Table(data_result)
-  
-  # Mise en forme du tableau 
-  table_data_result.setStyle(TableStyle([
-      ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-      ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-      ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-      ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-      ('FONTSIZE', (0, 0), (-1, 0), 14),
-      ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-      ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-      ('GRID', (0, 0), (-1, -1), 1, colors.black)
-  ]))
-  
-  elements.extend([table_data_result, Spacer(1, 0.5 * 72)])
-  
-  reco = Paragraph(f'<b>Recommandation :</b><BR/><BR/>\
-     {recommandations} <BR/><BR/>\
-  ', normal_style)
-  elements.extend([reco, PageBreak()])
-  vuln_i = vuln_i + 1
+def rapport_by_test(test, data_result):
+    global vuln_i
+    
+    with open('texte.json') as json_file:
+        data = json.load(json_file)
+
+    title = Paragraph(f'Vulnérabilité {vuln_i} : {data[test]["titre"]}  <BR/><BR/>', subheader_style)
+    elements.append(title)
+    
+    # Description de l'attaque
+    desc = Paragraph(f'<b>Description :</b><BR/><BR/>\
+         {data[test]["description"]} <BR/><BR/>\
+      ', normal_style)
+    elements.extend([desc, Spacer(1, 0.5 * 50)])
+    
+    # Constat de l'attaque
+    const = Paragraph(f'<b>Constat :</b><BR/><BR/>\
+         {data[test]["constat"]} <BR/><BR/>\
+         Ci dessous la liste des hôtes impactés : <BR/>\
+      ', normal_style)
+    elements.extend([const, Spacer(1, 0.5 * 50)])
+    
+    table_data_result = Table(data_result)
+    
+    # Mise en forme du tableau
+    table_data_result.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 14),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black)
+    ]))
+    
+    elements.extend([table_data_result, Spacer(1, 0.5 * 72)])
+    
+    reco = Paragraph(f'<b>Recommandation :</b><BR/><BR/>\
+         {data[test]["remediation"]} <BR/><BR/>\
+      ', normal_style)
+    elements.extend([reco, PageBreak()])
+    vuln_i = vuln_i + 1
+
 
 
 def create_tableau(test):
@@ -234,29 +241,28 @@ with open('texte.json') as f:
     data = json.load(f)
     
 if bruteforcessh == True:
-  rapport_by_test("Faiblesse du mot de passe pour connexion à distance", "Ce test un outil de sécurité qui peut être utilisé pour tester la sécurité d'un système SSH (Secure Shell). Il essaie de se connecter au serveur SSH à l'aide d'une combinaison de nom d'utilisateur et de mot de passe pour trouver des combinaisons valides. Le script utilise une liste de mots de passe pour essayer différentes combinaisons jusqu'à ce qu'il en trouve une qui fonctionne. Si le script trouve une combinaison valide, il informera l'utilisateur et enregistrera les informations d'identification valides dans un fichier.", "Dans votre infrastructure nous avons detecté des services SSH avec des mots de passes faibles.", tableau1, "Pour corriger la vulnérabilité de mot de passe faible sur SSH, vous pouvez mettre en place une politique de complexité de mot de passe, utiliser des outils de gestion de mots de passe, mettre en place la double authentification, limiter l'accès aux comptes utilisateurs et surveiller l'activité du compte utilisateur. En appliquant ces mesures, vous pouvez renforcer la sécurité de votre système SSH et prévenir les attaques par force brute.")
+  rapport_by_test("ssh_bf", tableau1)
 
 if CVE == True :
-  rapport_by_test("bla", "bla", "bla", tableau2, "bla")
+  rapport_by_test("cve", tableau2)
 
 if entete_web == True :
-  rapport_by_test("bla", "bla", "bla", tableau1, "bla")
+  rapport_by_test("entete_web", tableau1)
   
 if share_folder == True:
-  rapport_by_test("bla", "bla", "bla", tableau1, "bla")
+  rapport_by_test("share_folder", tableau1)
 
 if dos == True :
-  rapport_by_test("bla", "bla", "bla", tableau1, "bla")
+  rapport_by_test("dos", tableau1)
 
 if dhcp_starvation == True :
-  rapport_by_test("bla", "bla", "bla", tableau1, "bla")
+  rapport_by_test("dhcp_starvation", tableau1)
 
 if wifi == True :
-  rapport_by_test("Faiblesse du mot de passe WiFi", "Ce test permet de réaliser un audit de sécurité sur les réseaux Wi-Fi en scannant les réseaux Wi-Fi disponibles, en capturant les poignées de mains (handshakes) et en exécutant des tests de force brute pour récupérer les mots de passe. Le script utilise des bibliothèques Python telles que pyrcrack et scapy pour réaliser ces tâches. En effectuant ces tests, le script peut aider à détecter les vulnérabilités sur les réseaux Wi-Fi et à renforcer la sécurité des réseaux en corrigeant les vulnérabilités.", "Nous avons pu nous connecter au réseau WiFi sans connaître le mot de passe.", tableau1, "Pour remédier aux vulnérabilités liées aux mots de passe faibles sur les réseaux Wi-Fi, vous pouvez : utiliser des mots de passe forts, changer régulièrement les mots de passe, utiliser des protocoles de sécurité plus forts, limiter l'accès aux réseaux et surveiller régulièrement la sécurité des réseaux.")
+  rapport_by_test("wifi", tableau1)
 
 if check_tls == True :
-  rapport_by_test("Version obsolète de SSL/TLS", "Ce test permet de vérifier la sécurité SSL/TLS d'un site Web en se connectant au serveur Web et en récupérant le certificat SSL/TLS. Le script vérifie la version du protocole SSL/TLS utilisé, le chiffrement utilisé et informe l'utilisateur si le protocole SSL/TLS est obsolète et pourrait présenter des risques de sécurité. Il convient de noter que la sécurité SSL/TLS est importante pour protéger les informations échangées entre l'utilisateur et le serveur Web, telles que les informations de connexion et de paiement.", "Des versions de SSL/TLS obsolètes ont été détéctés sur vos hôtes.", tableau1, "Vous pouvez mettre à jour le protocole SSL/TLS et le chiffrement utilisé vers des versions plus récentes et sécurisées, renouveler le certificat SSL/TLS pour un certificat plus récent et plus sécurisé, configurer le serveur pour utiliser des protocoles et des chiffrements plus sécurisés, et surveiller régulièrement la sécurité de vos serveurs Web pour détecter les vulnérabilités et les erreurs de configuration. En prenant ces mesures de remédiation, vous pouvez réduire les risques de vulnérabilité liés à SSL/TLS et protéger les informations échangées entre l'utilisateur et le serveur Web.")
-
+  rapport_by_test("check_tls", tableau1)
 
 # Conclusion
 conclusion = Paragraph("Ce rapport présente un aperçu des vulnérabilités identifiées lors de l'audit système et du pentest réseau. Il est recommandé de prendre en compte les suggestions pour améliorer la sécurité de l'infrastructure.", normal_style)
