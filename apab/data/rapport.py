@@ -28,7 +28,7 @@ auj = today.strftime("%d %B %Y")
 titre_rapport = Paragraph("Rapport d'Audit et Pentest Automatisé\n APAB", header_style)
 date_rapport = Paragraph(f'Date : {auj}', normal_style)
 elements = [Spacer(1, 0.4 * 72),  Spacer(1, 0.7 * 72), date_rapport, PageBreak()]
-im = Image('APAB.png', 8*inch, 6*inch)
+im = Image('ressources/rapport/APAB.png', 8*inch, 6*inch)
 elements.insert(1, im)
 
 # Création d'un en-tête personnalisé
@@ -172,7 +172,7 @@ vuln_i = 1
 def rapport_by_test(test, data_result):
     global vuln_i
     
-    with open('texte.json') as json_file:
+    with open('ressources/rapport/texte.json') as json_file:
         data = json.load(json_file)
 
     title = Paragraph(f'Vulnérabilité {vuln_i} : {data[test]["titre"]}  <BR/><BR/>', subheader_style)
@@ -217,7 +217,7 @@ def rapport_by_test(test, data_result):
 
 def create_tableau(test):
 # Ouvrir le fichier JSON et le charger en tant que dictionnaire
-  with open('test.json') as f:
+  with open('ressource/rapport/test.json') as f:
       data = json.load(f)
   
   # Initialiser une liste vide pour stocker les données recréées
