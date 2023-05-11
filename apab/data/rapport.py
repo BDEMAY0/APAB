@@ -68,12 +68,23 @@ interlocuteur = Paragraph(f'<b>Interlocuteurs : </b><BR/>\
 	 <i>Auditeur.</i>\
 ', my_Style)
 
-
+current_dir = os.path.dirname(os.path.abspath(__file__))
+folder = os.path.join(current_dir, "ressources", "parametres", "options.txt")
+path_options = os.path.expanduser(folder)
+with open(path_options, "r") as f:
+    for line in f:
+        key, value = line.strip().split(" :")
+        if key == "mail_entreprise":
+            mail = value.replace(" ", "")
+        elif key == "niveau_diffusion":
+            niveau_diffusion = value.replace(" ", "")
+	
+	
 diffusion = Paragraph(f'<b>Interlocuteurs : </b><BR/>\
      Société APAB . . . Contact : projetannuel.apab@gmail.com<BR/> \
 	 <i>Auditeur</i><BR/><BR/>\
   <b>Diffusion : </b><BR/>\
-     Niveau de classification	: C2 – Document confidentiel<BR/><BR/> \
+     Niveau de classification	: {niveau_diffusion}<BR/><BR/> \
 	 <b>Définition des niveaux de classification utilisés : </b><BR/>\
 •	C0 – Public : les informations contenues dans ce document peuvent être diffusées sans aucune restriction <BR/> \
 •	C1 – Accès limité : les informations contenues dans ce document ne peuvent être communiquées qu’à des personnels du MSI ou de ses partenaires. <BR/>\
@@ -161,7 +172,7 @@ def parse_json_file(file_path):
                 index += 1
 
 # Usage: Specify the path to the JSON file
-json_file_path = "brice.json"
+json_file_path = "ressources/rapport/result.json"
 parse_json_file(json_file_path)
   
 table_ressources = Table(data_ressources)
@@ -194,7 +205,7 @@ vuln_i = 1
 def rapport_by_test(test, data_result):
     global vuln_i
     
-    with open('texte.json') as json_file:
+    with open('ressources/rapport/texte.json') as json_file:
         data = json.load(json_file)
 
     title = Paragraph(f'Vulnérabilité {vuln_i} : {data[test]["titre"]}  <BR/><BR/>', subheader_style)
@@ -239,7 +250,7 @@ def rapport_by_test(test, data_result):
 
 def create_tableau(test):
 # Ouvrir le fichier JSON et le charger en tant que dictionnaire
-  with open('test.json') as f:
+  with open('ressources/rapport/test.json') as f:
       data = json.load(f)
   
   # Initialiser une liste vide pour stocker les données recréées
