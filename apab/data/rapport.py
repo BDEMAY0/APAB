@@ -24,6 +24,17 @@ normal_style = styles['Normal']
 today = date.today()
 auj = today.strftime("%d %B %Y")
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+folder = os.path.join(current_dir, "ressources", "parametres", "options.txt")
+path_options = os.path.expanduser(folder)
+with open(path_options, "r") as f:
+    for line in f:
+        key, value = line.strip().split(" :")
+        if key == "mail_entreprise":
+            mail = value.replace(" ", "")
+        elif key == "niveau_diffusion":
+            niveau_diffusion = value.replace(" ", "")
+	
 # Page de couverture
 titre_rapport = Paragraph("Rapport d'Audit et Pentest Automatisé\n APAB", header_style)
 date_rapport = Paragraph(f'Date : {auj}', normal_style)
@@ -73,7 +84,7 @@ diffusion = Paragraph(f'<b>Interlocuteurs : </b><BR/>\
      Société APAB . . . Contact : projetannuel.apab@gmail.com<BR/> \
 	 <i>Auditeur</i><BR/><BR/>\
   <b>Diffusion : </b><BR/>\
-     Niveau de classification	: C2 – Document confidentiel<BR/><BR/> \
+     Niveau de classification	: {niveau_diffusion}<BR/><BR/> \
 	 <b>Définition des niveaux de classification utilisés : </b><BR/>\
 •	C0 – Public : les informations contenues dans ce document peuvent être diffusées sans aucune restriction <BR/> \
 •	C1 – Accès limité : les informations contenues dans ce document ne peuvent être communiquées qu’à des personnels du MSI ou de ses partenaires. <BR/>\
@@ -217,7 +228,7 @@ def rapport_by_test(test, data_result):
 
 def create_tableau(test):
 # Ouvrir le fichier JSON et le charger en tant que dictionnaire
-  with open('ressource/rapport/test.json') as f:
+  with open('ressources/rapport/test.json') as f:
       data = json.load(f)
   
   # Initialiser une liste vide pour stocker les données recréées
