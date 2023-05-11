@@ -24,22 +24,11 @@ normal_style = styles['Normal']
 today = date.today()
 auj = today.strftime("%d %B %Y")
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-folder = os.path.join(current_dir, "ressources", "parametres", "options.txt")
-path_options = os.path.expanduser(folder)
-with open(path_options, "r") as f:
-    for line in f:
-        key, value = line.strip().split(" :")
-        if key == "mail_entreprise":
-            mail = value.replace(" ", "")
-        elif key == "niveau_diffusion":
-            niveau_diffusion = value.replace(" ", "")
-	
 # Page de couverture
 titre_rapport = Paragraph("Rapport d'Audit et Pentest Automatisé\n APAB", header_style)
 date_rapport = Paragraph(f'Date : {auj}', normal_style)
 elements = [Spacer(1, 0.4 * 72),  Spacer(1, 0.7 * 72), date_rapport, PageBreak()]
-im = Image('ressources/rapport/APAB.png', 8*inch, 6*inch)
+im = Image('APAB.png', 8*inch, 6*inch)
 elements.insert(1, im)
 
 # Création d'un en-tête personnalisé
@@ -84,7 +73,7 @@ diffusion = Paragraph(f'<b>Interlocuteurs : </b><BR/>\
      Société APAB . . . Contact : projetannuel.apab@gmail.com<BR/> \
 	 <i>Auditeur</i><BR/><BR/>\
   <b>Diffusion : </b><BR/>\
-     Niveau de classification	: {niveau_diffusion}<BR/><BR/> \
+     Niveau de classification	: C2 – Document confidentiel<BR/><BR/> \
 	 <b>Définition des niveaux de classification utilisés : </b><BR/>\
 •	C0 – Public : les informations contenues dans ce document peuvent être diffusées sans aucune restriction <BR/> \
 •	C1 – Accès limité : les informations contenues dans ce document ne peuvent être communiquées qu’à des personnels du MSI ou de ses partenaires. <BR/>\
@@ -126,7 +115,7 @@ data_synth_vuln = [
   
 table_synth_vuln = Table(data_synth_vuln)
   
-# Mise en forme du tableau Ressources
+# Mise en forme du tableau synthèse des resultats
 table_synth_vuln.setStyle(TableStyle([
     ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
     ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
@@ -146,12 +135,34 @@ elements.append(ressourcestitle)
 bruteforce= Paragraph("Voici une liste des ressources identifiées de votre entreprise.")
 elements.extend([bruteforce, Spacer(1, 0.5 * 50)])
 
-# Données du tableau Ressources
 data_ressources = [
-    ["#", "Hostname","IP", "Port","Service"],
-    [1, "SRVPROD1","192.168.1.25", "80","Apache"],
-    [2, "SRVTEST4","192.168.1.56", "22","SSH"]
+    ["#", "Hostname", "IP", "Port", "Service"]
 ]
+
+def parse_json_file(file_path):
+    with open(file_path, "r") as file:
+        data = json.load(file)
+
+        index = 1
+        for ip_address, host_data in data.items():
+            hostname = host_data["hostname"]
+            ports = host_data["ports"]
+
+            if ports:
+                for port in ports:
+                    protocol = port["protocol"]
+                    port_id = port["port_id"]
+                    service_name = port["service_name"]
+
+                    data_ressources.append([index, hostname, ip_address, port_id, service_name])
+                    index += 1
+            else:
+                data_ressources.append([index, hostname, ip_address, "N/A", "N/A"])
+                index += 1
+
+# Usage: Specify the path to the JSON file
+json_file_path = "brice.json"
+parse_json_file(json_file_path)
   
 table_ressources = Table(data_ressources)
   
@@ -183,7 +194,7 @@ vuln_i = 1
 def rapport_by_test(test, data_result):
     global vuln_i
     
-    with open('ressources/rapport/texte.json') as json_file:
+    with open('texte.json') as json_file:
         data = json.load(json_file)
 
     title = Paragraph(f'Vulnérabilité {vuln_i} : {data[test]["titre"]}  <BR/><BR/>', subheader_style)
@@ -228,7 +239,7 @@ def rapport_by_test(test, data_result):
 
 def create_tableau(test):
 # Ouvrir le fichier JSON et le charger en tant que dictionnaire
-  with open('ressources/rapport/test.json') as f:
+  with open('test.json') as f:
       data = json.load(f)
   
   # Initialiser une liste vide pour stocker les données recréées
