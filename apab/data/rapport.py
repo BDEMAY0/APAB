@@ -9,6 +9,7 @@ from reportlab.pdfgen import canvas
 from reportlab.platypus import Frame, PageTemplate, BaseDocTemplate
 from datetime import date
 import json
+import os
 
 # Configuration du fichier PDF
 output_file = "rapport_audit_pentest.pdf"
@@ -28,7 +29,7 @@ auj = today.strftime("%d %B %Y")
 titre_rapport = Paragraph("Rapport d'Audit et Pentest Automatisé\n APAB", header_style)
 date_rapport = Paragraph(f'Date : {auj}', normal_style)
 elements = [Spacer(1, 0.4 * 72),  Spacer(1, 0.7 * 72), date_rapport, PageBreak()]
-im = Image('APAB.png', 8*inch, 6*inch)
+im = Image('ressources/rapport/APAB.png', 8*inch, 6*inch)
 elements.insert(1, im)
 
 # Création d'un en-tête personnalisé
@@ -77,9 +78,8 @@ with open(path_options, "r") as f:
         if key == "mail_entreprise":
             mail = value.replace(" ", "")
         elif key == "niveau_diffusion":
-            niveau_diffusion = value.replace(" ", "")
-	
-	
+            niveau_diffusion = value
+          
 diffusion = Paragraph(f'<b>Interlocuteurs : </b><BR/>\
      Société APAB . . . Contact : projetannuel.apab@gmail.com<BR/> \
 	 <i>Auditeur</i><BR/><BR/>\
@@ -190,17 +190,32 @@ table_ressources.setStyle(TableStyle([
 ]))
   
 elements.extend([table_ressources, PageBreak()])
-#Listing des test à afficher -> True si test effectué
-bruteforcessh = True
-CVE = True
-entete_web = True
-share_folder = True
-dos = True
-dhcp_starvation = True
-wifi = True
-check_tls = True
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+folder = os.path.join(current_dir, "ressources", "parametres", "pentest.txt")
+path_options = os.path.expanduser(folder)
+with open(path_options, "r") as f:
+    for line in f:
+        key, value = line.strip().split(" :")
+        if key == "entete_web":
+            entete_web = value.replace(" ", "")
+        elif key == "cve":
+            CVE = value.replace(" ", "")
+        elif key == "ssh_bf":
+            bruteforcessh = value.replace(" ", "")
+        elif key == "share_folder":
+            share_folder = value.replace(" ", "")
+        elif key == "dos":
+            dos = value.replace(" ", "")
+        elif key == "dhcp_starvation":
+            dhcp_starvation = value.replace(" ", "")
+        elif key == "wifi":
+            wifi = value.replace(" ", "")
+        elif key == "check_tls":
+            check_tls = value.replace(" ", "")
 
 vuln_i = 1
+
 
 def rapport_by_test(test, data_result):
     global vuln_i
@@ -270,31 +285,31 @@ def create_tableau(test):
 tableau1 = create_tableau('test1')
 tableau2 = create_tableau('test2')
 
-with open('texte.json') as f:
+with open('ressources/rapport/texte.json') as f:
     data = json.load(f)
     
-if bruteforcessh == True:
+if bruteforcessh == 'True':
   rapport_by_test("ssh_bf", tableau1)
 
-if CVE == True :
+if CVE == 'True' :
   rapport_by_test("cve", tableau2)
 
-if entete_web == True :
+if entete_web == 'True' :
   rapport_by_test("entete_web", tableau1)
   
-if share_folder == True:
+if share_folder == 'True':
   rapport_by_test("share_folder", tableau1)
 
-if dos == True :
+if dos == 'True' :
   rapport_by_test("dos", tableau1)
 
-if dhcp_starvation == True :
+if dhcp_starvation == 'True' :
   rapport_by_test("dhcp_starvation", tableau1)
 
-if wifi == True :
+if wifi == 'True' :
   rapport_by_test("wifi", tableau1)
 
-if check_tls == True :
+if check_tls == 'True' :
   rapport_by_test("check_tls", tableau1)
 
 # Conclusion
