@@ -19,6 +19,8 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.button import MDFlatButton
 import shutil
+from data.zip_password import f_zip_encrypt
+from data.send_mail import f_send_mail
 
 Window.keyboard_anim_args = {"d":.2,"t":"linear"}
 Config.set('kivy','keyboard_mode','dock')
@@ -277,18 +279,18 @@ class MenuApp(MDApp):
                 self.file_menu.dismiss()
                 self.extract_file(path)
 
-            def mail_callback():
-
+            def mail_callback(*args):
+                name_file = os.path.basename(path)
                 def close_pass_dialog(*args):
                     pass_dialog.dismiss()
 
                 current_dir = os.path.dirname(os.path.abspath(__file__))
                 folder = os.path.join(current_dir, "data")
                 path_mail = os.path.expanduser(folder)
-                passwd = subprocess.run(['python', f'{path_mail}/zip_password.py'], capture_output=True, text=True)
-                subprocess.run(['python', f'{path_mail}/send_mail.py'])
+                passwd = f_zip_encrypt(name_file)
+                f_send_mail(name_file)
                 pass_dialog = MDDialog(
-                    title=f'Le mot de passe du fichier envoyer est : \n{passwd.stdout}\n\n Ce mot de passe ne sera plus accessible à la cloture de la popup',
+                    title=f'Le mot de passe du fichier envoyer est : \n{passwd}\n\n Ce mot de passe ne sera plus accessible à la cloture de la popup',
                     type="custom",
                     buttons=[
                         MDFlatButton(text="Fermer la popup", on_release=close_pass_dialog),
