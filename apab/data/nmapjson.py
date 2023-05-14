@@ -19,7 +19,7 @@ with open(path_options, "r") as f:
 
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-folder = os.path.join(current_dir, "ressources", "nmap", "test.xml")
+folder = os.path.join(current_dir, "ressources", "nmap", "output.xml")
 path_xml = os.path.expanduser(folder)
 if ip_ex != "":
     commande = f'nmap -sV --exclude {ip_ex} -oX {path_xml} {ip}/{masque_sous_reseau}'
