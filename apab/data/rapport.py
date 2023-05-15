@@ -10,9 +10,26 @@ from reportlab.platypus import Frame, PageTemplate, BaseDocTemplate
 from datetime import date
 import json
 import os
+import time
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+folder = os.path.join(current_dir, "ressources", "parametres", "options.txt")
+path_options = os.path.expanduser(folder)
+with open(path_options, "r") as f:
+    for line in f:
+        key, value = line.strip().split(" :")
+        if key == "mail_entreprise":
+            mail = value.replace(" ", "")
+        elif key == "niveau_diffusion":
+            niveau_diffusion = value
+        elif key == "nom_entreprise":
+            nom_entreprise = value.replace(" ", "_")
+
+# Obtenir l'horodatage actuel
+timestamp = time.strftime("%Y%m%d_%H%M%S", time.localtime())
 
 # Configuration du fichier PDF
-output_file = "rapport_audit_pentest.pdf"
+output_file = f"rapport/Rapport_APAB{nom_entreprise}_{timestamp}.pdf"
 doc = BaseDocTemplate(output_file, pagesize=letter)
 
 # Styles de paragraphe
@@ -20,7 +37,6 @@ styles = getSampleStyleSheet()
 header_style = styles['Heading1']
 subheader_style = styles['Heading2']
 normal_style = styles['Normal']
-
 
 today = date.today()
 auj = today.strftime("%d %B %Y")
@@ -42,7 +58,7 @@ def header(canvas, doc):
     canvas.rect(415, 745, 175, 15, fill=1) # Rectangle autour du texte
     # Ajout du texte
     canvas.setFillColorRGB(255, 255, 255) # Couleur du texte
-    canvas.drawString(450, 750, "C2 – Document confidentiel")
+    canvas.drawString(450, 750, niveau_diffusion)
     # Ajout du numéro de page
     canvas.setFillColorRGB(0, 0, 0) # Couleur du texte
     canvas.drawString(475, 50, f"Page {doc.page}")
@@ -51,7 +67,6 @@ def header(canvas, doc):
 # Ajout de l'en-tête personnalisé à chaque page
 frame = Frame(doc.rightMargin, doc.bottomMargin, doc.width, doc.height, id='normal')
 doc.addPageTemplates([PageTemplate(id='custom_header', frames=frame, onPage=header)])
-
 
 #Page Interlocuteur / Diffusion
 my_Style=ParagraphStyle('My Para style',
@@ -68,17 +83,6 @@ interlocuteur = Paragraph(f'<b>Interlocuteurs : </b><BR/>\
      Société APAB <BR/> \
 	 <i>Auditeur.</i>\
 ', my_Style)
-
-current_dir = os.path.dirname(os.path.abspath(__file__))
-folder = os.path.join(current_dir, "ressources", "parametres", "options.txt")
-path_options = os.path.expanduser(folder)
-with open(path_options, "r") as f:
-    for line in f:
-        key, value = line.strip().split(" :")
-        if key == "mail_entreprise":
-            mail = value.replace(" ", "")
-        elif key == "niveau_diffusion":
-            niveau_diffusion = value
           
 diffusion = Paragraph(f'<b>Interlocuteurs : </b><BR/>\
      Société APAB . . . Contact : projetannuel.apab@gmail.com<BR/> \
@@ -150,7 +154,7 @@ data_ressources = [
     ["#", "Hostname", "IP", "Port", "Service"]
 ]
 
-def parse_json_file(file_path):
+def parse_json_result(file_path):
     with open(file_path, "r") as file:
         data = json.load(file)
 
@@ -173,7 +177,7 @@ def parse_json_file(file_path):
 
 # Usage: Specify the path to the JSON file
 json_file_path = "ressources/rapport/result.json"
-parse_json_file(json_file_path)
+parse_json_result(json_file_path)
   
 table_ressources = Table(data_ressources)
   
@@ -312,9 +316,6 @@ if wifi == 'True' :
 if check_tls == 'True' :
   rapport_by_test("check_tls", tableau1)
 
-# Conclusion
-conclusion = Paragraph("Ce rapport présente un aperçu des vulnérabilités identifiées lors de l'audit système et du pentest réseau. Il est recommandé de prendre en compte les suggestions pour améliorer la sécurité de l'infrastructure.", normal_style)
-elements.append(conclusion)
 
 # Construction du document PDF
 doc.build(elements)
