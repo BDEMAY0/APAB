@@ -98,15 +98,16 @@ diffusion = Paragraph(f'<b>Interlocuteurs : </b><BR/>\
 ', my_Style)
 elements.extend([Spacer(1, 0.5 * 50), diffusion, PageBreak()])
 
+
 # Introduction
 intro = Paragraph("Introduction", header_style)
 elements.extend([intro, Spacer(1, 0.5 * 50)])
 introduction = Paragraph(f'<b>Objet du document :</b><BR/><BR/>\
-     ENTREPRISE est une société spécialisée dans activité de l’entreprise. L’entreprise à souhaiter auditer l’application application afin d’évaluer le niveau de sécurité de celle-ci. Cette application consiste expliquer le but de l’application succinctement.<BR/><BR/> \
+     L’entreprise{nom_entreprise.replace("_", " ")} à souhaiter auditer ses systèmes et réseaux afin d’évaluer le niveau de sécurité de ceux-ci. <BR/><BR/> \
      Ce document présente les différents résultats obtenus par les auditeurs lors du test d’intrusion et leurs recommandations de remédiation. <BR/><BR/>\
      Le travail de l’équipe d’audit essaye d’être le plus exhaustif possible, mais ne peut pas garantir la détection de toutes les vulnérabilités présentes sur le périmètre.<BR/><BR/><BR/>\
   <b>Contexte et périmètre de l’audit : </b><BR/><BR/>\
-     L’audit a été mené depuis les locaux du Pôle Supérieur De La Salle à Rennes, entre le JJ/MM/AAAA et le JJ/MM/AAAA.<BR/><BR/> \
+     L’audit a été mené depuis les locaux de{nom_entreprise.replace("_", " ")}, entre le JJ/MM/AAAA et le JJ/MM/AAAA.<BR/><BR/> \
      L’audit a été effectuée avec une approche boite noire|boite grise|boite blanche, c’est-à-dire que les auditeurs disposaient (ou non) de compte d’accès sur l’application, du code source, etc.<BR/><BR/> \
      L’audit portait sur le périmètre suivant : URL , IP, domaine…<BR/> \
 ', normal_style)
@@ -117,11 +118,8 @@ results = Paragraph("Synthèse des resultats", header_style)
 elements.extend([results, Spacer(1, 0.5 * 50)])
 synthese = Paragraph(f'L’audit a permis de déterminer un niveau de sécurité : Nul Nul Nul la sécurité de votre entreprise.<BR/><BR/> \
 ', normal_style)
-elements.extend([synthese, PageBreak()])
+elements.extend([synthese, Spacer(1, 0.5 * 50)])
 
-# Synthese des vulnérabilités
-synth_vuln = Paragraph("Synthèse des resultats", header_style)
-elements.extend([results, Spacer(1, 0.5 * 50)])
 # Données du tableau Ressources
 data_synth_vuln = [
     ["Identifiant", "VULNERABILITE","CRITICITE"],
@@ -265,26 +263,27 @@ def rapport_by_test(test, data_result):
     elements.extend([reco, PageBreak()])
     vuln_i = vuln_i + 1
 
-
-
 def create_tableau(test):
-# Ouvrir le fichier JSON et le charger en tant que dictionnaire
-  with open('ressources/rapport/test.json') as f:
-      data = json.load(f)
-  
-  # Initialiser une liste vide pour stocker les données recréées
-  tableau = []
-  
-  # Ajouter une ligne d'en-tête pour le numéro, l'adresse IP et le port
-  tableau.append(['#', 'IP', 'Port'])
-  
-  # Parcourir la liste d'IP et ajouter chaque élément au tableau
-  for i, ip_obj in enumerate(data[test]['IP'], start=1):
-      ip = ip_obj['adresse']
-      port = ip_obj['port']
-      tableau.append([i, ip, port])
-  
-  return tableau
+    # Ouvrir le fichier JSON et le charger en tant que dictionnaire
+    with open('ressources/rapport/test.json') as f:
+        data = json.load(f)
+
+    # Initialiser une liste vide pour stocker les données recréées
+    tableau = []
+
+    # Vérifier si les données pour le test spécifié existent
+    if test in data:
+        # Obtenir les clés du premier objet Hosts, qui serviront d'en-têtes de colonnes
+        headers = ['#'] + list(data[test]['Hosts'][0].keys())
+        # Ajouter les en-têtes à la liste tableau
+        tableau.append(headers)
+
+        # Parcourir la liste d'hôtes et ajouter chaque élément au tableau
+        for i, host_obj in enumerate(data[test]['Hosts'], start=1):
+            row = [i] + [host_obj[key] for key in headers[1:]]
+            tableau.append(row)
+
+    return tableau
 
 tableau1 = create_tableau('test1')
 tableau2 = create_tableau('test2')
@@ -305,7 +304,7 @@ if share_folder == 'True':
   rapport_by_test("share_folder", tableau1)
 
 if dos == 'True' :
-  rapport_by_test("dos", tableau1)
+  rapport_by_test("dos", tableau2)
 
 if dhcp_starvation == 'True' :
   rapport_by_test("dhcp_starvation", tableau1)
