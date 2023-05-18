@@ -282,18 +282,21 @@ class MenuApp(MDApp):
             def mail_callback(*args):
                 name_file = os.path.basename(path)
                 def close_pass_dialog(*args):
+                    password = password_field.text
+                    f_zip_encrypt(name_file, password)
+                    f_send_mail(name_file)
                     pass_dialog.dismiss()
 
                 current_dir = os.path.dirname(os.path.abspath(__file__))
                 folder = os.path.join(current_dir, "data")
                 path_mail = os.path.expanduser(folder)
-                passwd = f_zip_encrypt(name_file)
-                f_send_mail(name_file)
+                password_field = MDTextField(size_hint=(0.8, None), pos_hint={"center_x": 0.5})
                 pass_dialog = MDDialog(
-                    title=f'Le mot de passe du fichier envoyer est : \n{passwd}\n\n Ce mot de passe ne sera plus accessible à la cloture de la popup',
+                    title=f'Entrez le mot de passe de chiffrement du rapport :',
                     type="custom",
+                    content_cls=password_field,
                     buttons=[
-                        MDFlatButton(text="Fermer la popup", on_release=close_pass_dialog),
+                        MDFlatButton(text="Envoyer", on_release=close_pass_dialog),
                     ],
                 )
                 pass_dialog.open()
