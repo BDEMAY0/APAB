@@ -19,8 +19,8 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.button import MDFlatButton
 import shutil
-from data.zip_password import f_zip_encrypt
-from data.send_mail import f_send_mail
+from data.Package_Mail.zip_password import f_zip_encrypt
+from data.Package_Mail.send_mail import f_send_mail
 
 Window.keyboard_anim_args = {"d":.2,"t":"linear"}
 Config.set('kivy','keyboard_mode','dock')
