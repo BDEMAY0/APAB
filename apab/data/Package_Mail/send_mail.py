@@ -15,7 +15,7 @@ def f_send_mail(name_file):
             if key == "mail_entreprise":
                 mail = value.replace(" ", "")
             elif key == "niveau_diffusion":
-                niveau_diffusion = value.replace(" ", "")
+                niveau_diffusion = value.replace(" ", " ")
 
     SMTP_SERVER = "smtp.gmail.com"
     SMTP_PORT = 587
