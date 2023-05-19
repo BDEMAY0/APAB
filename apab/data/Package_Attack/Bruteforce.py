@@ -26,7 +26,8 @@ class Bruteforce_ssh:
                     return result
 
         if not self.found:
-            return f"Bruteforce failed for {self.ip_address}"
+            #return s'il trouve rien
+            return self.ip_address, ""
 
     # Méthode pour essayer un couple identifiant/mot de passe
     def _bruteforce(self, username, password):
@@ -36,7 +37,8 @@ class Bruteforce_ssh:
         try:
             self.ssh.connect(self.ip_address, username=username, password=password, timeout=10)
             self.found = True
-            return f"Found credentials for {self.ip_address}: {username}/{password}"
+            #return si l'attaque a réussi
+            return self.ip_address, username
         except:
             pass
         finally:
