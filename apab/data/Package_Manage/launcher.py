@@ -11,7 +11,7 @@ from Package_Attack.SMBScanner import SMBScanner
 from Package_Attack.STPAttack import STPAttack
 from Package_Attack.CertificatHTTPS import CertificatHTTPS
 import threading
-
+import os
 
 
 """
@@ -38,10 +38,16 @@ interface = "eth0"
 def ssh_bf(parser):
     result_by_host = []
 
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Chemin relatif vers les fichiers usernames.txt et passwords.txt
+    usernames_path = os.path.join(current_dir, "..", "ressources", "ssh", "usernames.txt")
+    passwords_path = os.path.join(current_dir, "..", "ressources", "ssh", "passwords.txt")
+
     #Sous fonction permettant de faire du multithreading sur cette attaque. 
     def thread_bruteforce_ssh(host, port):
         if port["port_id"] == "22" or port["service_name"] == "ssh":
-            bf = Bruteforce_ssh(host.ip_address, 'ressources/ssh/usernames.txt', 'ressources/ssh/passwords.txt')
+            bf = Bruteforce_ssh(host.ip_address, usernames_path, passwords_path)
             hote, username  = bf.start()
             result_by_host.append((hote, username))
 
