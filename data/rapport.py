@@ -24,6 +24,10 @@ with open(path_options, "r") as f:
             niveau_diffusion = value
         elif key == "nom_entreprise":
             nom_entreprise = value.replace(" ", "_")
+        elif key == "ip":
+            ip = value.replace(" ", "")
+        elif key == "masque_sous_reseau":
+            masque_sous_reseau = value.replace(" ", "")
 
 # Obtenir l'horodatage actuel
 timestamp = time.strftime("%Y%m%d_%H%M%S", time.localtime())
@@ -35,7 +39,16 @@ doc = BaseDocTemplate(output_file, pagesize=letter)
 # Styles de paragraphe
 styles = getSampleStyleSheet()
 header_style = styles['Heading1']
-subheader_style = styles['Heading2']
+subheader_style = ParagraphStyle(
+    name='SubtitleStyle',
+    parent=getSampleStyleSheet()['Heading2'],
+    textColor=colors.white,
+    fontSize=14,
+    leftIndent=0, 
+    bulletIndent=20,
+    borderColor=colors.HexColor("#003366"),  
+    backColor=colors.HexColor("#003366"),  #
+)
 normal_style = styles['Normal']
 
 today = date.today()
@@ -107,9 +120,9 @@ introduction = Paragraph(f'<b>Objet du document :</b><BR/><BR/>\
      Ce document présente les différents résultats obtenus par les auditeurs lors du test d’intrusion et leurs recommandations de remédiation. <BR/><BR/>\
      Le travail de l’équipe d’audit essaye d’être le plus exhaustif possible, mais ne peut pas garantir la détection de toutes les vulnérabilités présentes sur le périmètre.<BR/><BR/><BR/>\
   <b>Contexte et périmètre de l’audit : </b><BR/><BR/>\
-     L’audit a été mené depuis les locaux de{nom_entreprise.replace("_", " ")}, entre le JJ/MM/AAAA et le JJ/MM/AAAA.<BR/><BR/> \
+     L’audit a été mené depuis les locaux de{nom_entreprise.replace("_", " ")} le {auj}.<BR/><BR/> \
      L’audit a été effectuée avec une approche boite noire|boite grise|boite blanche, c’est-à-dire que les auditeurs disposaient (ou non) de compte d’accès sur l’application, du code source, etc.<BR/><BR/> \
-     L’audit portait sur le périmètre suivant : URL , IP, domaine…<BR/> \
+     L’audit portait sur le périmètre suivant : {ip} {masque_sous_reseau}<BR/> \
 ', normal_style)
 elements.extend([introduction, PageBreak()])
 
@@ -143,20 +156,18 @@ table_synth_vuln.setStyle(TableStyle([
 elements.extend([table_synth_vuln, PageBreak()])
 
 #Tableau qui liste toutes les ressources de l'entreprise
-ressourcestitle = Paragraph("Phase de découverte :", subheader_style)
+ressourcestitle = Paragraph("Phase de découverte :", header_style)
 elements.append(ressourcestitle)
 bruteforce= Paragraph("Voici une liste des ressources identifiées de votre entreprise.")
 elements.extend([bruteforce, Spacer(1, 0.5 * 50)])
 
-data_ressources = [
-    ["#", "Hostname", "IP", "Port", "Service"]
-]
 
-def parse_json_result(file_path):
-    with open(file_path, "r") as file:
+def parse_result():
+    with open("ressources/rapport/result.json", "r") as file:
         data = json.load(file)
 
         index = 1
+        data_ressources = [["#", "Hostname", "IP", "Port", "Service"]]
         for ip_address, host_data in data.items():
             hostname = host_data["hostname"]
             ports = host_data["ports"]
@@ -172,10 +183,9 @@ def parse_json_result(file_path):
             else:
                 data_ressources.append([index, hostname, ip_address, "N/A", "N/A"])
                 index += 1
+    return data_ressources
 
-# Usage: Specify the path to the JSON file
-json_file_path = "ressources/rapport/result.json"
-parse_json_result(json_file_path)
+data_ressources = parse_result()
   
 table_ressources = Table(data_ressources)
   
@@ -193,28 +203,39 @@ table_ressources.setStyle(TableStyle([
   
 elements.extend([table_ressources, PageBreak()])
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-folder = os.path.join(current_dir, "ressources", "parametres", "pentest.txt")
-path_options = os.path.expanduser(folder)
-with open(path_options, "r") as f:
-    for line in f:
-        key, value = line.strip().split(" :")
-        if key == "entete_web":
-            entete_web = value.replace(" ", "")
-        elif key == "cve":
-            CVE = value.replace(" ", "")
-        elif key == "ssh_bf":
-            bruteforcessh = value.replace(" ", "")
-        elif key == "share_folder":
-            share_folder = value.replace(" ", "")
-        elif key == "dos":
-            dos = value.replace(" ", "")
-        elif key == "dhcp_starvation":
-            dhcp_starvation = value.replace(" ", "")
-        elif key == "wifi":
-            wifi = value.replace(" ", "")
-        elif key == "check_tls":
-            check_tls = value.replace(" ", "")
+def retreive_test():
+  current_dir = os.path.dirname(os.path.abspath(__file__))
+  folder = os.path.join(current_dir, "ressources", "parametres", "pentest.txt")
+  path_options = os.path.expanduser(folder)
+  with open(path_options, "r") as f:
+      for line in f:
+          key, value = line.strip().split(" :")
+          if key == "entete_web":
+              entete_web = value.replace(" ", "")
+          elif key == "cve":
+              cve = value.replace(" ", "")
+          elif key == "ssh_bf":
+              ssh_bf = value.replace(" ", "")
+          elif key == "share_folder":
+              share_folder = value.replace(" ", "")
+          elif key == "dos":
+              dos = value.replace(" ", "")
+          elif key == "dhcp_starvation":
+              dhcp_starvation = value.replace(" ", "")
+          elif key == "wifi":
+              wifi = value.replace(" ", "")
+          elif key == "check_tls":
+              check_tls = value.replace(" ", "")
+  options = []   
+  options.append({"ssh_bf": ssh_bf})
+  options.append({"entete_web": entete_web})
+  options.append({"cve": cve})
+  options.append({"share_folder": share_folder})
+  options.append({"dos": dos})
+  options.append({"dhcp_starvation": dhcp_starvation})
+  options.append({"wifi": wifi})
+  options.append({"check_tls": check_tls})
+  return options
 
 vuln_i = 1
 
@@ -249,7 +270,7 @@ def rapport_by_test(test, data_result):
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, 0), 14),
+        ('FONTSIZE', (0, 0), (-1, 0), 12),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
         ('GRID', (0, 0), (-1, -1), 1, colors.black)
@@ -263,58 +284,113 @@ def rapport_by_test(test, data_result):
     elements.extend([reco, PageBreak()])
     vuln_i = vuln_i + 1
 
+def rapport_by_test_not_vulnerable(test):
+    global vuln_i
+    
+    with open('ressources/rapport/texte.json') as json_file:
+        data = json.load(json_file)
+      
+    title = Paragraph(f'Vulnérabilité {vuln_i} : {data[test]["titre"]}  <BR/><BR/>', subheader_style)
+    elements.append(title)
+    
+    # Description de l'attaque
+    desc = Paragraph(f'<b>Description :</b><BR/><BR/>\
+         {data[test]["description"]} <BR/><BR/>\
+      ', normal_style)
+    elements.extend([desc, Spacer(1, 0.5 * 50)])
+    
+    # Constat de l'attaque
+    const = Paragraph(f'<b>Constat :</b><BR/><BR/>\
+         {data["no_result"]["constat"]} <BR/><BR/>\
+      ', normal_style)
+    elements.extend([const, PageBreak()])
+    vuln_i = vuln_i + 1
+
 def create_tableau(test):
-    # Ouvrir le fichier JSON et le charger en tant que dictionnaire
-    with open('ressources/rapport/test.json') as f:
+    details_table = [["Host"]]
+    with open('ressources/rapport/jsonfinal.json') as f:
         data = json.load(f)
 
-    # Initialiser une liste vide pour stocker les données recréées
-    tableau = []
+    for attack in data:
+        if attack["attack_name"] == test:
+            for host in attack["hosts"]:
+                ip_address = host["ip_address"]
 
-    # Vérifier si les données pour le test spécifié existent
-    if test in data:
-        # Obtenir les clés du premier objet Hosts, qui serviront d'en-têtes de colonnes
-        headers = ['#'] + list(data[test]['Hosts'][0].keys())
-        # Ajouter les en-têtes à la liste tableau
-        tableau.append(headers)
+                row =  [ip_address]
+                details_table.append(row)
+              
+    return details_table
 
-        # Parcourir la liste d'hôtes et ajouter chaque élément au tableau
-        for i, host_obj in enumerate(data[test]['Hosts'], start=1):
-            row = [i] + [host_obj[key] for key in headers[1:]]
-            tableau.append(row)
+def tableau_entete_web():
+    details_table = [["Host", "Server", "X-Powered-By", "X-AspNet-Version", "Access-Control-Allow-Origin"]]
+    with open('ressources/rapport/jsonfinal.json') as f:
+        data = json.load(f)
 
-    return tableau
+    for attack in data:
+        if attack["attack_name"] == "entete_web":
+            for host in attack["hosts"]:
+                ip_address = host["ip_address"]
+                details = host["details"][0] if host["details"] else {}
+                server = details.get("Server", "")
+                powered_by = details.get("X-Powered-By", "")
+                aspnet_version = details.get("X-AspNet-Version", "")
+                access_control = details.get("Access-Control-Allow-Origin", "")
 
-tableau1 = create_tableau('test1')
-tableau2 = create_tableau('test2')
+                row =  [ip_address] + [server] + [powered_by] + [aspnet_version] + [access_control]
+                details_table.append(row)
+              
+    return details_table
 
-with open('ressources/rapport/texte.json') as f:
-    data = json.load(f)
+def tableau_CVE():
+    details_table = [["Host", "CVE", "Score CVSS", "Produit", "Version"]]
+    with open('ressources/rapport/jsonfinal.json') as f:
+        data = json.load(f)
+
+    for attack in data:
+        if attack["attack_name"] == "cve":
+            for host in attack["hosts"]:
+                ip_address = host["ip_address"]
+                details = host["details"][0] if host["details"] else {}
+                CVE = details.get("id", "")
+                cvss_score = details.get("cvss_score", "")
+                product = details.get("product", "")
+                version = details.get("version", "")
+
+                row =  [ip_address] + [CVE] + [cvss_score] + [product] + [version]
+                details_table.append(row)
+              
+    return details_table
+
+def get_attack_success(attack_name):
+    with open('ressources/rapport/jsonfinal.json') as f:
+        data = json.load(f)
     
-if bruteforcessh == 'True':
-  rapport_by_test("ssh_bf", tableau1)
+    success = None  # Définir une valeur par défaut au cas où aucune correspondance n'est trouvée
+    
+    for item in data:
+        if item['attack_name'] == attack_name:
+            success = item['success']
+            break  # Sortir de la boucle une fois que la correspondance est trouvée
+    
+    return success
 
-if CVE == 'True' :
-  rapport_by_test("cve", tableau2)
 
-if entete_web == 'True' :
-  rapport_by_test("entete_web", tableau1)
-  
-if share_folder == 'True':
-  rapport_by_test("share_folder", tableau1)
+def print_final():
+  options = retreive_test()
+  for option in options:
+    for key, value in option.items():
+      if value == 'True' and get_attack_success(key) is True:
+        if key == "cve":
+          tableau = tableau_CVE()
+        elif key == "entete_web":
+          tableau = tableau_entete_web()
+        elif key != "cve" or "entete_web":
+          tableau = create_tableau(key)
+        rapport_by_test(key, tableau)
+      elif value == 'True' and get_attack_success(key) is False: 
+        rapport_by_test_not_vulnerable(key)
 
-if dos == 'True' :
-  rapport_by_test("dos", tableau2)
-
-if dhcp_starvation == 'True' :
-  rapport_by_test("dhcp_starvation", tableau1)
-
-if wifi == 'True' :
-  rapport_by_test("wifi", tableau1)
-
-if check_tls == 'True' :
-  rapport_by_test("check_tls", tableau1)
-
+print_final()
 
 # Construction du document PDF
 doc.build(elements)
