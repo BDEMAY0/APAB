@@ -46,6 +46,7 @@ subheader_style = ParagraphStyle(
     fontSize=14,
     leftIndent=0, 
     bulletIndent=20,
+    border=0.5,
     borderColor=colors.HexColor("#003366"),  
     backColor=colors.HexColor("#003366"),  #
 )
@@ -246,11 +247,11 @@ def rapport_by_test(test, data_result):
     with open('ressources/rapport/texte.json') as json_file:
         data = json.load(json_file)
 
-    title = Paragraph(f'Vulnérabilité {vuln_i} : {data[test]["titre"]}  <BR/><BR/>', subheader_style)
+    title = Paragraph(f'Vulnérabilité {vuln_i} : {data[test]["titre"]} ', subheader_style)
     elements.append(title)
     
     # Description de l'attaque
-    desc = Paragraph(f'<b>Description :</b><BR/><BR/>\
+    desc = Paragraph(f'<BR/><b>Description :</b><BR/><BR/>\
          {data[test]["description"]} <BR/><BR/>\
       ', normal_style)
     elements.extend([desc, Spacer(1, 0.5 * 50)])
@@ -290,11 +291,11 @@ def rapport_by_test_not_vulnerable(test):
     with open('ressources/rapport/texte.json') as json_file:
         data = json.load(json_file)
       
-    title = Paragraph(f'Vulnérabilité {vuln_i} : {data[test]["titre"]}  <BR/><BR/>', subheader_style)
+    title = Paragraph(f'Vulnérabilité {vuln_i} : {data[test]["titre"]} ', subheader_style)
     elements.append(title)
     
     # Description de l'attaque
-    desc = Paragraph(f'<b>Description :</b><BR/><BR/>\
+    desc = Paragraph(f'<BR/><b>Description :</b><BR/><BR/>\
          {data[test]["description"]} <BR/><BR/>\
       ', normal_style)
     elements.extend([desc, Spacer(1, 0.5 * 50)])
