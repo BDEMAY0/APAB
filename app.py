@@ -21,6 +21,7 @@ from kivymd.uix.button import MDFlatButton
 import shutil
 from data.Package_Mail.zip_password import f_zip_encrypt
 from data.Package_Mail.send_mail import f_send_mail
+import netifaces as ni
 
 Window.keyboard_anim_args = {"d":.2,"t":"linear"}
 Config.set('kivy','keyboard_mode','dock')
@@ -38,7 +39,36 @@ class Option(Screen):
         folder = os.path.join(current_dir, "data", "ressources", "parametres", "options.txt")
         path = os.path.expanduser(folder)
         with open(path, "w") as file:
+            ip_info = ni.ifaddresses('eth0')
+            ip_address = ip_info[ni.AF_INET][0]['addr']
+            subnet_mask = ip_info[ni.AF_INET][0]['netmask']
+            default_gateway = ni.gateways()['default'][ni.AF_INET][0]
             for option in options:
+                if name[i] == "ip":
+                    tmp = option.text
+                if name[i] == "masque_sous_reseau" and option.text == "" and tmp != "0.0.0.0":
+                    option.text = "24"
+                if name[i] == "gateway" and option.text == "" and tmp != "0.0.0.0":
+                    try:
+                        cut = tmp.strip().split(".")
+                        for z in range(3):
+                            option.text += cut[z] + "."
+                        option.text += "1"
+                    except:
+                        pass
+                if name[i] == "ip" and option.text == "0.0.0.0":
+                    try:
+                        cut = ip_address.strip().split(".")
+                        option.text = ''
+                        for z in range(3):
+                            option.text += cut[z] + "."
+                        option.text += "0"
+                    except:
+                        pass
+                if name[i] == "masque_sous_reseau" and option.text == "" and tmp == "0.0.0.0":
+                    option.text = str(sum([bin(int(x)).count('1') for x in subnet_mask.split('.')]))
+                if name[i] == "gateway" and option.text == "" and tmp == "0.0.0.0":
+                    option.text = default_gateway
                 file.write(f"{name[i]} : {option.text}\n")
                 i= i+1
             file.close()
@@ -287,19 +317,38 @@ class MenuApp(MDApp):
                     f_send_mail(name_file)
                     pass_dialog.dismiss()
 
+                def close_field_dialog(*args):
+                    field_dialog.dismiss()
+
                 current_dir = os.path.dirname(os.path.abspath(__file__))
-                folder = os.path.join(current_dir, "data")
-                path_mail = os.path.expanduser(folder)
-                password_field = MDTextField(size_hint=(0.8, None), pos_hint={"center_x": 0.5})
-                pass_dialog = MDDialog(
-                    title=f'Entrez le mot de passe de chiffrement du rapport :',
-                    type="custom",
-                    content_cls=password_field,
-                    buttons=[
-                        MDFlatButton(text="Envoyer", on_release=close_pass_dialog),
-                    ],
-                )
-                pass_dialog.open()
+                folder = os.path.join(current_dir, "data", "ressources", "parametres", "options.txt")
+                path_options = os.path.expanduser(folder)
+                with open(path_options, "r") as f:
+                    for line in f:
+                        key, value = line.strip().split(" :")
+                        if key == "mail_entreprise" and value != "":
+                            password_field = MDTextField(size_hint=(0.8, None), pos_hint={"center_x": 0.5})
+                            pass_dialog = MDDialog(
+                                title=f'Entrez le mot de passe de chiffrement du rapport :',
+                                type="custom",
+                                content_cls=password_field,
+                                buttons=[
+                                    MDFlatButton(text="Envoyer", on_release=close_pass_dialog),
+                                ],
+                            )
+                            pass_dialog.open()
+                            break
+                        elif key == "mail_entreprise" and value == "":
+                            field_dialog = MDDialog(
+                                title=f'Pas de mail renseigner',
+                                type="custom",
+                                buttons=[
+                                    MDFlatButton(text="Fermer", on_release=close_field_dialog),
+                                ],
+                            )
+                            field_dialog.open()
+                            break
+                
 
 
             self.file_menu = MDDropdownMenu(
@@ -308,8 +357,8 @@ class MenuApp(MDApp):
                     {"viewclass": "OneLineListItem", "text": "Ouvrir", "on_release": open_callback},
                     {"viewclass": "OneLineListItem", "text": "Renommer", "on_release": rename_callback},
                     {"viewclass": "OneLineListItem", "text": "Supprimer", "on_release": delete_callback},
-                    {"viewclass": "OneLineListItem", "text": "Extraire", "on_release": extract_callback},   
-                    {"viewclass": "OneLineListItem", "text": "Mail", "on_release": mail_callback},      
+                    {"viewclass": "OneLineListItem", "text": "Extraire disque externe", "on_release": extract_callback},   
+                    {"viewclass": "OneLineListItem", "text": "Extraire mail", "on_release": mail_callback},      
                 ],
                 position='bottom',
                 width_mult=4,
@@ -326,6 +375,8 @@ class MenuApp(MDApp):
             reset_dialog.dismiss()
 
         def reset(*args):
+            with open('/etc/dhcpcd.conf', 'r') as f:
+                lines = f.readlines()
             with open('/etc/dhcpcd.conf', 'w') as f:
                 for line in lines:
                     if f'interface eth0' in line:

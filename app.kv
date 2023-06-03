@@ -61,6 +61,14 @@ ScreenManagement:
             adaptive_height: True
             padding: dp(100)
             spacing: dp(75)
+            MDLabel:
+                text: "Choix des tests"
+                halign: "center"
+                pos_hint: {"center_x": .5}
+            MDLabel:
+                text: "Test système"
+                halign: "center"
+                pos_hint: {"center_x": .5}
             MDGridLayout:
                 cols: 2
                 height: 15
@@ -105,6 +113,10 @@ ScreenManagement:
                     color_active: "white"
                     size: "48dp", "48dp"
                     id: share_folder
+            MDLabel:
+                text: "Test réseau"
+                halign: "center"
+                pos_hint: {"center_x": .5}
             MDGridLayout:
                 cols: 2
                 height: 15
@@ -197,13 +209,18 @@ ScreenManagement:
             orientation: "vertical"
             adaptive_height: True
             padding: dp(100)
-            spacing: dp(75)
+            spacing: dp(80)
+            MDLabel:
+                text: "Configuration réseau pentest"
+                halign: "center"
+                pos_hint: {"center_x": .5}
             MDBoxLayout:
                 MDTextField:
                     font_size: "18sp"
                     line_color_normal: 1,1,1
                     hint_text_color_normal: 1,1,1
                     hint_text: "Nom de l’entreprise:"
+                    required: True
                     id: nom_entreprise
             MDBoxLayout:
                 MDTextField:
@@ -218,6 +235,7 @@ ScreenManagement:
                     line_color_normal: 1,1,1
                     hint_text_color_normal: 1,1,1
                     hint_text: 'Niveau de diffusion:'
+                    required: True
                     id: niveau_diffusion
                     on_focus: if self.focus: root.drop(self)
             MDBoxLayout:
@@ -225,9 +243,10 @@ ScreenManagement:
                     font_size: "18sp"
                     line_color_normal: 1,1,1
                     hint_text_color_normal: 1,1,1
-                    hint_text: 'IP réseau à tester:'
+                    hint_text: 'IP réseau à pentester:'
                     id: ip
-                    helper_text: "Ip du réseau à pentest"
+                    required: True
+                    helper_text: "0.0.0.0 test du réseau du boitier"
                     helper_text_mode: "persistent"
             MDBoxLayout:
                 MDTextField:
@@ -235,7 +254,7 @@ ScreenManagement:
                     line_color_normal: 1,1,1
                     hint_text_color_normal: 1,1,1
                     hint_text: 'Masque de sous-réseau:'
-                    helper_text: "Masque au format ex : 24"
+                    helper_text: "Masque au format ex : 24, vide si ip 0.0.0.0"
                     helper_text_mode: "persistent"
                     id: masque_sous_reseau
             MDBoxLayout:
@@ -244,6 +263,8 @@ ScreenManagement:
                     line_color_normal: 1,1,1
                     hint_text_color_normal: 1,1,1
                     hint_text: 'Passerelle:'
+                    helper_text: "Vide si ip 0.0.0.0"
+                    helper_text_mode: "persistent"
                     id: gateway
             BoxLayout:
                 MDTextField:
@@ -252,11 +273,12 @@ ScreenManagement:
                     hint_text_color_normal: 1,1,1
                     hint_text: 'IP exclu des tests:'
                     id: ip_ex
-                    helper_text: "Pour selectionner une range d'IP ex: 192.168.0.1-10"
+                    helper_text: "Ex: 192.168.0.1-10, 192.168.0.45, 192.168.0.56"
                     helper_text_mode: "persistent"
             MDBoxLayout:
                 orientation: 'vertical'
                 MDFillRoundFlatButton:
+                    disabled: True if ip.text == '' or nom_entreprise.text == '' or niveau_diffusion.text == '' else False
                     pos_hint: {'center_x': .5, 'center_y': .5}
                     text: 'Suivant'
                     font_size: "24sp"
@@ -280,6 +302,10 @@ ScreenManagement:
             adaptive_height: True
             padding: dp(100)
             spacing: dp(75)
+            MDLabel:
+                text: "Configuration IP boitier"
+                halign: "center"
+                pos_hint: {"center_x": .5}
             MDGridLayout:
                 cols: 2
                 height: 50
