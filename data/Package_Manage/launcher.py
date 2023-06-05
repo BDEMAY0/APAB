@@ -3,7 +3,7 @@ from Package_Attack.CVE import CVEWorker
 from Package_Attack.CVE import CVEHandler
 from Package_Attack.Bruteforce import Bruteforce_ssh
 from Package_Attack.MacFlooding import MacFlooding
-from Package_Attack.DhcpStarvation import DhcpStarvation
+from Package_Attack.DhcpStarvation import lancheur_starv
 from Package_Export.CVE_Export import CVE_Export
 from Package_Export.ManageExport import ManageExport
 from Package_Export.EnteteWeb_Export import EnteteWeb_Export
@@ -53,15 +53,14 @@ def ssh_bf(parser):
 
     def export_ssh():
         ssh_report = ManageExport("Bruteforce SSH")
-        has_password_ssh = False  # Variable pour vérifier si des informations cve_info sont présentes
-
-        for result in result_by_host:
-            ip_address, username = result
-            if username:
-                # Si cve_info est présent pour un hôte, on met à jour le statut de la vulnérabilité à True
-                ssh_report.success = True  
+        if result_by_host:
+            for result in result_by_host:
+                ip_address, username = result
+                if username:
+                    # Si cve_info est présent pour un hôte, on met à jour le statut de la vulnérabilité à True
+                    ssh_report.success = True  
             
-            ssh_report.add_host(ip_address, username)
+                ssh_report.add_host(ip_address, username)
 
     # Création de listes pour stocker les threads
     ssh_threads = []
@@ -198,16 +197,22 @@ def mac_flooding(parser):
 
     mac_flooding = MacFlooding(interface, num_packets, num_threads)
     attack_succes = mac_flooding.run()
+    macflood_report = ManageExport("Mac Flooding")
+    if attack_succes:
+        macflood_report.success = True
     
     
 def dhcp_starvation(parser):
     #Fonction pour lancer l'attaque de DHCP starvation sur les serveurs DHCP
-    num_requests = 10000 # Nombre de demandes DHCP à envoyer
-    num_threads = 100 # Nombre de threads à utiliser pour envoyer les demandes DHCP
-    dhcp_starvation = DhcpStarvation(interface, num_requests, num_threads)
-    dhcp_starvation.run_attack()
-    attack_succes = dhcp_starvation.check_dhcp_failure(timeout=10)
-  
+    num_requests = 1000 # Nombre de demandes DHCP à envoyer
+    dhcp_starvation_success = lancheur_starv(interface, num_requests)
+    dhcpstarv_report = ManageExport("DHCP Starvation")
+    print(dhcp_starvation_success)
+    if dhcp_starvation_success:
+        print("caca")
+        dhcpstarv_report.success = True 
+        print("caca21")  
+
         
 def stp_attack(parser):
     attack = STPAttack(interface=interface, num_packets=1000, priority=0)
