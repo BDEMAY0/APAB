@@ -27,7 +27,7 @@ class ManageExport:
             }
             attacks_json.append(attack_json)
 
-        directory = "data/ressources/rapport"
+        directory = os.path.join("..", "data", "ressources", "rapport")
         os.makedirs(directory, exist_ok=True)
         filepath = os.path.join(directory, filename)
 
