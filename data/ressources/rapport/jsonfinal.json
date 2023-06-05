@@ -1,0 +1,113 @@
+[
+  {
+    "attack_name": "entete_web",
+    "success": true,
+    "hosts": [
+      {
+        "ip_address": "10.0.0.37",
+        "details": [
+          {
+            "Server": "nginx/1.22.1",
+            "X-Powered-By": "Some value",
+            "X-AspNet-Version": "Some version",
+            "Access-Control-Allow-Origin": "*"
+          }
+        ]
+      },
+      {
+        "ip_address": "10.0.0.33",
+        "details": [
+          {
+            "Server": "",
+            "X-Powered-By": "",
+            "X-AspNet-Version": "",
+            "Access-Control-Allow-Origin": ""
+          }
+        ]
+      },
+      {
+        "ip_address": "10.0.0.34",
+        "details": [
+          {
+            "Server": "",
+            "X-Powered-By": "",
+            "X-AspNet-Version": "",
+            "Access-Control-Allow-Origin": ""
+          }
+        ]
+      }
+    ]
+  },
+ {
+    "attack_name": "cve",
+    "success": true,
+    "hosts": [
+      {
+        "ip_address": "192.168.74.242",
+        "details": [
+          {
+            "id": "CVE-2008-2392",
+            "cvss_score": 9.0,
+            "product": "dnsmasq",
+            "version": "2.51"
+          },
+          {
+            "id": "CVE-2007-0539",
+            "cvss_score": 7.8,
+            "product": "dnsmasq",
+            "version": "2.51"
+          },
+          {
+            "id": "CVE-2005-2108",
+            "cvss_score": 7.5,
+            "product": "dnsmasq",
+            "version": "2.51"
+          }
+        ]
+      },
+      {
+        "ip_address": "192.168.74.245",
+        "details": [
+          {
+            "id": "CVE-2018-1312",
+            "cvss_score": 9.8,
+            "product": "Apache httpd",
+            "version": "2.4.29"
+          },
+          {
+            "id": "CVE-2021-26691",
+            "cvss_score": 9.8,
+            "product": "Apache httpd",
+            "version": "2.4.29"
+          },
+          {
+            "id": "CVE-2021-39275",
+            "cvss_score": 9.8,
+            "product": "Apache httpd",
+            "version": "2.4.29"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "attack_name": "ssh_bf",
+    "success": true,
+    "hosts": [
+      {
+        "ip_address": "10.0.0.34",
+        "details": "pi"
+      }
+    ]
+  },
+  {
+    "attack_name": "TLS",
+    "success": false,
+    "hosts": [
+      {
+        "ip_address": "10.0.0.37",
+        "details": []
+      }
+    ]
+  }
+]
