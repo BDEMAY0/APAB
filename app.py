@@ -162,7 +162,6 @@ class PentestScreen(Screen):
             except:
                 self.message_queue.put("finished")
                 self.stop_event.set()
-                print("Error file not found ...")
 
 class Configuration(Screen):
     
