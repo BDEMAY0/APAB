@@ -12,6 +12,7 @@ from Package_Attack.STPAttack import STPAttack
 from Package_Attack.CertificatHTTPS import CertificatHTTPS
 import threading
 import os
+import json
 
 
 """
@@ -52,7 +53,7 @@ def ssh_bf(parser):
             result_by_host.append((hote, username))
 
     def export_ssh():
-        ssh_report = ManageExport("Bruteforce SSH")
+        ssh_report = ManageExport("ssh_bf")
         if result_by_host:
             for result in result_by_host:
                 ip_address, username = result
@@ -86,7 +87,7 @@ def cve(parser):
         result_by_host.append(result_hote)
 
     def export_cve():
-        cve_report = CVE_Export("CVE")
+        cve_report = CVE_Export("cve")
         cve_info = []
         host_ip = ""
         product = ""
@@ -131,7 +132,7 @@ def entete_web(parser):
             result_by_host.append((ip, server, xPoweredBy, xAspNetVersion, accessControlAllowOrigin))
 
     def export_entete():
-        entete_report = EnteteWeb_Export("Entete Web")
+        entete_report = EnteteWeb_Export("entete_web")
         for result in result_by_host:
             ip, server, xPoweredBy, xAspNetVersion, accessControlAllowOrigin = result
             if server or xPoweredBy or xAspNetVersion or accessControlAllowOrigin :
@@ -159,7 +160,7 @@ def check_tls(parser):
     result_by_host = []
 
     def export_tls():
-        tls_report = ManageExport("TLS")
+        tls_report = ManageExport("check_tls")
         for result in result_by_host:
             ip_address, protocole = result
             if protocole:
@@ -197,7 +198,7 @@ def mac_flooding(parser):
 
     mac_flooding = MacFlooding(interface, num_packets, num_threads)
     attack_succes = mac_flooding.run()
-    macflood_report = ManageExport("Mac Flooding")
+    macflood_report = ManageExport("mac_flooding")
     if attack_succes:
         macflood_report.success = True
     
@@ -206,12 +207,10 @@ def dhcp_starvation(parser):
     #Fonction pour lancer l'attaque de DHCP starvation sur les serveurs DHCP
     num_requests = 1000 # Nombre de demandes DHCP à envoyer
     dhcp_starvation_success = lancheur_starv(interface, num_requests)
-    dhcpstarv_report = ManageExport("DHCP Starvation")
+    dhcpstarv_report = ManageExport("dhcp_starvation")
     print(dhcp_starvation_success)
     if dhcp_starvation_success:
-        print("caca")
         dhcpstarv_report.success = True 
-        print("caca21")  
 
         
 def stp_attack(parser):
@@ -228,37 +227,75 @@ def stp_attack(parser):
 def audit(parser):    
     test=""
     #Sous fonction permettant de savoir si un service http est ouvert
-    def web_vuln(host):
-        
+    def web_vuln(host, web_report):
         for port in host.ports:
             if port["port_id"] == "80" or port["service_name"] == "http":
-                test = "HTTP Vulnerability", f"Host: {host.ip_address} Port: {port['port_id']}", True, ""
+                web_report.success = True
+                web_report.add_host(host.ip_address)
 
     #Sous fonction permettant de savoir si un service netbios est ouvert
-    def netbios_vuln(host):
+    def netbios_vuln(host, netbios_report):
         for port in host.ports:
             if port["port_id"] == "139" or port["service_name"] == "netbios-ssn":
-                test = "NetBIOS Vulnerability", f"Host: {host.ip_address} Port: {port['port_id']}", True, ""
+                netbios_report.success = True
+                netbios_report.add_host(host.ip_address)
     
     #Sous fonction permettant de savoir si un service dispose de sa banniere
-    def banner_vuln(host):
+    def banner_vuln(host, banner_report):
         for port in host.ports:
             if port["version"] != "N/A":
-                test = "Banner Vulnerability", f"Host: {host.ip_address} Port: {port['port_id']}", True, f"""Voici la bannière du service : {port["version"]}"""
+                banner_report.success = True
+                banner_report.add_host(host.ip_address, [port["service_name"], port["version"]])
+
+
+    web_report = ManageExport("web_vuln")
+    netbios_report = ManageExport("netbios_vuln")
+    banner_report = ManageExport("banner_vuln")
+
+    #####
+    # Export d'un fichier JSON pour la partie reconnaissance du rapport
+    #####
 
     for host in parser.host_info_list:
-        web_vuln(host)
-        netbios_vuln(host)
-        banner_vuln(host)
+        web_vuln(host, web_report)
+        netbios_vuln(host, netbios_report)
+        banner_vuln(host, banner_report)
+    host_dicts = []
+    for host in parser.host_info_list:
+        host_dict = host_to_dict(host)
+        host_dicts.append(host_dict)
 
-        
-        
+    # Fusion des dictionnaires d'hôtes en un seul dictionnaire
+    combined_dict = {k: v for d in host_dicts for k, v in d.items()}
+
+    # Définir le chemin du fichier de sortie
+    output_dir = "ressources/rapport"
+    os.makedirs(output_dir, exist_ok=True)  # Crée le répertoire s'il n'existe pas déjà
+    output_file_path = os.path.join(output_dir, "result.json")
+
+    # Écrire le JSON dans un fichier
+    with open(output_file_path, "w") as output_file:
+        json.dump(combined_dict, output_file, indent=2)
+
+            
+def host_to_dict(host):
+    host_dict = {
+        host.ip_address: {
+            "hostname": host.hostname,
+            "ports": []
+        }
+    }
+
+    for port in host.ports:
+        port_dict = {
+            "protocol": port["protocol"],
+            "port_id": port["port_id"],
+            "service_name": port["service_name"],
+            "product": port["product"],
+            "version": port.get("version", "N/A"),  # Si aucune version n'est spécifiée, utilisez "N/A"
+        }
+        host_dict[host.ip_address]["ports"].append(port_dict)
+
+    return host_dict   
            
-         
-
-
-
-
-
-
-
+      
