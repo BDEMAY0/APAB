@@ -180,11 +180,23 @@ def check_tls(parser):
 
 #Fonction permettant de savoir si des dossiers sont ouverts en tant qu'anonyme
 def smb_scanner(parser):
+    result_by_host = []
+
+    def export_smb_scanner():
+        smb_report = ManageExport("smb_scanner")
+        for result in result_by_host:
+            ip_address, success, folders = result
+            if success:
+                smb_report.add_host(ip_address, folders)
+                smb_report.success = success
+
     for host in parser.host_info_list:
         for port in host.ports:
             if port["port_id"] == "445":
                 smb = SMBScanner(host.ip_address)
-                attack_success = smb.manager()  
+                attack_success, folders = smb.manager()
+                result_by_host.append((host.ip_address, attack_success, folders))
+        export_smb_scanner() 
 
     
 ###############################################################
