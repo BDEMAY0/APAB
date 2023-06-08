@@ -196,7 +196,7 @@ def smb_scanner(parser):
                 smb = SMBScanner(host.ip_address)
                 attack_success, folders = smb.manager()
                 result_by_host.append((host.ip_address, attack_success, folders))
-        export_smb_scanner() 
+    export_smb_scanner() 
 
     
 ###############################################################
