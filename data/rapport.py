@@ -18,6 +18,16 @@ elements = []
 # Styles de paragraphe
 styles = getSampleStyleSheet()
 header_style = styles['Heading1']
+header_style2 = ParagraphStyle(
+    name='SubtitleStyle',
+    parent=getSampleStyleSheet()['Heading1'],
+    textColor=colors.white,
+    leftIndent=0, 
+    bulletIndent=20,
+    border=0.5,
+    borderColor=colors.HexColor("#003366"),  
+    backColor=colors.HexColor("#003366"),  #
+)
 subheader_style = ParagraphStyle(
     name='SubtitleStyle',
     parent=getSampleStyleSheet()['Heading2'],
@@ -31,6 +41,16 @@ subheader_style = ParagraphStyle(
 )
 normal_style = styles['Normal']
 
+table_style = TableStyle([
+      ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#003366")),
+      ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+      ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+      ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+      ('FONTSIZE', (0, 0), (-1, 0), 14),
+      ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+      ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#c9daf5")),
+      ('GRID', (0, 0), (-1, -1), 1, colors.black)
+  ])
 #Fonctions 
 def parse_result():
     with open("ressources/rapport/result.json", "r") as file:
@@ -55,41 +75,91 @@ def parse_result():
                 index += 1
     return data_ressources
 
-def retreive_test():
-  current_dir = os.path.dirname(os.path.abspath(__file__))
-  folder = os.path.join(current_dir, "ressources", "parametres", "pentest.txt")
-  path_options = os.path.expanduser(folder)
-  with open(path_options, "r") as f:
-      for line in f:
-          key, value = line.strip().split(" :")
-          if key == "entete_web":
-              entete_web = value.replace(" ", "")
-          elif key == "cve":
-              cve = value.replace(" ", "")
-          elif key == "ssh_bf":
-              ssh_bf = value.replace(" ", "")
-          elif key == "share_folder":
-              share_folder = value.replace(" ", "")
-          elif key == "dos":
-              dos = value.replace(" ", "")
-          elif key == "dhcp_starvation":
-              dhcp_starvation = value.replace(" ", "")
-          elif key == "wifi":
-              wifi = value.replace(" ", "")
-          elif key == "check_tls":
-              check_tls = value.replace(" ", "")
-  options = []   
-  options.append({"ssh_bf": ssh_bf})
-  options.append({"entete_web": entete_web})
-  options.append({"cve": cve})
-  options.append({"share_folder": share_folder})
-  options.append({"dos": dos})
-  options.append({"dhcp_starvation": dhcp_starvation})
-  options.append({"wifi": wifi})
-  options.append({"check_tls": check_tls})
-  return options
+def scoring():
+    ip_counts = {}
+    scoring_count = 0
+    with open('ressources/rapport/jsonfinal.json') as f:
+      data = json.load(f)
 
-def rapport_by_test(test, data_result):
+    for item in data:
+        attack_name = item['attack_name']
+        hosts = item['hosts']
+        ip_addresses = [host['ip_address'] for host in hosts]
+        if attack_name == "entete_web":
+          ip_counts[attack_name] = 3 * len(ip_addresses)
+          scoring_count += 3 * len(ip_addresses)
+        elif attack_name == "cve":
+          ip_counts[attack_name] = 2 * len(ip_addresses)
+          scoring_count += 2 * len(ip_addresses)
+        elif attack_name =="ssh_bf":
+          ip_counts[attack_name] = 3 * len(ip_addresses)
+          scoring_count += 3 * len(ip_addresses)
+
+    return ip_counts, scoring_count
+  
+def synthese():
+  global elements
+  
+    # Synthese des resultats
+  results = Paragraph("Synthèse des resultats", header_style2)
+  elements.extend([results, Spacer(1, 0.5 * 50)])
+  synthese = Paragraph(f'L’audit a permis de déterminer un niveau de sécurité : Texte en fonction du scoring<BR/><BR/> \
+  ', normal_style)
+  elements.extend([synthese, Spacer(1, 0.5 * 50)])
+  
+  # Données du tableau Ressources
+  data_synth_vuln = [["VULNERABILITE","CRITICITE", "SCORE"]]
+
+  count = scoring()
+  
+  with open("ressources/rapport/texte.json", "r") as file:
+    data = json.load(file)
+
+  with open('ressources/rapport/jsonfinal.json') as f:
+    attacks = json.load(f)
+    
+  for attack in attacks:
+    if attack['success'] == True:
+      vuln = data[attack['attack_name']]["titre"]
+      criticite = data[attack['attack_name']]["criticite"]
+      score = count[0][attack['attack_name']]
+      row =  [vuln] + [criticite] + [score]
+      data_synth_vuln.append(row)
+      
+  table_synth_vuln = Table(data_synth_vuln)
+  
+  table_style_synth =  TableStyle([
+      ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#003366")),
+      ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+      ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+      ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+      ('FONTSIZE', (0, 0), (-1, 0), 14),
+      ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+      ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#c9daf5")),
+      ('GRID', (0, 0), (-1, -1), 1, colors.black)
+  ])
+  
+  color_red = colors.HexColor("#f74545")
+  color_orange = colors.HexColor("#fa9052")
+  color_yellow = colors.HexColor("#f2f063")
+  
+  # Parcourir le tableau pour appliquer les couleurs
+  for row in range(1, len(data_synth_vuln)):
+      cell_value = data_synth_vuln[row][1]
+      if isinstance(cell_value, str):
+          if cell_value == 'Majeure':
+              table_style_synth.add('BACKGROUND', (1, row), (1, row), color_red)
+          elif cell_value == 'Modérée':
+              table_style_synth.add('BACKGROUND', (1, row), (1, row), color_orange)
+          elif cell_value == 'Mineure':
+              table_style_synth.add('BACKGROUND', (1, row), (1, row), color_yellow)
+  
+  # Mise en forme du tableau synthèse des resultats
+  table_synth_vuln.setStyle(table_style_synth)
+
+  elements.extend([table_synth_vuln, PageBreak()])
+
+def rapport_by_test(test, tableau):
     global vuln_i
     global elements
 
@@ -112,21 +182,7 @@ def rapport_by_test(test, data_result):
       ', normal_style)
     elements.extend([const, Spacer(1, 0.5 * 50)])
     
-    table_data_result = Table(data_result)
-    
-    # Mise en forme du tableau
-    table_data_result.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, 0), 12),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-        ('GRID', (0, 0), (-1, -1), 1, colors.black)
-    ]))
-    
-    elements.extend([table_data_result, Spacer(1, 0.5 * 72)])
+    elements.extend([tableau, Spacer(1, 0.5 * 72)])
     
     reco = Paragraph(f'<b>Recommandation :</b><BR/><BR/>\
          {data[test]["remediation"]} <BR/><BR/>\
@@ -169,8 +225,11 @@ def create_tableau(test):
 
                 row =  [ip_address]
                 details_table.append(row)
+    
+    table_data_result = Table(details_table)
+    table_data_result.setStyle(table_style)
               
-    return details_table
+    return table_data_result
 
 def tableau_entete_web():
     details_table = [["Host", "Server", "X-Powered-By", "X-AspNet-Version", "Access-Control-Allow-Origin"]]
@@ -189,10 +248,25 @@ def tableau_entete_web():
 
                 row =  [ip_address] + [server] + [powered_by] + [aspnet_version] + [access_control]
                 details_table.append(row)
-              
-    return details_table
+
+    table_data_result = Table(details_table)
+    # Mise en forme du tableau
+    table_data_result.setStyle(table_style)
+  
+    return table_data_result
 
 def tableau_CVE():
+    table_style_cve = TableStyle([
+      ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#003366")),
+      ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+      ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+      ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+      ('FONTSIZE', (0, 0), (-1, 0), 14),
+      ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+      ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#c9daf5")),
+      ('GRID', (0, 0), (-1, -1), 1, colors.black)
+  ])
+  
     details_table = [["Host", "CVE", "Score CVSS", "Produit", "Version"]]
     with open('ressources/rapport/jsonfinal.json') as f:
         data = json.load(f)
@@ -201,48 +275,57 @@ def tableau_CVE():
         if attack["attack_name"] == "cve":
             for host in attack["hosts"]:
                 ip_address = host["ip_address"]
-                details = host["details"][0] if host["details"] else {}
-                CVE = details.get("id", "")
-                cvss_score = details.get("cvss_score", "")
-                product = details.get("product", "")
-                version = details.get("version", "")
-
-                row =  [ip_address] + [CVE] + [cvss_score] + [product] + [version]
-                details_table.append(row)
-              
-    return details_table
-
-def get_attack_success(attack_name):
-    with open('ressources/rapport/jsonfinal.json') as f:
-        data = json.load(f)
+                details = host["details"]
+                for detail in details:
+                  CVE = detail['id']
+                  cvss_score = detail['cvss_score']
+                  product = detail['product']
+                  version = detail['version']
+          
+                  row =  [ip_address] + [CVE] + [cvss_score] + [product] + [version]
+                  details_table.append(row)
     
-    success = None  # Définir une valeur par défaut au cas où aucune correspondance n'est trouvée
-    
-    for item in data:
-        if item['attack_name'] == attack_name:
-            success = item['success']
-            break  # Sortir de la boucle une fois que la correspondance est trouvée
-    
-    return success
+    table_data_result = Table(details_table)
 
+    color_red_carmin = colors.HexColor("#9c1e1e")
+    color_red = colors.HexColor("#f74545")
+    color_orange = colors.HexColor("#fa9052")
+    color_yellow = colors.HexColor("#f2f063")
 
-def print_final():
+    # Parcourir le tableau pour appliquer les couleurs
+    for row in range(1, len(details_table)):
+      cell_value = details_table[row][2]
+      if isinstance(cell_value, (int, float)):
+        if cell_value > 9:
+            table_style_cve.add('BACKGROUND', (2, row), (2, row), color_red_carmin)
+        elif 7 <= cell_value <= 9:
+            table_style_cve.add('BACKGROUND', (2, row), (2, row), color_red)
+        elif 4 <= cell_value <= 7:
+            table_style_cve.add('BACKGROUND', (2, row), (2, row), color_orange)
+        elif cell_value < 4:
+            table_style_cve.add('BACKGROUND', (2, row), (2, row), color_yellow)
+    # Mise en forme du tableau
+    table_data_result.setStyle(table_style_cve)
+  
+    return table_data_result
+
+def print_attack():
   global elements
-  print(elements)
-  options = retreive_test()
-  for option in options:
-    for key, value in option.items():
-      if value == 'True' and get_attack_success(key) is True:
-        print(value, get_attack_success(key))
-        if key == "cve":
-          tableau = tableau_CVE()
-        elif key == "entete_web":
-          tableau = tableau_entete_web()
-        elif key != "cve" or "entete_web":
-          tableau = create_tableau(key)
-        rapport_by_test(key, tableau)
-      elif value == 'True' and get_attack_success(key) is False: 
-        rapport_by_test_not_vulnerable(key)
+  
+  with open('ressources/rapport/jsonfinal.json') as f:
+    attacks = json.load(f)
+
+  for attack in attacks:
+    if attack['success'] == True:
+      if attack['attack_name'] == "cve":
+        tableau = tableau_CVE()
+      elif attack['attack_name'] == "entete_web":
+        tableau = tableau_entete_web()
+      else:
+        tableau = create_tableau(attack['attack_name'])
+      rapport_by_test(attack['attack_name'], tableau)
+    else :
+      rapport_by_test_not_vulnerable(attack['attack_name'])
 
 def main():
   global elements
@@ -304,9 +387,9 @@ def main():
   #Page Interlocuteur / Diffusion
   my_Style=ParagraphStyle('My Para style',
   fontName='Times-Roman',
-  backColor='#F1F1F1',
+  backColor='#c9daf5',
   fontSize=11,
-  borderColor='#FFFF00',
+  borderColor='#003366',
   borderWidth=2,
   borderPadding=(20,20,20),
   leading=15,
@@ -333,7 +416,7 @@ def main():
   
   
   # Introduction
-  intro = Paragraph("Introduction", header_style)
+  intro = Paragraph("Introduction", header_style2)
   elements.extend([intro, Spacer(1, 0.5 * 50)])
   introduction = Paragraph(f'<b>Objet du document :</b><BR/><BR/>\
        L’entreprise{nom_entreprise.replace("_", " ")} à souhaiter auditer ses systèmes et réseaux afin d’évaluer le niveau de sécurité de ceux-ci. <BR/><BR/> \
@@ -346,37 +429,10 @@ def main():
   ', normal_style)
   elements.extend([introduction, PageBreak()])
   
-  # Synthese des resultats
-  results = Paragraph("Synthèse des resultats", header_style)
-  elements.extend([results, Spacer(1, 0.5 * 50)])
-  synthese = Paragraph(f'L’audit a permis de déterminer un niveau de sécurité : Nul Nul Nul la sécurité de votre entreprise.<BR/><BR/> \
-  ', normal_style)
-  elements.extend([synthese, Spacer(1, 0.5 * 50)])
-  
-  # Données du tableau Ressources
-  data_synth_vuln = [
-      ["Identifiant", "VULNERABILITE","CRITICITE"],
-      [1, "Absence d’attribut de sécurité sur les cookies","Majeure"],
-  ]
-    
-  table_synth_vuln = Table(data_synth_vuln)
-    
-  # Mise en forme du tableau synthèse des resultats
-  table_synth_vuln.setStyle(TableStyle([
-      ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-      ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-      ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-      ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-      ('FONTSIZE', (0, 0), (-1, 0), 14),
-      ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-      ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-      ('GRID', (0, 0), (-1, -1), 1, colors.black)
-  ]))
-    
-  elements.extend([table_synth_vuln, PageBreak()])
+  synthese()
   
   #Tableau qui liste toutes les ressources de l'entreprise
-  ressourcestitle = Paragraph("Phase de découverte :", header_style)
+  ressourcestitle = Paragraph("Phase de découverte :", header_style2)
   elements.append(ressourcestitle)
   bruteforce= Paragraph("Voici une liste des ressources identifiées de votre entreprise.")
   elements.extend([bruteforce, Spacer(1, 0.5 * 50)])
@@ -386,22 +442,12 @@ def main():
   table_ressources = Table(data_ressources)
     
   # Mise en forme du tableau Ressources
-  table_ressources.setStyle(TableStyle([
-      ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-      ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-      ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-      ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-      ('FONTSIZE', (0, 0), (-1, 0), 14),
-      ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-      ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-      ('GRID', (0, 0), (-1, -1), 1, colors.black)
-  ]))
+  table_ressources.setStyle(table_style)
     
   elements.extend([table_ressources, PageBreak()])
 
-  print_final()
-
+  print_attack()
   # Construction du document PDF
   doc.build(elements)
-
+  
 main()
