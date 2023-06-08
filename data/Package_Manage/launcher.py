@@ -216,6 +216,9 @@ def dhcp_starvation(parser):
 def stp_attack(parser):
     attack = STPAttack(interface=interface, num_packets=1000, priority=0)
     attack_succes = attack.run()
+    stp_report = ManageExport("stp_attack")
+    if attack_succes:
+        stp_report.success = True
     
 
 ###############################################################
