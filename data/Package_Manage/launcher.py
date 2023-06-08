@@ -286,7 +286,7 @@ def audit(parser):
     # Définir le chemin du fichier de sortie
     output_dir = "ressources/rapport"
     os.makedirs(output_dir, exist_ok=True)  # Crée le répertoire s'il n'existe pas déjà
-    output_file_path = os.path.join(output_dir, "result.json")
+    output_file_path = os.path.join(output_dir, "audit.json")
 
     # Écrire le JSON dans un fichier
     with open(output_file_path, "w") as output_file:
