@@ -389,6 +389,9 @@ class MenuApp(MDApp):
             subprocess.run(f'rm {fichier}/ressources/parametres/options.txt', shell=True)
             for pdf in os.listdir(f'{fichier}/rapport'):
                 subprocess.run(f'rm {fichier}/rapport/{pdf}', shell=True)
+            subprocess.run(f'rm {fichier}/ressources/nmap/output.json', shell=True)
+            subprocess.run(f'rm {fichier}/ressources/rapport/audit.json', shell=True)
+            subprocess.run(f'rm {fichier}/ressources/rapport/rapport_attaque.json', shell=True)
             reset_dialog.dismiss()
 
         reset_dialog = MDDialog(

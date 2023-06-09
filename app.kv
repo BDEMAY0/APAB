@@ -54,316 +54,322 @@ ScreenManagement:
             
 
 <PentestScreen>:
-    ScrollView:
-        MDBoxLayout:
-            md_bg_color: app.theme_cls.bg_light
-            orientation: "vertical"
-            adaptive_height: True
-            padding: dp(100)
-            spacing: dp(75)
-            MDLabel:
-                text: "Choix des tests"
-                halign: "center"
-                pos_hint: {"center_x": .5}
-            MDLabel:
-                text: "Test système"
-                halign: "center"
-                pos_hint: {"center_x": .5}
-            MDGridLayout:
-                cols: 2
-                height: 15
-                size_hint_y: None
-                MDLabel:
-                    text: "Entête HTTP :"
-                MDCheckbox:
-                    size_hint: None, None
-                    color_active: "white"
-                    size: "48dp", "48dp"
-                    id: entete_web
-            MDGridLayout:
-                cols: 2
-                height: 15
-                size_hint_y: None
-                MDLabel:
-                    text: "Vulnérabilité versions :"
-                MDCheckbox:
-                    size_hint: None, None
-                    color_active: "white"
-                    size: "48dp", "48dp"
-                    id: cve
-            MDGridLayout:
-                cols: 2
-                height: 15
-                size_hint_y: None
-                MDLabel:
-                    text: "SSH Bruteforce :"
-                MDCheckbox:
-                    size_hint: None, None
-                    color_active: "white"
-                    size: "48dp", "48dp"
-                    id: ssh_bf
-            MDGridLayout:
-                cols: 2
-                height: 15
-                size_hint_y: None
-                MDLabel:
-                    text: "Partage de fichier :"
-                MDCheckbox:
-                    size_hint: None, None
-                    color_active: "white"
-                    size: "48dp", "48dp"
-                    id: smb_scanner
-            MDLabel:
-                text: "Test réseau"
-                halign: "center"
-                pos_hint: {"center_x": .5}
-            MDGridLayout:
-                cols: 2
-                height: 15
-                size_hint_y: None
-                MDLabel:
-                    text: "Attaque DOS :"
-                MDCheckbox:
-                    size_hint: None, None
-                    color_active: "white"
-                    size: "48dp", "48dp"
-                    id: dos
-            MDGridLayout:
-                cols: 2
-                height: 15
-                size_hint_y: None
-                MDLabel:
-                    text: "DHCP Starvation :"
-                MDCheckbox:
-                    size_hint: None, None
-                    color_active: "white"
-                    size: "48dp", "48dp"
-                    id: dhcp_starvation
-            MDGridLayout:
-                cols: 2
-                height: 15
-                size_hint_y: None
-                MDLabel:
-                    text: "WIFI :"
-                MDCheckbox:
-                    size_hint: None, None
-                    color_active: "white"
-                    size: "48dp", "48dp"
-                    id: wifi
-            MDGridLayout:
-                cols: 2
-                height: 15
-                size_hint_y: None
-                MDLabel:
-                    text: "Mac Flooding :"
-                MDCheckbox:
-                    size_hint: None, None
-                    color_active: "white"
-                    size: "48dp", "48dp"
-                    id: mac_flooding
-            MDGridLayout:
-                cols: 2
-                height: 15
-                size_hint_y: None
-                MDLabel:
-                    text: "STP Attaque :"
-                MDCheckbox:
-                    size_hint: None, None
-                    color_active: "white"
-                    size: "48dp", "48dp"
-                    id: stp_attack
-            MDGridLayout:
-                cols: 2
-                height: 50
-                size_hint_y: None
-                MDLabel:
-                    text: "Certificat TLS :"
-                MDCheckbox:
-                    size_hint: None, None
-                    color_active: "white"
-                    size: "48dp", "48dp"
-                    id: check_tls
+    BoxLayout:
+        orientation: "vertical"
+        MDTopAppBar:
+            title: "Pentest - Tests"
+            pos_hint: {"top": 1}
+            elevation: 10
+        ScrollView:
             MDBoxLayout:
-                orientation: 'vertical'
-                MDFillRoundFlatButton:
-                    pos_hint: {'center_x': .5, 'center_y': .5}
-                    text: 'Lancer le test'
-                    font_size: "24sp"
-                    on_release:
-                        root.check_checkbox([entete_web, cve, ssh_bf, smb_scanner, dos, dhcp_starvation, wifi, check_tls, mac_flooding, stp_attack], ["entete_web", "cve", "ssh_bf", "smb_scanner", "dos", "dhcp_starvation", "wifi", "check_tls", "mac_flooding", "stp_attack"], root.file_name)
-                        root.start_loading()
-            MDBoxLayout:
-                orientation: 'vertical'
-                MDFillRoundFlatButton:
-                    pos_hint: {'center_x': .5, 'center_y': .5}
-                    text: 'Retour'
-                    font_size: "24sp"
-                    on_release:
-                        app.root.current = 'Option'
+                md_bg_color: app.theme_cls.bg_light
+                orientation: "vertical"
+                adaptive_height: True
+                padding: dp(100)
+                spacing: dp(75)
+                MDLabel:
+                    text: "Test système"
+                    halign: "center"
+                    pos_hint: {"center_x": .5}
+                MDGridLayout:
+                    cols: 2
+                    height: 15
+                    size_hint_y: None
+                    MDLabel:
+                        text: "Entête HTTP :"
+                    MDCheckbox:
+                        size_hint: None, None
+                        color_active: "white"
+                        size: "48dp", "48dp"
+                        id: entete_web
+                MDGridLayout:
+                    cols: 2
+                    height: 15
+                    size_hint_y: None
+                    MDLabel:
+                        text: "Vulnérabilité versions :"
+                    MDCheckbox:
+                        size_hint: None, None
+                        color_active: "white"
+                        size: "48dp", "48dp"
+                        id: cve
+                MDGridLayout:
+                    cols: 2
+                    height: 15
+                    size_hint_y: None
+                    MDLabel:
+                        text: "SSH Bruteforce :"
+                    MDCheckbox:
+                        size_hint: None, None
+                        color_active: "white"
+                        size: "48dp", "48dp"
+                        id: ssh_bf
+                MDGridLayout:
+                    cols: 2
+                    height: 15
+                    size_hint_y: None
+                    MDLabel:
+                        text: "Partage de fichier :"
+                    MDCheckbox:
+                        size_hint: None, None
+                        color_active: "white"
+                        size: "48dp", "48dp"
+                        id: smb_scanner
+                MDLabel:
+                    text: "Test réseau"
+                    halign: "center"
+                    pos_hint: {"center_x": .5}
+                MDGridLayout:
+                    cols: 2
+                    height: 15
+                    size_hint_y: None
+                    MDLabel:
+                        text: "Attaque DOS :"
+                    MDCheckbox:
+                        size_hint: None, None
+                        color_active: "white"
+                        size: "48dp", "48dp"
+                        id: dos
+                MDGridLayout:
+                    cols: 2
+                    height: 15
+                    size_hint_y: None
+                    MDLabel:
+                        text: "DHCP Starvation :"
+                    MDCheckbox:
+                        size_hint: None, None
+                        color_active: "white"
+                        size: "48dp", "48dp"
+                        id: dhcp_starvation
+                MDGridLayout:
+                    cols: 2
+                    height: 15
+                    size_hint_y: None
+                    MDLabel:
+                        text: "WIFI :"
+                    MDCheckbox:
+                        size_hint: None, None
+                        color_active: "white"
+                        size: "48dp", "48dp"
+                        id: wifi
+                MDGridLayout:
+                    cols: 2
+                    height: 15
+                    size_hint_y: None
+                    MDLabel:
+                        text: "Mac Flooding :"
+                    MDCheckbox:
+                        size_hint: None, None
+                        color_active: "white"
+                        size: "48dp", "48dp"
+                        id: mac_flooding
+                MDGridLayout:
+                    cols: 2
+                    height: 15
+                    size_hint_y: None
+                    MDLabel:
+                        text: "STP Attaque :"
+                    MDCheckbox:
+                        size_hint: None, None
+                        color_active: "white"
+                        size: "48dp", "48dp"
+                        id: stp_attack
+                MDGridLayout:
+                    cols: 2
+                    height: 50
+                    size_hint_y: None
+                    MDLabel:
+                        text: "Certificat TLS :"
+                    MDCheckbox:
+                        size_hint: None, None
+                        color_active: "white"
+                        size: "48dp", "48dp"
+                        id: check_tls
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    MDFillRoundFlatButton:
+                        pos_hint: {'center_x': .5, 'center_y': .5}
+                        text: 'Lancer le test'
+                        font_size: "24sp"
+                        on_release:
+                            root.check_checkbox([entete_web, cve, ssh_bf, smb_scanner, dos, dhcp_starvation, wifi, check_tls, mac_flooding, stp_attack], ["entete_web", "cve", "ssh_bf", "smb_scanner", "dos", "dhcp_starvation", "wifi", "check_tls", "mac_flooding", "stp_attack"], root.file_name)
+                            root.start_loading()
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    MDFillRoundFlatButton:
+                        pos_hint: {'center_x': .5, 'center_y': .5}
+                        text: 'Retour'
+                        font_size: "24sp"
+                        on_release:
+                            app.root.current = 'Option'
 
 
 <Option>:
-    ScrollView:
-        MDBoxLayout:
-            md_bg_color: app.theme_cls.bg_light
-            orientation: "vertical"
-            adaptive_height: True
-            padding: dp(100)
-            spacing: dp(80)
-            MDLabel:
-                text: "Configuration réseau pentest"
-                halign: "center"
-                pos_hint: {"center_x": .5}
+    BoxLayout:
+        orientation: "vertical"
+        MDTopAppBar:
+            title: "Pentest - Options"
+            pos_hint: {"top": 1}
+            elevation: 10
+        ScrollView:
             MDBoxLayout:
-                MDTextField:
-                    font_size: "18sp"
-                    line_color_normal: 1,1,1
-                    hint_text_color_normal: 1,1,1
-                    hint_text: "Nom de l’entreprise:"
-                    required: True
-                    id: nom_entreprise
-            MDBoxLayout:
-                MDTextField:
-                    font_size: "18sp"
-                    line_color_normal: 1,1,1
-                    hint_text_color_normal: 1,1,1
-                    hint_text: "Mail entreprise:"
-                    id: mail_entreprise
-            MDBoxLayout:
-                MDTextField:
-                    font_size: "18sp"
-                    line_color_normal: 1,1,1
-                    hint_text_color_normal: 1,1,1
-                    hint_text: 'Niveau de diffusion:'
-                    required: True
-                    id: niveau_diffusion
-                    on_focus: if self.focus: root.drop(self)
-            MDBoxLayout:
-                MDTextField:
-                    font_size: "18sp"
-                    line_color_normal: 1,1,1
-                    hint_text_color_normal: 1,1,1
-                    hint_text: 'IP réseau à pentester:'
-                    id: ip
-                    required: True
-                    helper_text: "0.0.0.0 test du réseau du boitier"
-                    helper_text_mode: "persistent"
-            MDBoxLayout:
-                MDTextField:
-                    font_size: "18sp"
-                    line_color_normal: 1,1,1
-                    hint_text_color_normal: 1,1,1
-                    hint_text: 'Masque de sous-réseau:'
-                    helper_text: "Masque au format ex : 24, vide si ip 0.0.0.0"
-                    helper_text_mode: "persistent"
-                    id: masque_sous_reseau
-            MDBoxLayout:
-                MDTextField:
-                    font_size: "18sp"
-                    line_color_normal: 1,1,1
-                    hint_text_color_normal: 1,1,1
-                    hint_text: 'Passerelle:'
-                    helper_text: "Vide si ip 0.0.0.0"
-                    helper_text_mode: "persistent"
-                    id: gateway
-            BoxLayout:
-                MDTextField:
-                    font_size: "18sp"
-                    line_color_normal: 1,1,1
-                    hint_text_color_normal: 1,1,1
-                    hint_text: 'IP exclu des tests:'
-                    id: ip_ex
-                    helper_text: "Ex: 192.168.0.1-10, 192.168.0.45, 192.168.0.56"
-                    helper_text_mode: "persistent"
-            MDBoxLayout:
-                orientation: 'vertical'
-                MDFillRoundFlatButton:
-                    disabled: True if ip.text == '' or nom_entreprise.text == '' or niveau_diffusion.text == '' else False
-                    pos_hint: {'center_x': .5, 'center_y': .5}
-                    text: 'Suivant'
-                    font_size: "24sp"
-                    on_release:
-                        root.save_options([nom_entreprise, mail_entreprise, niveau_diffusion, ip, masque_sous_reseau, gateway, ip_ex], ["nom_entreprise", "mail_entreprise", "niveau_diffusion", "ip", "masque_sous_reseau", "gateway", "ip_ex"])
-                        app.root.current = 'PentestScreen'
-            MDBoxLayout:
-                orientation: 'vertical'
-                MDFillRoundFlatButton:
-                    pos_hint: {'center_x': .5, 'center_y': .5}
-                    text: 'Retour'
-                    font_size: "24sp"
-                    on_release:
-                        app.root.current = 'Accueil'
+                md_bg_color: app.theme_cls.bg_light
+                orientation: "vertical"
+                adaptive_height: True
+                padding: dp(100)
+                spacing: dp(80)
+                MDBoxLayout:
+                    MDTextField:
+                        font_size: "18sp"
+                        line_color_normal: 1,1,1
+                        hint_text_color_normal: 1,1,1
+                        hint_text: "Nom de l’entreprise:"
+                        required: True
+                        id: nom_entreprise
+                MDBoxLayout:
+                    MDTextField:
+                        font_size: "18sp"
+                        line_color_normal: 1,1,1
+                        hint_text_color_normal: 1,1,1
+                        hint_text: "Mail entreprise:"
+                        id: mail_entreprise
+                MDBoxLayout:
+                    MDTextField:
+                        font_size: "18sp"
+                        line_color_normal: 1,1,1
+                        hint_text_color_normal: 1,1,1
+                        hint_text: 'Niveau de diffusion:'
+                        required: True
+                        id: niveau_diffusion
+                        on_focus: if self.focus: root.drop(self)
+                MDBoxLayout:
+                    MDTextField:
+                        font_size: "18sp"
+                        line_color_normal: 1,1,1
+                        hint_text_color_normal: 1,1,1
+                        hint_text: 'IP réseau à pentester:'
+                        id: ip
+                        required: True
+                        helper_text: "0.0.0.0 test du réseau du boitier"
+                        helper_text_mode: "persistent"
+                MDBoxLayout:
+                    MDTextField:
+                        font_size: "18sp"
+                        line_color_normal: 1,1,1
+                        hint_text_color_normal: 1,1,1
+                        hint_text: 'Masque de sous-réseau:'
+                        helper_text: "Masque au format ex : 24, vide si ip 0.0.0.0"
+                        helper_text_mode: "persistent"
+                        id: masque_sous_reseau
+                MDBoxLayout:
+                    MDTextField:
+                        font_size: "18sp"
+                        line_color_normal: 1,1,1
+                        hint_text_color_normal: 1,1,1
+                        hint_text: 'Passerelle:'
+                        helper_text: "Vide si ip 0.0.0.0"
+                        helper_text_mode: "persistent"
+                        id: gateway
+                BoxLayout:
+                    MDTextField:
+                        font_size: "18sp"
+                        line_color_normal: 1,1,1
+                        hint_text_color_normal: 1,1,1
+                        hint_text: 'IP exclu des tests:'
+                        id: ip_ex
+                        helper_text: "Ex: 192.168.0.1-10, 192.168.0.45, 192.168.0.56"
+                        helper_text_mode: "persistent"
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    MDFillRoundFlatButton:
+                        disabled: True if ip.text == '' or nom_entreprise.text == '' or niveau_diffusion.text == '' else False
+                        pos_hint: {'center_x': .5, 'center_y': .5}
+                        text: 'Suivant'
+                        font_size: "24sp"
+                        on_release:
+                            root.save_options([nom_entreprise, mail_entreprise, niveau_diffusion, ip, masque_sous_reseau, gateway, ip_ex], ["nom_entreprise", "mail_entreprise", "niveau_diffusion", "ip", "masque_sous_reseau", "gateway", "ip_ex"])
+                            app.root.current = 'PentestScreen'
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    MDFillRoundFlatButton:
+                        pos_hint: {'center_x': .5, 'center_y': .5}
+                        text: 'Retour'
+                        font_size: "24sp"
+                        on_release:
+                            app.root.current = 'Accueil'
 
 <Configuration>
-    ScrollView:
-        MDBoxLayout:
-            md_bg_color: app.theme_cls.bg_light
-            orientation: "vertical"
-            adaptive_height: True
-            padding: dp(100)
-            spacing: dp(75)
-            MDLabel:
-                text: "Configuration IP boitier"
-                halign: "center"
-                pos_hint: {"center_x": .5}
-            MDGridLayout:
-                cols: 2
-                height: 50
-                size_hint_y: None
-                MDLabel:
-                    text: "DHCP :"
-                MDSwitch:
-                    active: True
-                    size_hint: None, None
-                    color_active: "white"
-                    size: "48dp", "48dp"
-                    id: dhcp_configuration
-                    on_active: root.toggle_visibility(self, self.active)
+    BoxLayout:
+        orientation: "vertical"
+        MDTopAppBar:
+            title: "Configuration"
+            pos_hint: {"top": 1}
+            elevation: 10
+        ScrollView:
             MDBoxLayout:
-                MDTextField:
-                    opacity: 0
-                    font_size: "18sp"
-                    line_color_normal: 1,1,1
-                    hint_text_color_normal: 1,1,1
-                    hint_text: 'IP :'
-                    id: ip_configuration
-                    helper_text: "Ip du boitier de pentest"
-                    helper_text_mode: "persistent"
-            MDBoxLayout:
-                MDTextField:
-                    opacity: 0
-                    font_size: "18sp"
-                    line_color_normal: 1,1,1
-                    hint_text_color_normal: 1,1,1
-                    hint_text: 'Masque de sous-réseau:'
-                    helper_text: "Masque au format ex : 24"
-                    helper_text_mode: "persistent"
-                    id: masque_sous_reseau_configuration
-            MDBoxLayout:
-                MDTextField:
-                    opacity: 0
-                    font_size: "18sp"
-                    line_color_normal: 1,1,1
-                    hint_text_color_normal: 1,1,1
-                    hint_text: 'Passerelle:'
-                    id: gateway_configuration
-            MDBoxLayout:
-                orientation: 'vertical'
-                MDFillRoundFlatButton:
-                    pos_hint: {'center_x': .5, 'center_y': .5}
-                    text: 'Sauvegarder'
-                    font_size: "24sp"
-                    on_release:
-                        root.save_configuration([dhcp_configuration, ip_configuration, masque_sous_reseau_configuration, gateway_configuration], ["dhcp", "ip", "masque_sous_reseau", "gateway"])
-                        app.root.current = 'Accueil'
-            MDBoxLayout:
-                orientation: 'vertical'
-                MDFillRoundFlatButton:
-                    pos_hint: {'center_x': .5, 'center_y': .5}
-                    text: 'Retour'
-                    font_size: "24sp"
-                    on_release:
-                        app.root.current = 'Accueil'
+                md_bg_color: app.theme_cls.bg_light
+                orientation: "vertical"
+                adaptive_height: True
+                padding: dp(100)
+                spacing: dp(75)
+                MDGridLayout:
+                    cols: 2
+                    height: 50
+                    size_hint_y: None
+                    MDLabel:
+                        text: "DHCP :"
+                    MDSwitch:
+                        active: True
+                        size_hint: None, None
+                        color_active: "white"
+                        size: "48dp", "48dp"
+                        id: dhcp_configuration
+                        on_active: root.toggle_visibility(self, self.active)
+                MDBoxLayout:
+                    MDTextField:
+                        opacity: 0
+                        font_size: "18sp"
+                        line_color_normal: 1,1,1
+                        hint_text_color_normal: 1,1,1
+                        hint_text: 'IP :'
+                        id: ip_configuration
+                        helper_text: "Ip du boitier de pentest"
+                        helper_text_mode: "persistent"
+                MDBoxLayout:
+                    MDTextField:
+                        opacity: 0
+                        font_size: "18sp"
+                        line_color_normal: 1,1,1
+                        hint_text_color_normal: 1,1,1
+                        hint_text: 'Masque de sous-réseau:'
+                        helper_text: "Masque au format ex : 24"
+                        helper_text_mode: "persistent"
+                        id: masque_sous_reseau_configuration
+                MDBoxLayout:
+                    MDTextField:
+                        opacity: 0
+                        font_size: "18sp"
+                        line_color_normal: 1,1,1
+                        hint_text_color_normal: 1,1,1
+                        hint_text: 'Passerelle:'
+                        id: gateway_configuration
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    MDFillRoundFlatButton:
+                        pos_hint: {'center_x': .5, 'center_y': .5}
+                        text: 'Sauvegarder'
+                        font_size: "24sp"
+                        on_release:
+                            root.save_configuration([dhcp_configuration, ip_configuration, masque_sous_reseau_configuration, gateway_configuration], ["dhcp", "ip", "masque_sous_reseau", "gateway"])
+                            app.root.current = 'Accueil'
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    MDFillRoundFlatButton:
+                        pos_hint: {'center_x': .5, 'center_y': .5}
+                        text: 'Retour'
+                        font_size: "24sp"
+                        on_release:
+                            app.root.current = 'Accueil'
 
 
 <LoadScreen>:
