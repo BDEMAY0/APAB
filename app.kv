@@ -68,6 +68,43 @@ ScreenManagement:
                 padding: dp(100)
                 spacing: dp(75)
                 MDLabel:
+                    text: "Test audit"
+                    halign: "center"
+                    pos_hint: {"center_x": .5}
+                MDGridLayout:
+                    cols: 2
+                    height: 15
+                    size_hint_y: None
+                    MDLabel:
+                        text: "Serveur web :"
+                    MDCheckbox:
+                        size_hint: None, None
+                        color_active: "white"
+                        size: "48dp", "48dp"
+                        id: serveur_web
+                MDGridLayout:
+                    cols: 2
+                    height: 15
+                    size_hint_y: None
+                    MDLabel:
+                        text: "Netbios :"
+                    MDCheckbox:
+                        size_hint: None, None
+                        color_active: "white"
+                        size: "48dp", "48dp"
+                        id: netbios
+                MDGridLayout:
+                    cols: 2
+                    height: 15
+                    size_hint_y: None
+                    MDLabel:
+                        text: "Bannière de service :"
+                    MDCheckbox:
+                        size_hint: None, None
+                        color_active: "white"
+                        size: "48dp", "48dp"
+                        id: banner
+                MDLabel:
                     text: "Test système"
                     halign: "center"
                     pos_hint: {"center_x": .5}
@@ -192,7 +229,7 @@ ScreenManagement:
                         text: 'Lancer le test'
                         font_size: "24sp"
                         on_release:
-                            root.check_checkbox([entete_web, cve, ssh_bf, smb_scanner, dos, dhcp_starvation, wifi, check_tls, mac_flooding, stp_attack], ["entete_web", "cve", "ssh_bf", "smb_scanner", "dos", "dhcp_starvation", "wifi", "check_tls", "mac_flooding", "stp_attack"], root.file_name)
+                            root.check_checkbox([serveur_web, netbios, banner, entete_web, cve, ssh_bf, smb_scanner, dos, dhcp_starvation, wifi, check_tls, mac_flooding, stp_attack], ["serveur_web", "netbios", "banner", "entete_web", "cve", "ssh_bf", "smb_scanner", "dos", "dhcp_starvation", "wifi", "check_tls", "mac_flooding", "stp_attack"], root.file_name)
                             root.start_loading()
                 MDBoxLayout:
                     orientation: 'vertical'
