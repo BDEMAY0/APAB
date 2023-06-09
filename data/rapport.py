@@ -15,6 +15,15 @@ import time
 vuln_i = 1
 elements = []
 
+with open("ressources/rapport/audit.json", "r") as file:
+  audit = json.load(file)
+
+with open("ressources/rapport/texte.json", "r") as file:
+  texte = json.load(file)
+
+with open("ressources/rapport/jsonfinal.json", "r") as file:
+  attacks = json.load(file)
+
 # Styles de paragraphe
 styles = getSampleStyleSheet()
 header_style = styles['Heading1']
@@ -53,52 +62,49 @@ table_style = TableStyle([
   ])
 #Fonctions 
 def parse_result():
-    with open("ressources/rapport/result.json", "r") as file:
-        data = json.load(file)
+  global audit
 
-        index = 1
-        data_ressources = [["#", "Hostname", "IP", "Port", "Service"]]
-        for ip_address, host_data in data.items():
-            hostname = host_data["hostname"]
-            ports = host_data["ports"]
+  index = 1
+  data_ressources = [["#", "Hostname", "IP", "Port", "Service"]]
+  for ip_address, host_data in audit.items():
+      hostname = host_data["hostname"]
+      ports = host_data["ports"]
 
-            if ports:
-                for port in ports:
-                    protocol = port["protocol"]
-                    port_id = port["port_id"]
-                    service_name = port["service_name"]
+      if ports:
+          for port in ports:
+              protocol = port["protocol"]
+              port_id = port["port_id"]
+              service_name = port["service_name"]
 
-                    data_ressources.append([index, hostname, ip_address, port_id, service_name])
-                    index += 1
-            else:
-                data_ressources.append([index, hostname, ip_address, "N/A", "N/A"])
-                index += 1
-    return data_ressources
+              data_ressources.append([index, hostname, ip_address, port_id, service_name])
+              index += 1
+      else:
+          data_ressources.append([index, hostname, ip_address, "N/A", "N/A"])
+          index += 1
+  return data_ressources
 
 def scoring():
-    ip_counts = {}
-    scoring_count = 0
-    with open('ressources/rapport/jsonfinal.json') as f:
-      data = json.load(f)
+    global texte
+    global attacks
 
-    for item in data:
+    ip_counts = {}
+    scoring_count = 0	
+
+    for item in attacks:
         attack_name = item['attack_name']
         hosts = item['hosts']
         ip_addresses = [host['ip_address'] for host in hosts]
-        if attack_name == "entete_web":
-          ip_counts[attack_name] = 3 * len(ip_addresses)
-          scoring_count += 3 * len(ip_addresses)
-        elif attack_name == "cve":
-          ip_counts[attack_name] = 2 * len(ip_addresses)
-          scoring_count += 2 * len(ip_addresses)
-        elif attack_name =="ssh_bf":
-          ip_counts[attack_name] = 3 * len(ip_addresses)
-          scoring_count += 3 * len(ip_addresses)
+        for test in texte:
+          if attack_name == test:
+            ip_counts[attack_name] = texte[test]["scoring"] * len(ip_addresses)
+            scoring_count += texte[test]["scoring"] * len(ip_addresses)
 
     return ip_counts, scoring_count
   
 def synthese():
   global elements
+  global texte
+  global attacks
   
     # Synthese des resultats
   results = Paragraph("Synthèse des resultats", header_style2)
@@ -111,17 +117,11 @@ def synthese():
   data_synth_vuln = [["VULNERABILITE","CRITICITE", "SCORE"]]
 
   count = scoring()
-  
-  with open("ressources/rapport/texte.json", "r") as file:
-    data = json.load(file)
-
-  with open('ressources/rapport/jsonfinal.json') as f:
-    attacks = json.load(f)
     
   for attack in attacks:
     if attack['success'] == True:
-      vuln = data[attack['attack_name']]["titre"]
-      criticite = data[attack['attack_name']]["criticite"]
+      vuln = texte[attack['attack_name']]["titre"]
+      criticite = texte[attack['attack_name']]["criticite"]
       score = count[0][attack['attack_name']]
       row =  [vuln] + [criticite] + [score]
       data_synth_vuln.append(row)
@@ -162,22 +162,20 @@ def synthese():
 def rapport_by_test(test, tableau):
     global vuln_i
     global elements
+    global texte
 
-    with open('ressources/rapport/texte.json') as json_file:
-        data = json.load(json_file)
-
-    title = Paragraph(f'Vulnérabilité {vuln_i} : {data[test]["titre"]} ', subheader_style)
+    title = Paragraph(f'Vulnérabilité {vuln_i} : {texte[test]["titre"]} ', subheader_style)
     elements.append(title)
     
     # Description de l'attaque
     desc = Paragraph(f'<BR/><b>Description :</b><BR/><BR/>\
-         {data[test]["description"]} <BR/><BR/>\
+         {texte[test]["description"]} <BR/><BR/>\
       ', normal_style)
     elements.extend([desc, Spacer(1, 0.5 * 50)])
     
     # Constat de l'attaque
     const = Paragraph(f'<b>Constat :</b><BR/><BR/>\
-         {data[test]["constat"]} <BR/><BR/>\
+         {texte[test]["constat"]} <BR/><BR/>\
          Ci dessous la liste des hôtes impactés : <BR/>\
       ', normal_style)
     elements.extend([const, Spacer(1, 0.5 * 50)])
@@ -185,7 +183,7 @@ def rapport_by_test(test, tableau):
     elements.extend([tableau, Spacer(1, 0.5 * 72)])
     
     reco = Paragraph(f'<b>Recommandation :</b><BR/><BR/>\
-         {data[test]["remediation"]} <BR/><BR/>\
+         {texte[test]["remediation"]} <BR/><BR/>\
       ', normal_style)
     elements.extend([reco, PageBreak()])
     vuln_i = vuln_i + 1
@@ -193,22 +191,20 @@ def rapport_by_test(test, tableau):
 def rapport_by_test_not_vulnerable(test):
     global vuln_i
     global elements
-    
-    with open('ressources/rapport/texte.json') as json_file:
-        data = json.load(json_file)
+    global texte
       
-    title = Paragraph(f'Vulnérabilité {vuln_i} : {data[test]["titre"]} ', subheader_style)
+    title = Paragraph(f'Vulnérabilité {vuln_i} : {texte[test]["titre"]} ', subheader_style)
     elements.append(title)
     
     # Description de l'attaque
     desc = Paragraph(f'<BR/><b>Description :</b><BR/><BR/>\
-         {data[test]["description"]} <BR/><BR/>\
+         {texte[test]["description"]} <BR/><BR/>\
       ', normal_style)
     elements.extend([desc, Spacer(1, 0.5 * 50)])
     
     # Constat de l'attaque
     const = Paragraph(f'<b>Constat :</b><BR/><BR/>\
-         {data["no_result"]["constat"]} <BR/><BR/>\
+         {texte["no_result"]["constat"]} <BR/><BR/>\
       ', normal_style)
     elements.extend([const, PageBreak()])
     vuln_i = vuln_i + 1
@@ -218,7 +214,7 @@ def create_tableau(test):
     with open('ressources/rapport/jsonfinal.json') as f:
         data = json.load(f)
 
-    for attack in data:
+    for attack in attacks:
         if attack["attack_name"] == test:
             for host in attack["hosts"]:
                 ip_address = host["ip_address"]
@@ -233,10 +229,9 @@ def create_tableau(test):
 
 def tableau_entete_web():
     details_table = [["Host", "Server", "X-Powered-By", "X-AspNet-Version", "Access-Control-Allow-Origin"]]
-    with open('ressources/rapport/jsonfinal.json') as f:
-        data = json.load(f)
+    global attacks
 
-    for attack in data:
+    for attack in attacks:
         if attack["attack_name"] == "entete_web":
             for host in attack["hosts"]:
                 ip_address = host["ip_address"]
@@ -256,6 +251,8 @@ def tableau_entete_web():
     return table_data_result
 
 def tableau_CVE():
+    global attacks
+
     table_style_cve = TableStyle([
       ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#003366")),
       ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
@@ -268,10 +265,8 @@ def tableau_CVE():
   ])
   
     details_table = [["Host", "CVE", "Score CVSS", "Produit", "Version"]]
-    with open('ressources/rapport/jsonfinal.json') as f:
-        data = json.load(f)
 
-    for attack in data:
+    for attack in attacks:
         if attack["attack_name"] == "cve":
             for host in attack["hosts"]:
                 ip_address = host["ip_address"]
@@ -311,9 +306,7 @@ def tableau_CVE():
 
 def print_attack():
   global elements
-  
-  with open('ressources/rapport/jsonfinal.json') as f:
-    attacks = json.load(f)
+  global attacks
 
   for attack in attacks:
     if attack['success'] == True:
