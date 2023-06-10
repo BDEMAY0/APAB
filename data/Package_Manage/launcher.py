@@ -237,44 +237,36 @@ def stp_attack(parser):
 #                      PARTIE AUDIT                       #
 ###############################################################
 
-
-# Fonction permettant de savoir toutes les informations de mal configuration sur la partie audit = port HTTP/NETBIOS/BANNIERE SERVICE/
-def audit(parser):    
-    test=""
-    #Sous fonction permettant de savoir si un service http est ouvert
-    def web_vuln(host, web_report):
+#fonction permettant de savoir si un service http est ouvert
+def web_vuln(parser):
+    web_report = ManageExport("web_vuln")
+    for host in parser.host_info_list:
         for port in host.ports:
             if port["port_id"] == "80" or port["service_name"] == "http":
                 web_report.success = True
                 web_report.add_host(host.ip_address)
 
-    #Sous fonction permettant de savoir si un service netbios est ouvert
-    def netbios_vuln(host, netbios_report):
+#fonction permettant de savoir si un service netbios est ouvert
+def netbios(parser):
+    netbios_report = ManageExport("netbios")
+    for host in parser.host_info_list:
         for port in host.ports:
             if port["port_id"] == "139" or port["service_name"] == "netbios-ssn":
                 netbios_report.success = True
                 netbios_report.add_host(host.ip_address)
-    
-    #Sous fonction permettant de savoir si un service dispose de sa banniere
-    def banner_vuln(host, banner_report):
+
+#fonction permettant de savoir si un service dispose de sa banniere
+def banner(parser):
+    banner_report = ManageExport("banner")
+    for host in parser.host_info_list:
         for port in host.ports:
             if port["version"] != "N/A":
                 banner_report.success = True
                 banner_report.add_host(host.ip_address, [port["service_name"], port["version"]])
-
-
-    web_report = ManageExport("web_vuln")
-    netbios_report = ManageExport("netbios_vuln")
-    banner_report = ManageExport("banner_vuln")
-
-    #####
-    # Export d'un fichier JSON pour la partie reconnaissance du rapport
-    #####
-
-    for host in parser.host_info_list:
-        web_vuln(host, web_report)
-        netbios_vuln(host, netbios_report)
-        banner_vuln(host, banner_report)
+        
+# Fonction permettant de récupérer toutes les informations sur les hôtes avec leurs service port ouvert pour la partie reconnaissance (génère un fichier json audit.json utilisé dans le rapport)
+def audit(parser):    
+    test=""
     host_dicts = []
     for host in parser.host_info_list:
         host_dict = host_to_dict(host)
