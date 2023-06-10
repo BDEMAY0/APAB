@@ -67,6 +67,18 @@ ScreenManagement:
                 adaptive_height: True
                 padding: dp(100)
                 spacing: dp(75)
+                MDGridLayout:
+                    cols: 2
+                    height: 15
+                    size_hint_y: None
+                    MDLabel:
+                        text: "Sélectionner tout :"
+                    MDCheckbox:
+                        size_hint: None, None
+                        color_active: "white"
+                        size: "48dp", "48dp"
+                        id: master
+                        on_active: serveur_web.active, netbios.active, banner.active, entete_web.active, cve.active, ssh_bf.active, smb_scanner.active, dos.active, dhcp_starvation.active, wifi.active, mac_flooding.active, stp_attack.active, check_tls.active = [self.active]*13
                 MDLabel:
                     text: "Test audit"
                     halign: "center"
