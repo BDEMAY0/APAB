@@ -22,6 +22,7 @@ import shutil
 from data.Package_Mail.zip_password import f_zip_encrypt
 from data.Package_Mail.send_mail import f_send_mail
 import netifaces as ni
+from kivy.base import EventLoop
 
 Window.keyboard_anim_args = {"d":.2,"t":"linear"}
 Config.set('kivy','keyboard_mode','dock')
@@ -215,6 +216,13 @@ class MenuApp(MDApp):
         )
         self.file_manager.ids.toolbar.right_action_items=[]
         self.file_manager.ids.toolbar.left_action_items=[]
+
+    def on_start(self):
+        EventLoop.window.bind(on_request_close=self.on_request_close)
+
+    def on_request_close(self, *args, **kwargs):
+        # Retournez True pour empêcher la fermeture de l'application
+        return True
 
     def file_manager_open(self):
         current_dir = os.path.dirname(os.path.abspath(__file__))
