@@ -21,7 +21,7 @@ with open("ressources/rapport/audit.json", "r") as file:
 with open("ressources/rapport/texte.json", "r") as file:
   texte = json.load(file)
 
-with open("ressources/rapport/jsonfinal.json", "r") as file:
+with open("ressources/rapport/rapport_attaques.json", "r") as file:
   attacks = json.load(file)
 
 # Styles de paragraphe
@@ -54,6 +54,7 @@ table_style = TableStyle([
       ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#003366")),
       ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
       ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+      ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'), 
       ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
       ('FONTSIZE', (0, 0), (-1, 0), 14),
       ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
@@ -61,7 +62,7 @@ table_style = TableStyle([
       ('GRID', (0, 0), (-1, -1), 1, colors.black)
   ])
 #Fonctions 
-def parse_result():
+def parse_data_ressources():
   global audit
 
   index = 1
@@ -210,9 +211,9 @@ def rapport_by_test_not_vulnerable(test):
     vuln_i = vuln_i + 1
 
 def create_tableau(test):
+    global attacks
+  
     details_table = [["Host"]]
-    with open('ressources/rapport/jsonfinal.json') as f:
-        data = json.load(f)
 
     for attack in attacks:
         if attack["attack_name"] == test:
@@ -242,6 +243,48 @@ def tableau_entete_web():
                 access_control = details.get("Access-Control-Allow-Origin", "")
 
                 row =  [ip_address] + [server] + [powered_by] + [aspnet_version] + [access_control]
+                details_table.append(row)
+
+    table_data_result = Table(details_table)
+    # Mise en forme du tableau
+    table_data_result.setStyle(table_style)
+  
+    return table_data_result
+
+def tableau_smb():
+    details_table = [["Host", "Dossier accessible"]]
+    global attacks
+
+    for attack in attacks:
+        if attack["attack_name"] == "smb_scanner":
+            for host in attack["hosts"]:
+                ip_address = host["ip_address"]
+                details = host["details"] if host["details"] else {}
+                detail = "\n".join(details[:-1]) if details else ""
+                if details:
+                    detail += "\n" + details[-1]
+                row = [ip_address, detail]
+                details_table.append(row)
+
+    table_data_result = Table(details_table)
+    # Mise en forme du tableau
+    table_data_result.setStyle(table_style)
+  
+    return table_data_result
+
+def tableau_banner():
+    details_table = [["Host", "Service", "Version"]]
+    global attacks
+
+    for attack in attacks:
+        if attack["attack_name"] == "banner_vuln":
+            for host in attack["hosts"]:
+                ip_address = host["ip_address"]
+                details = host["details"] if host["details"] else {}
+                if details:
+                    service = details[0]
+                    version = details[1]
+                row = [ip_address, service, version]
                 details_table.append(row)
 
     table_data_result = Table(details_table)
@@ -314,13 +357,17 @@ def print_attack():
         tableau = tableau_CVE()
       elif attack['attack_name'] == "entete_web":
         tableau = tableau_entete_web()
+      elif attack['attack_name'] == "smb_scanner":
+        tableau = tableau_smb()
+      elif attack['attack_name'] == "banner_vuln":
+        tableau = tableau_banner()
       else:
         tableau = create_tableau(attack['attack_name'])
       rapport_by_test(attack['attack_name'], tableau)
     else :
       rapport_by_test_not_vulnerable(attack['attack_name'])
 
-def main():
+def main_rapport():
   global elements
   
   current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -430,7 +477,7 @@ def main():
   bruteforce= Paragraph("Voici une liste des ressources identifiées de votre entreprise.")
   elements.extend([bruteforce, Spacer(1, 0.5 * 50)])
   
-  data_ressources = parse_result()
+  data_ressources = parse_data_ressources()
     
   table_ressources = Table(data_ressources)
     
@@ -443,4 +490,4 @@ def main():
   # Construction du document PDF
   doc.build(elements)
   
-main()
+main_rapport()
