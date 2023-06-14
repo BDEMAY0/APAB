@@ -56,33 +56,38 @@ table_style = TableStyle([
       ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
       ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'), 
       ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-      ('FONTSIZE', (0, 0), (-1, 0), 14),
+      ('FONTSIZE', (0, 0), (-1, 0), 12),
       ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
       ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#c9daf5")),
       ('GRID', (0, 0), (-1, -1), 1, colors.black)
   ])
 #Fonctions 
 def parse_data_ressources():
-  global audit
+    global audit
 
-  index = 1
-  data_ressources = [["#", "Hostname", "IP", "Port", "Service"]]
-  for ip_address, host_data in audit.items():
-      hostname = host_data["hostname"]
-      ports = host_data["ports"]
+    index = 1
+    data_ressources = [["#", "Hostname", "IP", "Port", "Service"]]
+    for ip_address, host_data in audit.items():
+        hostname = host_data["hostname"]
+        ports = host_data["ports"]
 
-      if ports:
-          for port in ports:
-              protocol = port["protocol"]
-              port_id = port["port_id"]
-              service_name = port["service_name"]
+        if ports:
+            port_info = ""
+            service = ""
+            for i, port in enumerate(ports):
+                protocol = port["protocol"]
+                port_id = port["port_id"]
+                service_name = port["service_name"]
 
-              data_ressources.append([index, hostname, ip_address, port_id, service_name])
-              index += 1
-      else:
-          data_ressources.append([index, hostname, ip_address, "N/A", "N/A"])
-          index += 1
-  return data_ressources
+                port_info += f"{port_id}\n"
+                service += f"{service_name}\n"
+            data_ressources.append([index, hostname, ip_address, port_info.strip(), service.strip()])
+            index += 1
+        else:
+            data_ressources.append([index, hostname, ip_address, "N/A", "N/A"])
+            index += 1
+    return data_ressources
+
 
 def scoring():
     global texte
@@ -157,8 +162,11 @@ def synthese():
   
   # Mise en forme du tableau synthèse des resultats
   table_synth_vuln.setStyle(table_style_synth)
+  data_score_total = [["Score Total", count[1]]]
+  table_score_total = Table(data_score_total)
+  table_score_total.setStyle(table_style)
+  elements.extend([table_synth_vuln,  Spacer(1, 0.7 * 72), table_score_total,PageBreak()])
 
-  elements.extend([table_synth_vuln, PageBreak()])
 
 def rapport_by_test(test, tableau):
     global vuln_i
@@ -182,6 +190,32 @@ def rapport_by_test(test, tableau):
     elements.extend([const, Spacer(1, 0.5 * 50)])
     
     elements.extend([tableau, Spacer(1, 0.5 * 72)])
+    
+    reco = Paragraph(f'<b>Recommandation :</b><BR/><BR/>\
+         {texte[test]["remediation"]} <BR/><BR/>\
+      ', normal_style)
+    elements.extend([reco, PageBreak()])
+    vuln_i = vuln_i + 1
+
+def rapport_by_test_without_table(test):
+    global vuln_i
+    global elements
+    global texte
+
+    title = Paragraph(f'Vulnérabilité {vuln_i} : {texte[test]["titre"]} ', subheader_style)
+    elements.append(title)
+    
+    # Description de l'attaque
+    desc = Paragraph(f'<BR/><b>Description :</b><BR/><BR/>\
+         {texte[test]["description"]} <BR/><BR/>\
+      ', normal_style)
+    elements.extend([desc, Spacer(1, 0.5 * 50)])
+    
+    # Constat de l'attaque
+    const = Paragraph(f'<b>Constat :</b><BR/><BR/>\
+         {texte[test]["constat"]} <BR/>\
+      ', normal_style)
+    elements.extend([const, Spacer(1, 0.5 * 50)])
     
     reco = Paragraph(f'<b>Recommandation :</b><BR/><BR/>\
          {texte[test]["remediation"]} <BR/><BR/>\
@@ -229,7 +263,7 @@ def create_tableau(test):
     return table_data_result
 
 def tableau_entete_web():
-    details_table = [["Host", "Server", "X-Powered-By", "X-AspNet-Version", "Access-Control-Allow-Origin"]]
+    details_table = [["Host", "Server", "X-Powered-By", "X-AspNet-Version", "Access-Control\nAllow-Origin"]]
     global attacks
 
     for attack in attacks:
@@ -282,9 +316,14 @@ def tableau_banner():
                 ip_address = host["ip_address"]
                 details = host["details"] if host["details"] else {}
                 if details:
-                    service = details[0]
-                    version = details[1]
-                row = [ip_address, service, version]
+                  service = ""
+                  version = ""
+                  for i in range(0, len(details), 1):
+                    if i % 2 == 0:
+                      service += details[i] + "\n"
+                    elif i % 2 == 1:
+                      version += details[i] + "\n"
+                row = [ip_address, service.rstrip('\n'), version.rstrip('\n')]
                 details_table.append(row)
 
     table_data_result = Table(details_table)
@@ -347,6 +386,24 @@ def tableau_CVE():
   
     return table_data_result
 
+def if_data_in_attack(attack_name):
+  global attacks
+
+  # Parcours des attaques
+  for attack in attacks:
+    if attack['attack_name'] == attack_name:
+      hosts = attack['hosts']
+      
+      # Vérification des informations dans les hôtes
+      for host in hosts:
+          ip_address = host['ip_address']
+          if not ip_address:
+            table = 0
+          if ip_address :
+            table = 1
+
+  return table
+
 def print_attack():
   global elements
   global attacks
@@ -363,10 +420,14 @@ def print_attack():
         tableau = tableau_banner()
       else:
         tableau = create_tableau(attack['attack_name'])
-      rapport_by_test(attack['attack_name'], tableau)
+      
+      if if_data_in_attack(attack['attack_name']) == 1:
+        rapport_by_test(attack['attack_name'], tableau)
+      else:
+        rapport_by_test_without_table(attack['attack_name'])
     else :
       rapport_by_test_not_vulnerable(attack['attack_name'])
-
+  
 def main_rapport():
   global elements
   
@@ -490,4 +551,3 @@ def main_rapport():
   # Construction du document PDF
   doc.build(elements)
   
-main_rapport()
