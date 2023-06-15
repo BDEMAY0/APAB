@@ -4,7 +4,8 @@ import signal
 from scapy.all import *
 
 ap_info = {}
-folder = "test"
+folder = os.path.join("..", "data", "ressources", "wifi")
+
 def monitor_mode(iface_name):
     os.system(f"sudo ifconfig {iface_name} down")
     os.system(f"sudo iwconfig {iface_name} mode monitor")
@@ -69,7 +70,7 @@ def start_wifi(iface_name="wlan1"):
 
             if check_handshake(f"{folder}/capture-01.cap"):
                 print("Handshake found, start cracking...")
-                result = crack_handshake(f"{folder}/capture-01.cap", "passwords.txt")
+                result = crack_handshake(f"{folder}/capture-01.cap", f"{folder}/passwords.txt")
                 if result:
                     ap_info[ssid]['password_cracked'] = True
                 else:
