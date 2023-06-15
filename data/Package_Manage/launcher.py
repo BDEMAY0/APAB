@@ -10,6 +10,8 @@ from Package_Export.EnteteWeb_Export import EnteteWeb_Export
 from Package_Attack.SMBScanner import SMBScanner
 from Package_Attack.STPAttack import STPAttack
 from Package_Attack.CertificatHTTPS import CertificatHTTPS
+from Package_Attack.WIFI import start_wifi
+from Package_Export.Wifi_Export import Wifi_Export 
 import threading
 import os
 import json
@@ -232,6 +234,23 @@ def stp_attack(parser):
     if attack_succes:
         stp_report.success = True
     
+def wifi(parser):
+    attack = start_wifi()
+    wifi_report = Wifi_Export("wifi")
+    wifi_open_report = Wifi_Export("wifi_open")
+    for result in attack:
+        for value, key in result.items():
+            if value == "password_cracked":
+                if key == True:
+                    ssid = result.get('SSID')
+                    crypto = result.get('crypto')
+                    if crypto != "Open":
+                        wifi_report.success = True 
+                        
+                        wifi_report.add_ap_info(ssid, crypto)
+                    else:
+                        wifi_open_report.success = True 
+                        wifi_open_report.add_ap_info(ssid, crypto)
 
 ###############################################################
 #                      PARTIE AUDIT                       #
