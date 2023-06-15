@@ -2,6 +2,7 @@ from Package_Manage.NmapParser import NmapParser
 import os
 from Package_Manage.launcher import * 
 from Package_Export.ManageExport import ManageExport
+from rapport import main_rapport
 
 # Le point d'entrée du programme
 def main():
@@ -34,6 +35,7 @@ def main():
         f.seek(0)
         f.writelines(lignes)
         ManageExport.export_all_to_json("rapport_attaques.json")
+        main_rapport()
 
 
 if __name__ == "__main__":
