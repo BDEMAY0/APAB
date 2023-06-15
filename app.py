@@ -400,10 +400,11 @@ class MenuApp(MDApp):
             subprocess.run(f'rm {fichier}/ressources/nmap/output.json', shell=True)
             subprocess.run(f'rm {fichier}/ressources/rapport/audit.json', shell=True)
             subprocess.run(f'rm {fichier}/ressources/rapport/rapport_attaque.json', shell=True)
+            subprocess.run(f'rm {fichier}/ressources/wifi/capture*', shell=True)
             reset_dialog.dismiss()
 
         reset_dialog = MDDialog(
-                    title="Réinitialisé la machine ?",
+                    title="Réinitialiser la machine ?",
                     type="custom",
                     buttons=[
                         MDFlatButton(text="Oui", on_release=reset),
