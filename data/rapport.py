@@ -7,6 +7,7 @@ from reportlab.lib.units import inch
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
 from reportlab.pdfgen import canvas
 from reportlab.platypus import Frame, PageTemplate, BaseDocTemplate
+from copy import deepcopy
 from datetime import date
 import json
 import os
@@ -95,6 +96,7 @@ def scoring():
 
     ip_counts = {}
     scoring_count = 0	
+    nb_ip = 0
 
     for item in attacks:
         attack_name = item['attack_name']
@@ -103,8 +105,11 @@ def scoring():
         for test in texte:
           if attack_name == test:
             ip_counts[attack_name] = texte[test]["scoring"] * len(ip_addresses)
+            nb_ip += len(ip_addresses)
             scoring_count += texte[test]["scoring"] * len(ip_addresses)
 
+    print(nb_ip)
+    scoring_count = round(scoring_count / nb_ip, 2)
     return ip_counts, scoring_count
   
 def synthese():
@@ -247,15 +252,17 @@ def rapport_by_test_not_vulnerable(test):
 def create_tableau(test):
     global attacks
   
-    details_table = [["Host"]]
+    details_table = [["#", "Host"]]
+    i = 1
 
     for attack in attacks:
         if attack["attack_name"] == test:
             for host in attack["hosts"]:
                 ip_address = host["ip_address"]
 
-                row =  [ip_address]
+                row = [i] + [ip_address]
                 details_table.append(row)
+                i += 1
     
     table_data_result = Table(details_table)
     table_data_result.setStyle(table_style)
@@ -263,8 +270,9 @@ def create_tableau(test):
     return table_data_result
 
 def tableau_entete_web():
-    details_table = [["Host", "Server", "X-Powered-By", "X-AspNet-Version", "Access-Control\nAllow-Origin"]]
+    details_table = [["#", "Host", "Server", "X-Powered-By", "X-AspNet-Version", "Access-Control\nAllow-Origin"]]
     global attacks
+    i = 1
 
     for attack in attacks:
         if attack["attack_name"] == "entete_web":
@@ -276,8 +284,9 @@ def tableau_entete_web():
                 aspnet_version = details.get("X-AspNet-Version", "")
                 access_control = details.get("Access-Control-Allow-Origin", "")
 
-                row =  [ip_address] + [server] + [powered_by] + [aspnet_version] + [access_control]
+                row =  [i] + [ip_address] + [server] + [powered_by] + [aspnet_version] + [access_control]
                 details_table.append(row)
+                i += 1
 
     table_data_result = Table(details_table)
     # Mise en forme du tableau
@@ -286,8 +295,9 @@ def tableau_entete_web():
     return table_data_result
 
 def tableau_smb():
-    details_table = [["Host", "Dossier accessible"]]
+    details_table = [["#", "Host", "Dossier accessible"]]
     global attacks
+    i = 1
 
     for attack in attacks:
         if attack["attack_name"] == "smb_scanner":
@@ -297,8 +307,9 @@ def tableau_smb():
                 detail = "\n".join(details[:-1]) if details else ""
                 if details:
                     detail += "\n" + details[-1]
-                row = [ip_address, detail]
+                row = [i] + [ip_address, detail]
                 details_table.append(row)
+                i += 1
 
     table_data_result = Table(details_table)
     # Mise en forme du tableau
@@ -307,8 +318,9 @@ def tableau_smb():
     return table_data_result
 
 def tableau_banner():
-    details_table = [["Host", "Service", "Version"]]
+    details_table = [["#", "Host", "Service", "Version"]]
     global attacks
+    i = 1
 
     for attack in attacks:
         if attack["attack_name"] == "banner_vuln":
@@ -323,8 +335,9 @@ def tableau_banner():
                       service += details[i] + "\n"
                     elif i % 2 == 1:
                       version += details[i] + "\n"
-                row = [ip_address, service.rstrip('\n'), version.rstrip('\n')]
+                row = [i] + [ip_address, service.rstrip('\n'), version.rstrip('\n')]
                 details_table.append(row)
+                i += 1
 
     table_data_result = Table(details_table)
     # Mise en forme du tableau
@@ -346,7 +359,8 @@ def tableau_CVE():
       ('GRID', (0, 0), (-1, -1), 1, colors.black)
   ])
   
-    details_table = [["Host", "CVE", "Score CVSS", "Produit", "Version"]]
+    details_table = [["#", "Host", "CVE", "Score CVSS", "Produit", "Version"]]
+    i = 1
 
     for attack in attacks:
         if attack["attack_name"] == "cve":
@@ -359,8 +373,9 @@ def tableau_CVE():
                   product = detail['product']
                   version = detail['version']
           
-                  row =  [ip_address] + [CVE] + [cvss_score] + [product] + [version]
+                  row =  [i] + [ip_address] + [CVE] + [cvss_score] + [product] + [version]
                   details_table.append(row)
+                  i += 1
     
     table_data_result = Table(details_table)
 
@@ -427,7 +442,30 @@ def print_attack():
         rapport_by_test_without_table(attack['attack_name'])
     else :
       rapport_by_test_not_vulnerable(attack['attack_name'])
-  
+
+def annexe():
+    global elements
+    global texte
+
+    # Synthèse des résultats
+    results = Paragraph("Annexe", header_style2)
+    elements.extend([results, Spacer(1, 0.5 * 50)])
+
+    data_annexe = [["Attaque", "Multiplicateur"]]
+
+    for attack in texte:
+        if attack != "no_result" and attack != "annexe":
+            titre = texte[attack]["titre"]
+            score = texte[attack]["scoring"]
+            row = [titre, score]
+            data_annexe.append(row)
+
+    table_annexe = Table(data_annexe)
+    table_annexe.setStyle(table_style)
+    elements.extend([table_annexe, Spacer(1, 0.5 * 50)])
+
+    
+
 def main_rapport():
   global elements
   
@@ -459,11 +497,14 @@ def main_rapport():
   auj = today.strftime("%d %B %Y")
   
   # Page de couverture
-  titre_rapport = Paragraph("Rapport d'Audit et Pentest Automatisé\n APAB", header_style)
+  nom_entreprise = nom_entreprise.replace("_", " ")
+  centered_style = deepcopy(header_style)
+  centered_style.alignment = TA_CENTER
+  titre_rapport = Paragraph(f"Rapport d'Audit et Pentest Automatisé <BR/> APAB x {nom_entreprise}", centered_style)
   date_rapport = Paragraph(f'Date : {auj}', normal_style)
-  elements = [Spacer(1, 0.4 * 72),  Spacer(1, 0.7 * 72), date_rapport, PageBreak()]
-  im = Image('ressources/rapport/APAB.png', 8*inch, 6*inch)
-  elements.insert(1, im)
+  im = Image('ressources/rapport/APAB1.png', 8*inch, 4.5*inch)
+  elements = [Spacer(1, 0.4 * 72), im, Spacer(1, 1 * 72), titre_rapport, Spacer(1, 2 * 72), date_rapport, PageBreak()]
+
   
   # Création d'un en-tête personnalisé
   def header(canvas, doc):
@@ -548,6 +589,8 @@ def main_rapport():
   elements.extend([table_ressources, PageBreak()])
 
   print_attack()
+  annexe()
+  
   # Construction du document PDF
   doc.build(elements)
   
