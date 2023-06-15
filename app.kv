@@ -169,55 +169,75 @@ ScreenManagement:
                     halign: "center"
                     pos_hint: {"center_x": .5}
                 MDGridLayout:
-                    cols: 2
+                    cols: 3
                     height: 15
                     size_hint_y: None
                     MDLabel:
                         text: "Attaque DOS :"
+                    MDIconButton:
+                        icon: "alert"
+                        theme_text_color:"Custom"
+                        text_color:1, 0, 0, 1
                     MDCheckbox:
                         size_hint: None, None
                         color_active: "white"
                         size: "48dp", "48dp"
                         id: dos
                 MDGridLayout:
-                    cols: 2
+                    cols: 3
                     height: 15
                     size_hint_y: None
                     MDLabel:
                         text: "DHCP Starvation :"
+                    MDIconButton:
+                        icon: "alert"
+                        theme_text_color:"Custom"
+                        text_color:1, 0, 0, 1
                     MDCheckbox:
                         size_hint: None, None
                         color_active: "white"
                         size: "48dp", "48dp"
                         id: dhcp_starvation
                 MDGridLayout:
-                    cols: 2
+                    cols: 3
                     height: 15
                     size_hint_y: None
                     MDLabel:
                         text: "WIFI :"
+                    MDIconButton:
+                        icon: "alert"
+                        theme_text_color:"Custom"
+                        text_color:1, 0, 0, 1
                     MDCheckbox:
                         size_hint: None, None
                         color_active: "white"
                         size: "48dp", "48dp"
                         id: wifi
                 MDGridLayout:
-                    cols: 2
+                    cols: 3
                     height: 15
                     size_hint_y: None
                     MDLabel:
                         text: "Mac Flooding :"
+                    MDIconButton:
+                        icon: "alert"
+                        theme_text_color:"Custom"
+                        text_color:1, 0, 0, 1
                     MDCheckbox:
                         size_hint: None, None
                         color_active: "white"
                         size: "48dp", "48dp"
                         id: mac_flooding
                 MDGridLayout:
-                    cols: 2
+                    cols: 3
                     height: 15
                     size_hint_y: None
                     MDLabel:
                         text: "STP Attaque :"
+                    MDIconButton:
+                        icon: "alert"
+                        theme_text_color:"Custom"
+                        text_color:1, 0, 0, 1
                     MDCheckbox:
                         size_hint: None, None
                         color_active: "white"
@@ -225,7 +245,7 @@ ScreenManagement:
                         id: stp_attack
                 MDGridLayout:
                     cols: 2
-                    height: 50
+                    height: 15
                     size_hint_y: None
                     MDLabel:
                         text: "Certificat TLS :"
@@ -234,6 +254,16 @@ ScreenManagement:
                         color_active: "white"
                         size: "48dp", "48dp"
                         id: check_tls
+                MDGridLayout:
+                    cols: 2
+                    height: 50
+                    size_hint_y: None
+                    MDIconButton:
+                        icon: "alert"
+                        theme_text_color:"Custom"
+                        text_color:1, 0, 0, 1
+                    MDLabel:
+                        text: "Ces tests peuvent avoir un impact sur le réseau cible"
                 MDBoxLayout:
                     orientation: 'vertical'
                     MDFillRoundFlatButton:
