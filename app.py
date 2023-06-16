@@ -23,6 +23,8 @@ from data.Package_Mail.zip_password import f_zip_encrypt
 from data.Package_Mail.send_mail import f_send_mail
 import netifaces as ni
 from kivy.base import EventLoop
+import netifaces
+from kivy.properties import StringProperty
 
 Window.keyboard_anim_args = {"d":.2,"t":"linear"}
 Config.set('kivy','keyboard_mode','dock')
@@ -166,6 +168,22 @@ class PentestScreen(Screen):
 
 class Configuration(Screen):
     
+    ip = StringProperty()
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        Clock.schedule_interval(self.update_ip, 1)  # update every 1 seconds
+    
+    def update_ip(self, *args):
+        self.ip = self.ip_addr()
+
+    def ip_addr(self, interface='eth0'):
+        addr = netifaces.ifaddresses(interface)
+        if netifaces.AF_INET in addr:
+            return addr[netifaces.AF_INET][0]['addr']
+        else:
+            return ""
+
     def save_configuration(self, options, name):
         if options[0].active == True:
             with open('/etc/dhcpcd.conf', 'r') as f:
@@ -181,7 +199,7 @@ class Configuration(Screen):
             with open('/etc/dhcpcd.conf', 'a') as f:
                 f.write(config_line)
                 f.close()
-        os.system('sudo systemctl daemon-reload')
+        #os.system('sudo systemctl daemon-reload')
         os.system('sudo systemctl restart dhcpcd')
 
     def toggle_visibility(self, instance, value):
