@@ -471,7 +471,7 @@ def annexe():
 def main_rapport():
   global elements
   directory_client = os.path.join("..", "data", "ressources", "parametres")
-  folder = "f{directory_client}/options.txt")
+  folder = (f"{directory_client}/options.txt")
   path_options = os.path.expanduser(folder)
   with open(path_options, "r") as f:
       for line in f:
@@ -504,7 +504,7 @@ def main_rapport():
   centered_style.alignment = TA_CENTER
   titre_rapport = Paragraph(f"Rapport d'Audit et Pentest Automatisé <BR/> APAB x {nom_entreprise}", centered_style)
   date_rapport = Paragraph(f'Date : {auj}', normal_style)
-  im = Image('ressources/rapport/APAB1.png', 8*inch, 4.5*inch)
+  im = Image(f'{directory}/APAB1.png', 8*inch, 4.5*inch)
   elements = [Spacer(1, 0.4 * 72), im, Spacer(1, 1 * 72), titre_rapport, Spacer(1, 2 * 72), date_rapport, PageBreak()]
 
   
