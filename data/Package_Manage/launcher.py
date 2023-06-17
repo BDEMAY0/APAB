@@ -295,7 +295,7 @@ def audit(parser):
     combined_dict = {k: v for d in host_dicts for k, v in d.items()}
 
     # Définir le chemin du fichier de sortie
-    output_dir = "ressources/rapport"
+    output_dir = "data/ressources/rapport"
     os.makedirs(output_dir, exist_ok=True)  # Crée le répertoire s'il n'existe pas déjà
     output_file_path = os.path.join(output_dir, "audit.json")
 
