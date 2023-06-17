@@ -4,7 +4,7 @@ import signal
 from scapy.all import *
 
 ap_info = {}
-folder = os.path.join("..", "data", "ressources", "wifi")
+folder = os.path.join("data", "ressources", "wifi")
 
 def monitor_mode(iface_name):
     os.system(f"sudo ifconfig {iface_name} down")
