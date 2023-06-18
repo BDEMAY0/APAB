@@ -175,6 +175,17 @@ ScreenManagement:
                         color_active: "white"
                         size: "48dp", "48dp"
                         id: check_tls
+                MDGridLayout:
+                    cols: 2
+                    height: 15
+                    size_hint_y: None
+                    MDLabel:
+                        text: "Telnet :"
+                    MDCheckbox:
+                        size_hint: None, None
+                        color_active: "white"
+                        size: "48dp", "48dp"
+                        id: telnet
                 MDLabel:
                     text: "Test réseau"
                     halign: "center"
@@ -256,7 +267,7 @@ ScreenManagement:
                         text: 'Lancer le test'
                         font_size: "24sp"
                         on_release:
-                            root.check_checkbox([serveur_web, netbios, banner, entete_web, cve, ssh_bf, smb_scanner, dhcp_starvation, wifi, check_tls, mac_flooding, stp_attack], ["serveur_web", "netbios", "banner", "entete_web", "cve", "ssh_bf", "smb_scanner", "dhcp_starvation", "wifi", "check_tls", "mac_flooding", "stp_attack"], root.file_name)
+                            root.check_checkbox([telnet, serveur_web, netbios, banner, entete_web, cve, ssh_bf, smb_scanner, dhcp_starvation, wifi, check_tls, mac_flooding, stp_attack], ["telnet", "serveur_web", "netbios", "banner", "entete_web", "cve", "ssh_bf", "smb_scanner", "dhcp_starvation", "wifi", "check_tls", "mac_flooding", "stp_attack"], root.file_name)
                             root.start_loading()
                 MDBoxLayout:
                     orientation: 'vertical'
