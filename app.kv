@@ -164,25 +164,21 @@ ScreenManagement:
                         color_active: "white"
                         size: "48dp", "48dp"
                         id: smb_scanner
-                MDLabel:
-                    text: "Test réseau"
-                    halign: "center"
-                    pos_hint: {"center_x": .5}
                 MDGridLayout:
-                    cols: 3
+                    cols: 2
                     height: 15
                     size_hint_y: None
                     MDLabel:
-                        text: "Attaque DOS :"
-                    MDIconButton:
-                        icon: "alert"
-                        theme_text_color:"Custom"
-                        text_color:1, 0, 0, 1
+                        text: "Certificat TLS :"
                     MDCheckbox:
                         size_hint: None, None
                         color_active: "white"
                         size: "48dp", "48dp"
-                        id: dos
+                        id: check_tls
+                MDLabel:
+                    text: "Test réseau"
+                    halign: "center"
+                    pos_hint: {"center_x": .5}
                 MDGridLayout:
                     cols: 3
                     height: 15
@@ -245,17 +241,6 @@ ScreenManagement:
                         id: stp_attack
                 MDGridLayout:
                     cols: 2
-                    height: 15
-                    size_hint_y: None
-                    MDLabel:
-                        text: "Certificat TLS :"
-                    MDCheckbox:
-                        size_hint: None, None
-                        color_active: "white"
-                        size: "48dp", "48dp"
-                        id: check_tls
-                MDGridLayout:
-                    cols: 2
                     height: 50
                     size_hint_y: None
                     MDIconButton:
@@ -271,7 +256,7 @@ ScreenManagement:
                         text: 'Lancer le test'
                         font_size: "24sp"
                         on_release:
-                            root.check_checkbox([serveur_web, netbios, banner, entete_web, cve, ssh_bf, smb_scanner, dos, dhcp_starvation, wifi, check_tls, mac_flooding, stp_attack], ["serveur_web", "netbios", "banner", "entete_web", "cve", "ssh_bf", "smb_scanner", "dos", "dhcp_starvation", "wifi", "check_tls", "mac_flooding", "stp_attack"], root.file_name)
+                            root.check_checkbox([serveur_web, netbios, banner, entete_web, cve, ssh_bf, smb_scanner, dhcp_starvation, wifi, check_tls, mac_flooding, stp_attack], ["serveur_web", "netbios", "banner", "entete_web", "cve", "ssh_bf", "smb_scanner", "dhcp_starvation", "wifi", "check_tls", "mac_flooding", "stp_attack"], root.file_name)
                             root.start_loading()
                 MDBoxLayout:
                     orientation: 'vertical'
