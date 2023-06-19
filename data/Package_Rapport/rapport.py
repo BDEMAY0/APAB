@@ -323,24 +323,20 @@ def tableau_smb():
     return table_data_result
 
 def tableau_banner():
-    details_table = [["#", "Host", "Service", "Version"]]
+    details_table = [["#", "Host", "Port", "Service", "Version"]]
     global attacks
     i = 1
 
     for attack in attacks:
-        if attack["attack_name"] == "banner_vuln":
+        if attack["attack_name"] == "banner":
             for host in attack["hosts"]:
                 ip_address = host["ip_address"]
-                details = host["details"] if host["details"] else {}
-                if details:
-                  service = ""
-                  version = ""
-                  for i in range(0, len(details), 1):
-                    if i % 2 == 0:
-                      service += details[i] + "\n"
-                    elif i % 2 == 1:
-                      version += details[i] + "\n"
-                row = [i] + [ip_address, service.rstrip('\n'), version.rstrip('\n')]
+                details = host["details"][0] if host["details"] else {}
+                port = details.get("Port", "")
+                service = details.get("Service", "")
+                version = details.get("Version", "")
+
+                row =  [i] + [ip_address] + [port] + [service] + [version] 
                 details_table.append(row)
                 i += 1
 
