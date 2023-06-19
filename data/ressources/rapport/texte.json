@@ -62,7 +62,7 @@
     "criticite": "Majeure",
     "scoring": 1
   },
-  "banner_vuln": {
+  "banner": {
     "titre": "RECUPERATION DES BANNIERES",
     "description": "L'utilisation de Nmap nous permet d'explorer et de découvrir les services ouverts sur les machines du système d'information. Grâce à cette analyse, nous sommes en mesure de récupérer les bannières associées à ces services. Si un service a une bannière présente, cela peut être considéré comme un défaut de configuration, car cela peut révéler des informations sensibles sur le service ou sur la version utilisée.",
     "constat": "Une mauvaise configuration ou des vulnérabilités dans les protocoles TLS peuvent exposer les communications à des attaques telles que le détournement ou l'interception des données.",
@@ -70,7 +70,7 @@
     "criticite": "Majeure",
     "scoring": 1
   },
-  "netbios_vuln": {
+  "netbios": {
     "titre": "SERVICE NETBIOS",
     "description": "Grâce à l'utilisation de Nmap, nous sommes en mesure de détecter la présence de NetBIOS sur les machines du réseau. Dans le cadre de bonnes pratiques de sécurité, la désactivation de NetBIOS est recommandée, et notre outil considérera la présence de NetBIOS comme un défaut de configuration. NetBIOS est un protocole de communication largement utilisé pour le partage de fichiers, l'impression et d'autres services réseau dans les environnements Windows. Cependant, en raison de certaines vulnérabilités et de ses fonctionnalités obsolètes, désactiver NetBIOS est souvent conseillé pour réduire les risques de sécurité associés à son utilisation.",
     "constat": "Une mauvaise configuration ou des vulnérabilités dans les protocoles TLS peuvent exposer les communications à des attaques telles que le détournement ou l'interception des données.",
@@ -95,6 +95,14 @@
     "scoring": 3
   },
   "web_vuln": {
+    "titre": "Web Vuln",
+    "description": "L'attaque MAC Flooding consiste à saturer les tables d'adresses MAC des commutateurs d'un réseau en envoyant de nombreux paquets avec des adresses MAC aléatoires. Cela provoque une surcharge des tables d'adresses MAC. Lorsque les tables sont pleines, les commutateurs transmettent tous les paquets à tous les périphériques du réseau, ce qui entraîne une diffusion générale des paquets et perturbe les communications normales. L'objectif de cette attaque est de causer un déni de service en épuisant les ressources du réseau ou de faciliter d'autres attaques en profitant de la confusion causée par la diffusion des paquets. Un outil est utilisé pour mesurer l'impact de l'attaque en comparant le nombre de paquets diffusés avant et après son exécution, afin de déterminer si le réseau est vulnérable à cette attaque.",
+    "constat": "Une mauvaise configuration ou des vulnérabilités dans les protocoles TLS peuvent exposer les communications à des attaques telles que le détournement ou l'interception des données.",
+    "remediation": "Pour renforcer la sécurité des communications TLS, il est essentiel de suivre les bonnes pratiques de configuration, de mettre à jour régulièrement les versions TLS et d'effectuer des tests de vulnérabilité pour détecter les éventuelles faiblesses dans la configuration du protocole.",
+    "criticite": "Majeure",
+    "scoring": 2
+  },
+  "telnet": {
     "titre": "Web Vuln",
     "description": "L'attaque MAC Flooding consiste à saturer les tables d'adresses MAC des commutateurs d'un réseau en envoyant de nombreux paquets avec des adresses MAC aléatoires. Cela provoque une surcharge des tables d'adresses MAC. Lorsque les tables sont pleines, les commutateurs transmettent tous les paquets à tous les périphériques du réseau, ce qui entraîne une diffusion générale des paquets et perturbe les communications normales. L'objectif de cette attaque est de causer un déni de service en épuisant les ressources du réseau ou de faciliter d'autres attaques en profitant de la confusion causée par la diffusion des paquets. Un outil est utilisé pour mesurer l'impact de l'attaque en comparant le nombre de paquets diffusés avant et après son exécution, afin de déterminer si le réseau est vulnérable à cette attaque.",
     "constat": "Une mauvaise configuration ou des vulnérabilités dans les protocoles TLS peuvent exposer les communications à des attaques telles que le détournement ou l'interception des données.",
