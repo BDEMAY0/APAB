@@ -600,3 +600,6 @@ def main_rapport():
   
   # Construction du document PDF
   doc.build(elements)
+
+if __name__ == "__main__":
+  main_rapport()
