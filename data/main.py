@@ -2,7 +2,6 @@ from Package_Manage.NmapParser import NmapParser
 import os
 from Package_Manage.launcher import * 
 from Package_Export.ManageExport import ManageExport
-from Package_Rapport.rapport import main_rapport
 import subprocess
 
 # Le point d'entrée du programme
