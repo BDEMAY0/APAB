@@ -436,7 +436,7 @@ def print_attack():
         tableau = tableau_entete_web()
       elif attack['attack_name'] == "smb_scanner":
         tableau = tableau_smb()
-      elif attack['attack_name'] == "banner_vuln":
+      elif attack['attack_name'] == "banner":
         tableau = tableau_banner()
       else:
         tableau = create_tableau(attack['attack_name'])
@@ -574,7 +574,7 @@ def main_rapport():
     <b>Contexte et périmètre de l’audit : </b><BR/><BR/>\
        L’audit a été mené depuis les locaux de{nom_entreprise.replace("_", " ")} le {auj}.<BR/><BR/> \
        L’audit a été effectuée avec une approche boite noire|boite grise|boite blanche, c’est-à-dire que les auditeurs disposaient (ou non) de compte d’accès sur l’application, du code source, etc.<BR/><BR/> \
-       L’audit portait sur le périmètre suivant : {ip} {masque_sous_reseau}<BR/> \
+       L’audit portait sur le périmètre suivant : {ip} /{masque_sous_reseau}<BR/> \
   ', normal_style)
   elements.extend([introduction, PageBreak()])
   
