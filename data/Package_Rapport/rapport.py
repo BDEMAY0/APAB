@@ -111,8 +111,10 @@ def scoring():
             nb_ip += len(ip_addresses)
             scoring_count += texte[test]["scoring"] * len(ip_addresses)
 
-    print(nb_ip)
-    scoring_count = round(scoring_count / nb_ip, 2)
+    if scoring_count == 0:
+      pass
+    else :
+      scoring_count = round(scoring_count / nb_ip, 2)
     return ip_counts, scoring_count
   
 def synthese():
