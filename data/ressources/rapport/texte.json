@@ -103,7 +103,7 @@
     "scoring": 2
   },
   "telnet": {
-    "titre": "Web Vuln",
+    "titre": "Telnet",
     "description": "L'attaque MAC Flooding consiste à saturer les tables d'adresses MAC des commutateurs d'un réseau en envoyant de nombreux paquets avec des adresses MAC aléatoires. Cela provoque une surcharge des tables d'adresses MAC. Lorsque les tables sont pleines, les commutateurs transmettent tous les paquets à tous les périphériques du réseau, ce qui entraîne une diffusion générale des paquets et perturbe les communications normales. L'objectif de cette attaque est de causer un déni de service en épuisant les ressources du réseau ou de faciliter d'autres attaques en profitant de la confusion causée par la diffusion des paquets. Un outil est utilisé pour mesurer l'impact de l'attaque en comparant le nombre de paquets diffusés avant et après son exécution, afin de déterminer si le réseau est vulnérable à cette attaque.",
     "constat": "Une mauvaise configuration ou des vulnérabilités dans les protocoles TLS peuvent exposer les communications à des attaques telles que le détournement ou l'interception des données.",
     "remediation": "Pour renforcer la sécurité des communications TLS, il est essentiel de suivre les bonnes pratiques de configuration, de mettre à jour régulièrement les versions TLS et d'effectuer des tests de vulnérabilité pour détecter les éventuelles faiblesses dans la configuration du protocole.",
