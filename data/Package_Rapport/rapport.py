@@ -15,6 +15,7 @@ import time
 
 vuln_i = 1
 elements = []
+
 current_dir = os.path.dirname(os.path.abspath(__file__))
 directory = os.path.join(current_dir, "..", "ressources", "rapport")
 
@@ -111,7 +112,7 @@ def scoring():
             scoring_count += texte[test]["scoring"] * len(ip_addresses)
 
     print(nb_ip)
-    #scoring_count = round(scoring_count / nb_ip, 2)
+    scoring_count = round(scoring_count / nb_ip, 2)
     return ip_counts, scoring_count
   
 def synthese():
@@ -469,8 +470,11 @@ def annexe():
     
 
 def main_rapport():
+  global elements
+  global directory
   
   directory_client = os.path.join(current_dir, "..", "ressources", "parametres", "options.txt")
+
   with open(directory_client, "r") as f:
       for line in f:
           key, value = line.strip().split(" :")
@@ -502,7 +506,8 @@ def main_rapport():
   centered_style.alignment = TA_CENTER
   titre_rapport = Paragraph(f"Rapport d'Audit et Pentest Automatisé <BR/> APAB x {nom_entreprise}", centered_style)
   date_rapport = Paragraph(f'Date : {auj}', normal_style)
-  im = Image(f'{directory}/APAB.png', 8*inch, 4.5*inch)
+  image = f"{directory}/APAB.png"
+  im = Image(image, 8*inch, 4.5*inch)
   elements = [Spacer(1, 0.4 * 72), im, Spacer(1, 1 * 72), titre_rapport, Spacer(1, 2 * 72), date_rapport, PageBreak()]
 
   
@@ -593,4 +598,3 @@ def main_rapport():
   
   # Construction du document PDF
   doc.build(elements)
-  
