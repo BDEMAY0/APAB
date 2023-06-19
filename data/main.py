@@ -3,6 +3,7 @@ import os
 from Package_Manage.launcher import * 
 from Package_Export.ManageExport import ManageExport
 from Package_Rapport.rapport import main_rapport
+import subprocess
 
 # Le point d'entrée du programme
 def main():
@@ -35,7 +36,10 @@ def main():
         f.seek(0)
         f.writelines(lignes)
         ManageExport.export_all_to_json("rapport_attaques.json")
-        main_rapport()
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        folder = os.path.join(current_dir, "Package_Rapport", "rapport.py")
+        path = os.path.expanduser(folder)
+        subprocess.run(['python3', path])
 
 
 if __name__ == "__main__":
