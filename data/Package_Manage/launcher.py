@@ -285,7 +285,7 @@ def banner(parser):
 
 #fonction permettant de savoir si un service dispose du telnet
 def telnet(parser):
-    telnet_report = ManageExport("telnet_report")
+    telnet_report = ManageExport("telnet")
     for host in parser.host_info_list:
         for port in host.ports:
             if port["port_id"] == "23" or port["service_name"] == "telnet":
