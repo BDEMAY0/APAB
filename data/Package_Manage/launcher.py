@@ -12,6 +12,7 @@ from Package_Attack.STPAttack import STPAttack
 from Package_Attack.CertificatHTTPS import CertificatHTTPS
 from Package_Attack.WIFI import start_wifi
 from Package_Export.Wifi_Export import Wifi_Export 
+from Package_Export.Banner_Export import Banner_Export
 import threading
 import os
 import json
@@ -276,12 +277,12 @@ def netbios(parser):
 
 #fonction permettant de savoir si un service dispose de sa banniere
 def banner(parser):
-    banner_report = ManageExport("banner")
+    banner_report = Banner_Export("banner")
     for host in parser.host_info_list:
         for port in host.ports:
             if port["version"] != "N/A":
                 banner_report.success = True
-                banner_report.add_host(host.ip_address, [port["service_name"], port["version"]])
+                banner_report.add_banner_host(host.ip_address, port["port_id"], port["service_name"], port["version"])
 
 #fonction permettant de savoir si un service dispose du telnet
 def telnet(parser):
