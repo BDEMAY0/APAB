@@ -88,6 +88,17 @@ ScreenManagement:
                     height: 15
                     size_hint_y: None
                     MDLabel:
+                        text: "Telnet :"
+                    MDCheckbox:
+                        size_hint: None, None
+                        color_active: "white"
+                        size: "48dp", "48dp"
+                        id: telnet
+                MDGridLayout:
+                    cols: 2
+                    height: 15
+                    size_hint_y: None
+                    MDLabel:
                         text: "Serveur web :"
                     MDCheckbox:
                         size_hint: None, None
@@ -175,17 +186,6 @@ ScreenManagement:
                         color_active: "white"
                         size: "48dp", "48dp"
                         id: check_tls
-                MDGridLayout:
-                    cols: 2
-                    height: 15
-                    size_hint_y: None
-                    MDLabel:
-                        text: "Telnet :"
-                    MDCheckbox:
-                        size_hint: None, None
-                        color_active: "white"
-                        size: "48dp", "48dp"
-                        id: telnet
                 MDLabel:
                     text: "Test réseau"
                     halign: "center"
