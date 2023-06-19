@@ -282,6 +282,15 @@ def banner(parser):
             if port["version"] != "N/A":
                 banner_report.success = True
                 banner_report.add_host(host.ip_address, [port["service_name"], port["version"]])
+
+#fonction permettant de savoir si un service dispose du telnet
+def telnet(parser):
+    telnet_report = ManageExport("telnet_report")
+    for host in parser.host_info_list:
+        for port in host.ports:
+            if port["port_id"] == "23" or port["service_name"] == "telnet":
+                telnet_report.success = True
+                telnet_report.add_host(host.ip_address)
         
 # Fonction permettant de récupérer toutes les informations sur les hôtes avec leurs service port ouvert pour la partie reconnaissance (génère un fichier json audit.json utilisé dans le rapport)
 def audit(parser):    
