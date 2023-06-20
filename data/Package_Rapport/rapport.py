@@ -402,16 +402,16 @@ def tableau_CVE():
 
     # Parcourir le tableau pour appliquer les couleurs
     for row in range(1, len(details_table)):
-      cell_value = details_table[row][2]
+      cell_value = details_table[row][3]
       if isinstance(cell_value, (int, float)):
         if cell_value > 9:
-            table_style_cve.add('BACKGROUND', (2, row), (2, row), color_red_carmin)
+            table_style_cve.add('BACKGROUND', (3, row), (3, row), color_red_carmin)
         elif 7 <= cell_value <= 9:
-            table_style_cve.add('BACKGROUND', (2, row), (2, row), color_red)
+            table_style_cve.add('BACKGROUND', (3, row), (3, row), color_red)
         elif 4 <= cell_value <= 7:
-            table_style_cve.add('BACKGROUND', (2, row), (2, row), color_orange)
+            table_style_cve.add('BACKGROUND', (3, row), (3, row), color_orange)
         elif cell_value < 4:
-            table_style_cve.add('BACKGROUND', (2, row), (2, row), color_yellow)
+            table_style_cve.add('BACKGROUND', (3, row), (3, row), color_yellow)
     # Mise en forme du tableau
     table_data_result.setStyle(table_style_cve)
   
