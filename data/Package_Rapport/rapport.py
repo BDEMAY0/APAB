@@ -133,12 +133,27 @@ def synthese():
   data_synth_vuln = [["VULNERABILITE","CRITICITE", "SCORE"]]
 
   count = scoring()
-    
+  score_cve = 0
   for attack in attacks:
     if attack['success'] == True:
       vuln = texte[attack['attack_name']]["titre"]
-      criticite = texte[attack['attack_name']]["criticite"]
       score = count[0][attack['attack_name']]
+      if attack['attack_name'] == "cve":
+        for host in attack["hosts"]:
+          details = host["details"]
+          for detail in details:
+            cvss_score = detail['cvss_score']
+            if cvss_score > score_cve:
+              score_cve = cvss_score
+              if score_cve >= 9:
+                criticite = "Majeure"
+              elif 5 < score_cve < 9:
+                criticite = "Modérée"
+              elif score_cve <= 5:
+                criticite = "Mineure"
+      else:
+        criticite = texte[attack['attack_name']]["criticite"]
+        
       row =  [vuln] + [criticite] + [score]
       data_synth_vuln.append(row)
       
@@ -552,10 +567,10 @@ def main_rapport():
        Niveau de classification	: {niveau_diffusion}<BR/><BR/> \
   	 <b>Définition des niveaux de classification utilisés : </b><BR/>\
   •	C0 – Public : les informations contenues dans ce document peuvent être diffusées sans aucune restriction <BR/> \
-  •	C1 – Accès limité : les informations contenues dans ce document ne peuvent être communiquées qu’à des personnels du MSI ou de ses partenaires. <BR/>\
-  •	C2 – Document confidentiel : les informations contenues dans ce document ne peuvent être communiquées qu’à des personnels du MSI ou des tiers explicitement nommés dans la liste de diffusion. <BR/>\
+  •	C1 – Accès limité : les informations contenues dans ce document ne peuvent être communiquées qu’à des personnels de APAB ou de ses partenaires. <BR/>\
+  •	C2 – Document confidentiel : les informations contenues dans ce document ne peuvent être communiquées qu’à des personnels de APAB ou des tiers explicitement nommés dans la liste de diffusion. <BR/>\
   •	C3 – Document secret : les informations contenues dans ce document ne peuvent être communiquées qu’aux personnes physiques identifiées dans la liste de diffusion. <BR/>\
-  •	DR – Diffusion restreinte : les informations contenues dans ce document bénéficient des mesures de sécurité spécifiques en lien avec la réglementation en vigueur et les politiques de sécurité dédiées du MSI. <BR/>\
+  •	DR – Diffusion restreinte : les informations contenues dans ce document bénéficient des mesures de sécurité spécifiques en lien avec la réglementation en vigueur et les politiques de sécurité dédiées de APAB. <BR/>\
   ', my_Style)
   elements.extend([Spacer(1, 0.5 * 50), diffusion, PageBreak()])
   
