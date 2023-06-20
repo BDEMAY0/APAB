@@ -8,7 +8,10 @@ class SMBScanner:
     def racine_folders(self):
         folders = []
         command = f"smbclient -L {self.ip} -N"
-        output = subprocess.check_output(command, shell=True).decode("utf-8")
+        try:
+            output = subprocess.check_output(command, shell=True).decode("utf-8")
+        except subprocess.CalledProcessError as e:
+            return []
 
         for line in output.splitlines():
             if "Disk" in line:
@@ -32,8 +35,7 @@ class SMBScanner:
                     if folder not in ['.', '..']:
                         sub_path = path + '/' + folder
                         folders.append(sub_path)
-
-        except:
+        except subprocess.CalledProcessError as e:
             pass
         return racine, folders
 
@@ -47,6 +49,8 @@ class SMBScanner:
     def manager(self):
         state = False
         shares = self.racine_folders()
+        if not shares:
+            return state, self.total_return
         for share in shares:
             has_access, folders = self.check_anonymous_access(share)
             if has_access:
