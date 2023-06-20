@@ -282,7 +282,7 @@ def banner(parser):
         for port in host.ports:
             if port["version"] != "N/A":
                 banner_report.success = True
-                banner_report.add_banner_host(host.ip_address, port["port_id"], port["service_name"], port["version"])
+                banner_report.add_banner_host(host.ip_address, port["port_id"], port["product"], port["version"])
 
 #fonction permettant de savoir si un service dispose du telnet
 def telnet(parser):
@@ -326,7 +326,7 @@ def host_to_dict(host):
         port_dict = {
             "protocol": port["protocol"],
             "port_id": port["port_id"],
-            "service_name": port["service_name"],
+            "service_name": port["product"],
             "product": port["product"],
             "version": port.get("version", "N/A"),  # Si aucune version n'est spécifiée, utilisez "N/A"
         }
