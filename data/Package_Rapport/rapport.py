@@ -96,26 +96,29 @@ def parse_data_ressources():
 def scoring():
     global texte
     global attacks
+    global audit
 
     ip_counts = {}
     scoring_count = 0	
     nb_ip = 0
-
+    nb_ip = len(audit)
+      
     for item in attacks:
         attack_name = item['attack_name']
         hosts = item['hosts']
         ip_addresses = [host['ip_address'] for host in hosts]
         for test in texte:
           if attack_name == test:
-            ip_counts[attack_name] = texte[test]["scoring"] * len(ip_addresses)
-            nb_ip += len(ip_addresses)
+            ip_counts[attack_name] = len(ip_addresses)
+            if ip_counts[attack_name] == 0:
+              ip_counts[attack_name] = "N/A"
             scoring_count += texte[test]["scoring"] * len(ip_addresses)
 
     if scoring_count == 0:
       pass
     else :
       scoring_count = round(scoring_count / nb_ip, 2)
-    return ip_counts, scoring_count
+    return ip_counts, scoring_count, nb_ip
   
 def synthese():
   global elements
@@ -130,7 +133,7 @@ def synthese():
   elements.extend([synthese, Spacer(1, 0.5 * 50)])
   
   # Données du tableau Ressources
-  data_synth_vuln = [["VULNERABILITE","CRITICITE", "SCORE"]]
+  data_synth_vuln = [["VULNERABILITE","CRITICITE", "Nombre d'hôtes"]]
 
   count = scoring()
   score_cve = 0
@@ -419,7 +422,7 @@ def tableau_CVE():
 
 def if_data_in_attack(attack_name):
   global attacks
-
+  table = 0
   # Parcours des attaques
   for attack in attacks:
     if attack['attack_name'] == attack_name:
@@ -594,8 +597,8 @@ def main_rapport():
   #Tableau qui liste toutes les ressources de l'entreprise
   ressourcestitle = Paragraph("Phase de découverte :", header_style2)
   elements.append(ressourcestitle)
-  bruteforce= Paragraph("Voici une liste des ressources identifiées de votre entreprise.")
-  elements.extend([bruteforce, Spacer(1, 0.5 * 50)])
+  ressources= Paragraph("Voici une liste des ressources identifiées de votre entreprise.")
+  elements.extend([ressources, Spacer(1, 0.5 * 50)])
   
   data_ressources = parse_data_ressources()
     
