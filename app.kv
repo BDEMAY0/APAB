@@ -57,7 +57,7 @@ ScreenManagement:
     BoxLayout:
         orientation: "vertical"
         MDTopAppBar:
-            title: "Pentest - Tests"
+            title: "Audit & Pentest - Tests"
             pos_hint: {"top": 1}
             elevation: 10
         ScrollView:
@@ -264,7 +264,7 @@ ScreenManagement:
                     orientation: 'vertical'
                     MDFillRoundFlatButton:
                         pos_hint: {'center_x': .5, 'center_y': .5}
-                        text: 'Lancer le test'
+                        text: 'Lancer le(s) test(s)'
                         font_size: "24sp"
                         on_release:
                             root.check_checkbox([telnet, serveur_web, netbios, banner, entete_web, cve, ssh_bf, smb_scanner, dhcp_starvation, wifi, check_tls, mac_flooding, stp_attack], ["telnet", "serveur_web", "netbios", "banner", "entete_web", "cve", "ssh_bf", "smb_scanner", "dhcp_starvation", "wifi", "check_tls", "mac_flooding", "stp_attack"], root.file_name)
@@ -283,7 +283,7 @@ ScreenManagement:
     BoxLayout:
         orientation: "vertical"
         MDTopAppBar:
-            title: "Pentest - Options"
+            title: "Audit & Pentest - Options"
             pos_hint: {"top": 1}
             elevation: 10
         ScrollView:
@@ -322,7 +322,7 @@ ScreenManagement:
                         font_size: "18sp"
                         line_color_normal: 1,1,1
                         hint_text_color_normal: 1,1,1
-                        hint_text: 'IP réseau à pentester:'
+                        hint_text: 'IP réseau à tester:'
                         id: ip
                         required: True
                         helper_text: "0.0.0.0 test du réseau du boitier"
