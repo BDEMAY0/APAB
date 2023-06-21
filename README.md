@@ -20,7 +20,7 @@ Grâce à des technologies et des méthodologies de pointe, APAB effectue des an
 Pour commencer avec APAB, veuillez consulter le [Guide d'installation](lien-vers-le-guide-dinstallation) pour des instructions détaillées sur la configuration de la boîte et la mise en place des composants nécessaires. Ce guide fournit également un aperçu des fonctionnalités disponibles dans APAB.
 
 ## Contributions
-Nous accueillons les contributions à APAB de la part de la communauté open source. Si vous souhaitez contribuer à ce projet, veuillez vous référer aux [Lignes directrices de contribution](lien-vers-les-lignes-directrices-de-contribution) pour plus d'informations.
+Nous accueillons les contributions à APAB de la part de la communauté open source. Si vous souhaitez contribuer à ce projet, veuillez vous référer aux Lignes directrices de contribution pour plus d'informations.
 
 ## Retours et support
 Nous attachons une grande importance à vos retours et nous nous engageons à améliorer APAB en fonction des retours d'expérience et des besoins des utilisateurs. Si vous avez des questions, des suggestions ou rencontrez des problèmes lors de l'utilisation d'APAB, n'hésitez pas à ouvrir un
