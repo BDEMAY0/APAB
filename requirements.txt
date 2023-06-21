@@ -1,0 +1,14 @@
+pyminizip==0.2.6
+pyshark==0.6
+pysmbc==1.0.23
+pytest-asyncio==0.21.0
+ratelimiter==1.2.0.post0
+scapy==2.5.0
+xmltodict==0.13.0
+reportlab==3.5.59
+Kivy==2.1.0
+kivymd==1.1.1
+kivytransitions==1.1
+Pillow==8.1.2
+Cython==0.29.34
+netifaces==0.11.0
