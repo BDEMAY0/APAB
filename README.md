@@ -20,7 +20,7 @@ APAB est une boîte compacte et autonome, équipée d'outils puissants et de fon
 Grâce à des technologies et des méthodologies de pointe, APAB effectue des analyses automatisées des vulnérabilités, simule des attaques réelles et génère des rapports détaillés avec des constatations claires et des actions recommandées. Cela permet aux organisations d'identifier et de résoudre de manière proactive les éventuelles faiblesses de sécurité, améliorant ainsi leur posture de sécurité globale.
 
 ## Premiers pas
-Pour commencer avec APAB, veuillez consulter le [Guide d'installation]([lien-vers-le-guide-dinstallation](https://github.com/BDEMAY0/APAB/wiki/Installation)) pour des instructions détaillées sur la configuration de la boîte et la mise en place des composants nécessaires. Ce guide fournit également un aperçu des fonctionnalités disponibles dans APAB.
+Pour commencer avec APAB, veuillez consulter le [Guide d'installation](https://github.com/BDEMAY0/APAB/wiki/Installation) pour des instructions détaillées sur la configuration de la boîte et la mise en place des composants nécessaires. Ce guide fournit également un aperçu des fonctionnalités disponibles dans APAB.
 
 ## Contributions
 Nous accueillons les contributions à APAB de la part de la communauté open source. Si vous souhaitez contribuer à ce projet, veuillez vous référer aux Lignes directrices de contribution pour plus d'informations.
