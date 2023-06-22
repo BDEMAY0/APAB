@@ -1,5 +1,8 @@
 # APAB (Audit and Pentest Automation Box)
 
+![image](https://github.com/BDEMAY0/APAB/assets/77978931/95d4306b-861b-4c48-82a8-616992d808aa)
+
+
 ## Introduction
 APAB, acronyme pour Audit and Pentest Automation Box, est un projet développé dans le cadre de notre programme annuel de master en sécurité informatique. Notre équipe de trois membres a conçu et créé cette solution innovante afin de faciliter et d'automatiser les audits et les tests de pénétration au sein des réseaux de nos clients.
 
