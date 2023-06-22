@@ -25,6 +25,14 @@ import netifaces as ni
 from kivy.base import EventLoop
 import netifaces
 from kivy.properties import StringProperty
+from kivy.uix.image import Image
+from kivy.uix.popup import Popup
+from pdf2image import convert_from_path
+from kivy.uix.carousel import Carousel
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.scatter import Scatter
+from kivy.uix.relativelayout import RelativeLayout
+import time
 
 Window.keyboard_anim_args = {"d":.2,"t":"linear"}
 Config.set('kivy','keyboard_mode','dock')
@@ -328,7 +336,36 @@ class MenuApp(MDApp):
 
             def open_callback():
                 self.file_menu.dismiss()
-                subprocess.run(["xdg-open", path], check=True)
+                current_dir = os.path.dirname(os.path.abspath(__file__))
+                images = convert_from_path(path)
+                folder = os.path.join(current_dir, "data", "previsualisation")
+                path_options = os.path.expanduser(folder)
+                subprocess.run(f'rm {path_options}/*.png', shell=True)
+                time_suffix = str(time.time())
+                for i, image in enumerate(images):
+                    image.save(f'{path_options}/image_{i}_{time_suffix}.png', 'PNG')
+                carousel = Carousel(direction='right')
+                for i in range(len(images)):
+                    scatter = Scatter(do_rotation=False, 
+                              do_translation=True,
+                              scale=5)
+                    scatter.size = Window.size
+                    img = Image(source=f'{path_options}/image_{i}_{time_suffix}.png', 
+                                center_x=76 , center_y=45)
+                    scatter.add_widget(img)
+            
+                    relative_layout = RelativeLayout()
+                    relative_layout.add_widget(scatter)
+                    
+                    carousel.add_widget(relative_layout)
+
+                # Créez un Popup avec le Carousel comme contenu :
+                popup = Popup(title='Prévisualisation',
+                            content=carousel,
+                            size_hint=(0.8, 1))
+
+                # Affichez le Popup :
+                popup.open()
 
             def extract_callback():
                 self.file_menu.dismiss()
@@ -419,6 +456,7 @@ class MenuApp(MDApp):
             subprocess.run(f'rm {fichier}/ressources/rapport/audit.json', shell=True)
             subprocess.run(f'rm {fichier}/ressources/rapport/rapport_attaque.json', shell=True)
             subprocess.run(f'rm {fichier}/ressources/wifi/capture*', shell=True)
+            subprocess.run(f'rm {fichier}/previsualisation/*.png', shell=True)
             reset_dialog.dismiss()
 
         reset_dialog = MDDialog(
@@ -433,7 +471,7 @@ class MenuApp(MDApp):
 
     def build(self):
         Window.size = (480, 320)
-        Window.fullscreen = False
+        Window.fullscreen = True
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "Blue"
         self.theme_cls.primary_hue = "900"
