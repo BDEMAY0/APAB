@@ -363,7 +363,6 @@ ScreenManagement:
                         font_size: "24sp"
                         on_release:
                             root.save_options([nom_entreprise, mail_entreprise, niveau_diffusion, ip, masque_sous_reseau, gateway, ip_ex], ["nom_entreprise", "mail_entreprise", "niveau_diffusion", "ip", "masque_sous_reseau", "gateway", "ip_ex"])
-                            app.root.current = 'PentestScreen'
                 MDBoxLayout:
                     orientation: 'vertical'
                     MDFillRoundFlatButton:
@@ -445,7 +444,6 @@ ScreenManagement:
                         font_size: "24sp"
                         on_release:
                             root.save_configuration([dhcp_configuration, ip_configuration, masque_sous_reseau_configuration, gateway_configuration], ["dhcp", "ip", "masque_sous_reseau", "gateway"])
-                            app.root.current = 'Accueil'
                 MDBoxLayout:
                     orientation: 'vertical'
                     MDFillRoundFlatButton:

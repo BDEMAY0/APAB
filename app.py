@@ -33,6 +33,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.scatter import Scatter
 from kivy.uix.relativelayout import RelativeLayout
 import time
+import re
 
 Window.keyboard_anim_args = {"d":.2,"t":"linear"}
 Config.set('kivy','keyboard_mode','dock')
@@ -44,8 +45,36 @@ class Accueil(Screen):
 
 class Option(Screen):
 
+    def dialog(field):
+        def close_dialog(*args):
+            field_dialog.dismiss()
+        field_dialog = MDDialog(
+            title=f'{field} invalide',
+            type="custom",
+            buttons=[
+                MDFlatButton(text="Fermer", on_release=close_dialog),
+            ],
+        )
+        field_dialog.open()
+
+    def is_valid_ipv4(ip):
+        """Valide une adresse IPv4"""
+        pattern = re.compile(r'^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$')
+        return bool(pattern.match(ip))
+
+    def is_valid_ip_range(ip_range):
+        """Valide un range d'adresse IPv4 et vérifie que le premier nombre est plus petit que le second"""
+        pattern = re.compile(r'^((?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))(-((?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))$|$))')
+        match = pattern.match(ip_range)
+        if match:
+            start, end = map(int, ip_range.split(".")[-1].split("-"))
+            return start < end
+        return False
+            
+
     def save_options(self, options, name):
-        i=0
+        i = 0
+        valid = 0
         current_dir = os.path.dirname(os.path.abspath(__file__))
         folder = os.path.join(current_dir, "data", "ressources", "parametres", "options.txt")
         path = os.path.expanduser(folder)
@@ -57,6 +86,17 @@ class Option(Screen):
             for option in options:
                 if name[i] == "ip":
                     tmp = option.text
+                    if Option.is_valid_ipv4(tmp) != True:
+                        Option.dialog("IP")
+                        valid = 1
+                if name[i] == "masque_sous_reseau" and option.text != "":
+                    if int(option.text) < 0 or int(option.text) > 32:
+                        Option.dialog("Masque de sous réseau")
+                        valid = 1
+                if name[i] == "gateway" and option.text != "":
+                    if Option.is_valid_ipv4(option.text) != True:
+                        Option.dialog("Passerelle")
+                        valid = 1
                 if name[i] == "masque_sous_reseau" and option.text == "" and tmp != "0.0.0.0":
                     option.text = "24"
                 if name[i] == "gateway" and option.text == "" and tmp != "0.0.0.0":
@@ -80,9 +120,17 @@ class Option(Screen):
                     option.text = str(sum([bin(int(x)).count('1') for x in subnet_mask.split('.')]))
                 if name[i] == "gateway" and option.text == "" and tmp == "0.0.0.0":
                     option.text = default_gateway
+                if name[i] == "ip_ex" and option.text != "":
+                    segments = [seg.strip() for seg in option.text.split(",")]
+                    all_valid = all(Option.is_valid_ipv4(seg) or Option.is_valid_ip_range(seg) for seg in segments)
+                    if all_valid != True:
+                        Option.dialog("Ip exclu")
+                        valid = 1
                 file.write(f"{name[i]} : {option.text}\n")
                 i= i+1
             file.close()
+            if valid == 0:
+                self.manager.current= 'PentestScreen'
 
     def drop(self, instance):
         self.menu = MDDropdownMenu(
@@ -193,6 +241,7 @@ class Configuration(Screen):
             return ""
 
     def save_configuration(self, options, name):
+        valid = 0
         if options[0].active == True:
             with open('/etc/dhcpcd.conf', 'r') as f:
                 lines = f.readlines()
@@ -203,12 +252,29 @@ class Configuration(Screen):
                     f.write(line)
                 f.close()
         else:
-            config_line = f'interface eth0\nstatic ip_address={options[1].text}/{options[2].text}\nstatic routers={options[3].text}\n'
-            with open('/etc/dhcpcd.conf', 'a') as f:
-                f.write(config_line)
-                f.close()
-        #os.system('sudo systemctl daemon-reload')
-        os.system('sudo systemctl restart dhcpcd')
+            if Option.is_valid_ipv4(options[1].text) != True or options[1].text== "":
+                Option.dialog("IP")
+                valid = 1
+            if options[2].text != "":
+                if int(options[2].text) < 0 or  int(options[2].text) > 32:
+                    Option.dialog("Masque de sous réseau")
+                    valid = 1
+            if options[2].text == "":
+                Option.dialog("Masque de sous réseau")
+                valid = 1
+            if options[3].text != "":
+                if Option.is_valid_ipv4(options[3].text) != True:
+                    Option.dialog("Passerelle")
+                    valid = 1
+            if valid == 0:
+                config_line = f'interface eth0\nstatic ip_address={options[1].text}/{options[2].text}\nstatic routers={options[3].text}\n'
+                with open('/etc/dhcpcd.conf', 'a') as f:
+                    f.write(config_line)
+                    f.close()
+        
+        if valid == 0:
+            os.system('sudo systemctl restart dhcpcd')
+            self.manager.current= 'Accueil'
 
     def toggle_visibility(self, instance, value):
         # Modifier l'opacité des champs texte et boutons en fonction de l'état du bouton Switch
@@ -471,7 +537,7 @@ class MenuApp(MDApp):
 
     def build(self):
         Window.size = (480, 320)
-        Window.fullscreen = True
+        Window.fullscreen = False
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "Blue"
         self.theme_cls.primary_hue = "900"
