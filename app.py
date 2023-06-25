@@ -57,6 +57,11 @@ class Option(Screen):
         )
         field_dialog.open()
 
+    def is_valid_email(email):
+        """Valide une adresse e-mail"""
+        pattern = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
+        return bool(pattern.match(email))
+
     def is_valid_ipv4(ip):
         """Valide une adresse IPv4"""
         pattern = re.compile(r'^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$')
@@ -125,6 +130,10 @@ class Option(Screen):
                     all_valid = all(Option.is_valid_ipv4(seg) or Option.is_valid_ip_range(seg) for seg in segments)
                     if all_valid != True:
                         Option.dialog("Ip exclu")
+                        valid = 1
+                if name[i] == "mail_entreprise" and option.text != "":
+                    if Option.is_valid_email(option.text) != True:
+                        Option.dialog("mail")
                         valid = 1
                 file.write(f"{name[i]} : {option.text}\n")
                 i= i+1
