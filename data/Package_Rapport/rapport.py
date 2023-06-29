@@ -63,7 +63,7 @@ table_style = TableStyle([
       ('FONTSIZE', (0, 0), (-1, 0), 12),
       ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
       ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#c9daf5")),
-      ('GRID', (0, 0), (-1, -1), 1, colors.black)
+      ('GRID', (0, 0), (-1, -1), 1, colors.HexColor("#FFFFFF"))
   ])
 #Fonctions 
 def parse_data_ressources():
@@ -100,6 +100,7 @@ def scoring():
 
     ip_counts = {}
     scoring_count = 0	
+    scoring_max = 0
     nb_ip = 0
     nb_ip = len(audit)
       
@@ -109,15 +110,16 @@ def scoring():
         ip_addresses = [host['ip_address'] for host in hosts]
         for test in texte:
           if attack_name == test:
-            ip_counts[attack_name] = len(ip_addresses)
-            if ip_counts[attack_name] == 0:
-              ip_counts[attack_name] = "N/A"
-            scoring_count += texte[test]["scoring"] * len(ip_addresses)
+            ip_counts[attack_name] = round(len(ip_addresses)  / nb_ip * 100)
+            ip_counts[attack_name] = ip_counts[attack_name]
+            scoring_count += ip_counts[attack_name] * texte[test]["scoring"] 
+            scoring_max += 1
 
     if scoring_count == 0:
       pass
     else :
-      scoring_count = round(scoring_count / nb_ip, 2)
+      scoring_count = round(scoring_count / scoring_max , 2)
+
     return ip_counts, scoring_count, nb_ip
   
 def synthese():
@@ -128,19 +130,22 @@ def synthese():
     # Synthese des resultats
   results = Paragraph("Synthèse des resultats", header_style2)
   elements.extend([results, Spacer(1, 0.5 * 50)])
-  synthese = Paragraph(f'L’audit a permis de déterminer un niveau de sécurité : Texte en fonction du scoring<BR/><BR/> \
+  synthese = Paragraph(f'L’audit a permis de déterminer un niveau de sécurité :<BR/><BR/> \
   ', normal_style)
   elements.extend([synthese, Spacer(1, 0.5 * 50)])
   
   # Données du tableau Ressources
-  data_synth_vuln = [["VULNERABILITE","CRITICITE", "Nombre d'hôtes"]]
+  data_synth_vuln = [["VULNERABILITE","CRITICITE", "% d'hôtes impactés"]]
 
   count = scoring()
   score_cve = 0
   for attack in attacks:
     if attack['success'] == True:
       vuln = texte[attack['attack_name']]["titre"]
-      score = count[0][attack['attack_name']]
+      if count[0][attack['attack_name']] != 0 :
+        score = f"{count[0][attack['attack_name']]} %"
+      else :
+        score = "N/A"
       if attack['attack_name'] == "cve":
         for host in attack["hosts"]:
           details = host["details"]
@@ -170,7 +175,7 @@ def synthese():
       ('FONTSIZE', (0, 0), (-1, 0), 14),
       ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
       ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#c9daf5")),
-      ('GRID', (0, 0), (-1, -1), 1, colors.black)
+      ('GRID', (0, 0), (-1, -1), 1, colors.HexColor("#FFFFFF"))
   ])
   
   color_red = colors.HexColor("#f74545")
@@ -190,10 +195,20 @@ def synthese():
   
   # Mise en forme du tableau synthèse des resultats
   table_synth_vuln.setStyle(table_style_synth)
-  data_score_total = [["Score Total", count[1]]]
+
+  # Mise en place du tableau Score total
+  data_score_total = [["Score Total", f"{count[1]} %"]]
   table_score_total = Table(data_score_total)
   table_score_total.setStyle(table_style)
-  elements.extend([table_synth_vuln,  Spacer(1, 0.7 * 72), table_score_total,PageBreak()])
+
+  phrase_score = f"Votre système d'information possède un score de {count[1]} %"
+  
+  #Mise en place du tableau explicatif Mineure, Majeure, Modérée
+  data_criticite = [["Criticité", "Définition", "Délai de résolution"], ["Majeure", "Faille ou faiblesse au niveau de risque élevé, ayant\n un impact majeur sur les vecteurs de la cybersécurité\net pouvant compromettre activement vos actifs", "24 heures"], ["Modérée", "Faille ou faiblesse de niveau intermédiaire est observée\ndans votre système d'information, ayant un impact modéré\n sur les vecteurs de la cybersécurité et peut présenter une\ncertaine menace pour vos actifs", "1-2 jours"], ["Mineure", "Faille ou faiblesse minime est présente dans votre\n système d'information, mais son impact sur les\nvecteurs de cybersécurité est limité", "7 jours"]]
+  table_criticite = Table(data_criticite)
+  table_criticite.setStyle(table_style)
+  
+  elements.extend([table_synth_vuln,  Spacer(1, 0.2 * 72), table_score_total, Spacer(1, 0.5 * 72), table_criticite,  PageBreak()])
 
 
 def rapport_by_test(test, tableau):
@@ -344,15 +359,19 @@ def tableau_banner():
     details_table = [["#", "Host", "Port", "Service", "Version"]]
     global attacks
     i = 1
+  
 
     for attack in attacks:
         if attack["attack_name"] == "banner":
+            port = "" 
+            service = ""
+            version = ""
             for host in attack["hosts"]:
                 ip_address = host["ip_address"]
                 details = host["details"][0] if host["details"] else {}
-                port = details.get("Port", "")
-                service = details.get("Service", "")
-                version = details.get("Version", "")
+                port = details.get("Port", "") 
+                service = details.get("Service", "") 
+                version = details.get("Version", "") 
 
                 row =  [i] + [ip_address] + [port] + [service] + [version] 
                 details_table.append(row)
@@ -375,7 +394,7 @@ def tableau_CVE():
       ('FONTSIZE', (0, 0), (-1, 0), 14),
       ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
       ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#c9daf5")),
-      ('GRID', (0, 0), (-1, -1), 1, colors.black)
+      ('GRID', (0, 0), (-1, -1), 1, colors.HexColor("#FFFFFF"))
   ])
   
     details_table = [["#", "Host", "CVE", "Score CVSS", "Produit", "Version"]]
@@ -460,6 +479,10 @@ def print_attack():
       else:
         rapport_by_test_without_table(attack['attack_name'])
     else :
+      pass
+
+  for attack in attacks :
+    if attack['success'] == False:
       rapport_by_test_not_vulnerable(attack['attack_name'])
 
 def annexe():
