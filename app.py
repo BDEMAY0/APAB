@@ -165,6 +165,18 @@ class Option(Screen):
 
 class PentestScreen(Screen):
 
+    def dialog():
+        def close_dialog(*args):
+            field_dialog.dismiss()
+        field_dialog = MDDialog(
+            title=f'Aucun test choisi',
+            type="custom",
+            buttons=[
+                MDFlatButton(text="Fermer", on_release=close_dialog),
+            ],
+        )
+        field_dialog.open()
+
     def __init__(self, **kwargs):
         super(PentestScreen, self).__init__(**kwargs)
         current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -178,11 +190,19 @@ class PentestScreen(Screen):
         Clock.schedule_interval(self.check_loading_finished, 0.5)
 
     def check_checkbox(self, instance, name, file_name):
-        with open(file_name, "w") as file:
-            for i in range(0, len(name)):
-                file.write(f'{name[i]} : {instance[i].active}\n')
-            file.write(f'En cours : chargement\n')
-            file.close()
+        check = 0
+        for i in range(0, len(name)):
+            if instance[i].active == "True":
+                check += 1
+        if check > 0:
+            with open(file_name, "w") as file:
+                for i in range(0, len(name)):
+                    file.write(f'{name[i]} : {instance[i].active}\n')
+                file.write(f'En cours : chargement\n')
+                file.close()
+                PentestScreen.start_loading()
+        else:
+            PentestScreen.dialog()
 
     def start_loading(self):
         self.stop_event = threading.Event()
