@@ -16,47 +16,44 @@ class SMBScanner:
         for line in output.splitlines():
             if "Disk" in line:
                 share = line.split()[0]
-                if share not in ['NETLOGON', 'SYSVOL']:
+                if share not in ['NETLOGON', 'SYSVOL', 'print$']:
                     folders.append(share)
 
         return folders
 
     def check_anonymous_access(self, path):
-        racine = False
         folders = []
         command = f"smbclient //{self.ip}/{path} -N -c 'ls'"
         try:
             output = subprocess.check_output(command, shell=True).decode("utf-8")
-            racine = True
             for line in output.splitlines():
-                directory = line.split()[1]
-                if "D" in directory and "DR" not in directory and "DHR" not in directory:
-                    folder = line.split()[0]
-                    if folder not in ['.', '..']:
-                        sub_path = path + '/' + folder
-                        folders.append(sub_path)
+                parts = line.split()
+                if len(parts) >= 2:
+                    directory = parts[1]
+                    if "D" in directory:
+                        folder = parts[0]
+                        if folder not in ['.', '..']:
+                            sub_path = folder
+                            folders.append(sub_path)
+                            new_command = f"smbclient //{self.ip}/{path} -N -c 'cd {sub_path}; ls'"
+                            new_output = subprocess.check_output(new_command, shell=True).decode("utf-8")
+                            for new_line in new_output.splitlines():
+                                new_parts = new_line.split()
+                                if len(new_parts) >= 2:
+                                    new_directory = new_parts[1]
+                                    if "D" in new_directory:
+                                        new_folder = new_parts[0]
+                                        if new_folder not in ['.', '..']:
+                                            new_sub_path = sub_path + '/' + new_folder
+                                            folders.append(new_sub_path)
         except subprocess.CalledProcessError as e:
             pass
-        return racine, folders
-
-    def recursive_check(self, folder):
-        has_access, folders = self.check_anonymous_access(folder)
-        if has_access:
-            for sub_folder in folders:
-                self.total_return.append(sub_folder)
-                self.recursive_check(sub_folder)
+        return folders
 
     def manager(self):
-        state = False
         shares = self.racine_folders()
-        if not shares:
-            return state, self.total_return
         for share in shares:
-            has_access, folders = self.check_anonymous_access(share)
-            if has_access:
-                state = True
-                self.total_return.append(share)
-                for sub_folder in folders:
-                    self.total_return.append(sub_folder)
-                    self.recursive_check(sub_folder)
-        return state, self.total_return
+            sub_folders = self.check_anonymous_access(share)
+            self.total_return.append(share)
+            self.total_return.extend(sub_folders)
+        return self.total_return
