@@ -21,5 +21,5 @@ class Banner_Export(ManageExport):
                 
         self.hosts.append({
             "ip_address": host_ip,
-            "details": details
+            "details": new_details
         })
