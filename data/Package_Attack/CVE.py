@@ -3,6 +3,7 @@ import requests
 from ratelimiter import RateLimiter
 import queue
 import time
+import re
 
 """
 Dans ce fichier, les classes `CVE`, `CVEHandler`, `CVEWorker` et `CVEAnalysis` sont définies 
@@ -89,12 +90,13 @@ class CVEWorker():
     # Méthode exécutée lorsque le thread est lancé
     def run(self):
         if self.port['cpe'] != "N/A":
-            cve_info = self.cve_handler.get_cve_info(self.port['cpe'])
-            result = {
-                "ip": self.host.ip_address,
-                "cve_info": [cve.to_dict() for cve in cve_info],
-                "product": self.port["product"],
-                "version": self.port["version"],
-            }
+            if self.port['cpe'] != "N/A" and re.search(r'\d', self.port['cpe']):
+                cve_info = self.cve_handler.get_cve_info(self.port['cpe'])
+                result = {
+                    "ip": self.host.ip_address,
+                    "cve_info": [cve.to_dict() for cve in cve_info],
+                    "product": self.port["product"],
+                    "version": self.port["version"],
+                }
             # Ajoute le résultat dans la file d'attente des résultats
-            return result
+                return result
