@@ -192,7 +192,7 @@ class PentestScreen(Screen):
     def check_checkbox(self, instance, name, file_name):
         check = 0
         for i in range(0, len(name)):
-            if instance[i].active == "True":
+            if instance[i].active == True:
                 check += 1
         if check > 0:
             with open(file_name, "w") as file:
@@ -200,7 +200,7 @@ class PentestScreen(Screen):
                     file.write(f'{name[i]} : {instance[i].active}\n')
                 file.write(f'En cours : chargement\n')
                 file.close()
-                PentestScreen.start_loading()
+                PentestScreen.start_loading(self)
         else:
             PentestScreen.dialog()
 
