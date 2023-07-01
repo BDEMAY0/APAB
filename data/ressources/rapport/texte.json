@@ -37,7 +37,7 @@
     "constat": "Les attaques de saturation DHCP peuvent épuiser les adresses IP disponibles dans le pool DHCP, empêchant ainsi les nouveaux périphériques de se connecter au réseau.",
     "remediation": "Pour prévenir les attaques de saturation DHCP, il est recommandé de surveiller et de limiter le nombre de demandes DHCP par périphérique, d'appliquer des stratégies de contrôle d'accès et de configurer des mécanismes de détection d'anomalies.",
     "criticite": "Modérée",
-    "scoring": 2,5
+    "scoring": 2.5
   },
   "wifi": {
     "titre": "Faiblesse du mot de passe WiFi",
