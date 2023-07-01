@@ -359,21 +359,21 @@ def tableau_banner():
     details_table = [["#", "Host", "Port", "Service", "Version"]]
     global attacks
     i = 1
-  
 
     for attack in attacks:
         if attack["attack_name"] == "banner":
-            port = "" 
-            service = ""
-            version = ""
             for host in attack["hosts"]:
                 ip_address = host["ip_address"]
-                details = host["details"][0] if host["details"] else {}
-                port = details.get("Port", "") 
-                service = details.get("Service", "") 
-                version = details.get("Version", "") 
+                port = []
+                service = []
+                version = []
+                for detail in host["details"]:
+                    port.append(detail.get("Port", "")) 
+                    service.append(detail.get("Service", "")) 
+                    version.append(detail.get("Version", "")) 
 
-                row =  [i] + [ip_address] + [port] + [service] + [version] 
+                # Les détails sont joints avec des sauts de ligne pour n'apparaître qu'une seule fois par adresse IP
+                row = [i, ip_address, '\n'.join(port), '\n'.join(service), '\n'.join(version)]
                 details_table.append(row)
                 i += 1
 
@@ -382,6 +382,8 @@ def tableau_banner():
     table_data_result.setStyle(table_style)
   
     return table_data_result
+
+
 
 def tableau_CVE():
     global attacks
