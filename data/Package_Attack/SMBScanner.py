@@ -56,4 +56,6 @@ class SMBScanner:
             sub_folders = self.check_anonymous_access(share)
             self.total_return.append(share)
             self.total_return.extend(sub_folders)
-        return self.total_return
+
+        state = True if self.total_return else False
+        return state, self.total_return
