@@ -271,7 +271,7 @@ def netbios(parser):
     netbios_report = ManageExport("netbios")
     for host in parser.host_info_list:
         for port in host.ports:
-            if port["port_id"] == "139" or port["service_name"] == "netbios-ssn":
+            if port["service_name"] == "netbios-ssn":
                 netbios_report.success = True
                 netbios_report.add_host(host.ip_address)
 
