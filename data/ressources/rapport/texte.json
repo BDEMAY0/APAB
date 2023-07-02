@@ -17,7 +17,7 @@
   },
   "ssh_bf": {
     "titre": "Attaque par dictionnaire sur SSH",
-    "description": "Le test d'attaque par dictionnaire SSH vise à évaluer la robustesse des mots de passe utilisés sur les machines du système d'information qui ont le service SSH ouvert. L'objectif est de réaliser une attaque par dictionnaire en utilisant une liste de mots de passe conçus par nos soins. Ce test consiste à essayer différents mots de passe de la liste générée pour tenter de compromettre les comptes SSH. Il permet de vérifier la résistance des mots de passe utilisés.",
+    "description": "Le protocole SSH (Secure Shell) est largement utilisé pour l'administration à distance de systèmes Linux. Malheureusement. L'objectif de cette attaque est de réaliser une attaque par dictionnaire en utilisant une liste de mots de passe conçus par nos soins. Ce test consiste à essayer différents mots de passe de la liste générée pour tenter de compromettre les comptes SSH. Il permet de vérifier la résistance des mots de passe utilisés.",
     "constat": "Dans votre infrastructure nous avons detecté des services SSH avec des mots de passes faibles.",
     "remediation": "Pour corriger la vulnérabilité de mot de passe faible sur SSH, vous pouvez mettre en place une politique de complexité de mot de passe, utiliser des outils de gestion de mots de passe, mettre en place la double authentification, limiter l'accès aux comptes utilisateurs et surveiller l'activité du compte utilisateur. En appliquant ces mesures, vous pouvez renforcer la sécurité de votre système SSH et prévenir les attaques par force brute.",
     "criticite": "Majeure",
