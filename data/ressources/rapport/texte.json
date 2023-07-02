@@ -9,10 +9,9 @@
   },
   "cve": {
     "titre": "Détection de Vulnérabilités répertoriées",
-    "description": "A la suite à l'exécution de Nmap, sur le système d'information, il est possible de récupérer les informations relatives aux différentes machines du système en fonction des services qu'elles fournissent. Cela inclut la collecte des versions des services identifiés. En utilisant l'API du NIST (National Institute of Standards and Technology), il est possible d'obtenir des informations sur les vulnérabilités associées à chaque produit et à sa version spécifique. Le NIST maintient une base de données de vulnérabilités connues et fournit des scores CVSS (Common Vulnerability Scoring System) permettant d'évaluer la gravité de chaque vulnérabilité. L’outil permet de récupérer les 3 CVE ayant un score CVSS le plus élevé et ce pour chaque produit et pour chaque hôte.",
-    "constat": "L'exploitation des vulnérabilités CVE connues peut permettre à un attaquant de compromettre un système.",
-    "remediation": "Il est essentiel de suivre les avis de sécurité, les correctifs et les mises à jour émis par les fournisseurs pour résoudre les vulnérabilités CVE identifiées.",
-    "criticite": "Modérée",
+    "description": "Une analyse approfondie des services et versions de votre système a été effectuée pour déterminer la présence de vulnérabilités CVE (Common Vulnerabilities and Exposures) connues.",
+    "constat": "Plusieurs services actuellement utilisés dans votre système sont associés à des vulnérabilités CVE connues. Ces vulnérabilités, liées aux versions spécifiques des services, pourraient permettre à des attaquants d'exploiter les failles pour compromettre vos données.",
+    "remediation": "Il est fortement recommandé de mettre à jour ces services vers les versions les plus récentes et sécurisées pour éliminer ces vulnérabilités. Des mises à jour régulières et une surveillance constante des bulletins de sécurité aideront à atténuer ces risques.", "criticite": "Modérée",
     "scoring": 2
   },
   "ssh_bf": {
@@ -25,8 +24,8 @@
   },
   "smb_scanner": {
     "titre": "Découverte de partages de fichiers publics",
-    "description": "Le test Accès au fichier partagé vise à trouver des problèmes de sécurité liés aux partages de fichiers SMB. Il vérifie si un accès anonyme non autorisé est possible et examine les fichiers et dossiers accessibles. L'accès anonyme permet à des utilisateurs non authentifiés d'accéder aux fichiers sans identification, ce qui peut être dangereux. La vérification récursive explore la structure des dossiers pour déterminer quels fichiers et dossiers sont accessibles aux utilisateurs anonymes, afin de comprendre l'exposition des données sensibles. Certains partages spécifiques au domaine sont exclus de cette liste.",
-    "constat": "Un partage de fichiers mal configuré peut permettre à des utilisateurs non autorisés d'accéder, de modifier ou de supprimer des fichiers sensibles.",
+    "description": "Le test Accès au fichier partagé vise à trouver des problèmes de sécurité liés aux partages de fichiers SMB. Il vérifie si un accès anonyme non autorisé est possible et examine les fichiers et dossiers accessibles. L'accès anonyme permet à des utilisateurs non authentifiés d'accéder aux fichiers sans identification, ce qui peut être dangereux. La vérification récursive explore la structure des dossiers pour déterminer quels dossiers sont accessibles aux utilisateurs anonymes, afin de comprendre l'exposition des données sensibles. Certains partages spécifiques au domaine sont exclus de cette liste.",
+    "constat": "Votre système permet actuellement le partage de fichiers avec des connexions anonymes. Cela peut exposer vos fichiers à des utilisateurs non authentifiés, potentiellement donnant accès à des informations sensibles à des personnes non autorisées",
     "remediation": "Il est important de restreindre l'accès aux partages de fichiers en utilisant des autorisations appropriées, des mots de passe forts et en limitant les droits d'accès des utilisateurs.",
     "criticite": "Modérée",
     "scoring": 2
@@ -34,7 +33,7 @@
   "dhcp_starvation": {
     "titre": "Epuisement de ressources DHCP",
     "description": "Le test consiste en une attaque appelée 'DHCP Starvation' qui vise à épuiser les ressources du serveur DHCP d'un réseau cible. L'objectif est de priver les clients légitimes d'accéder aux adresses IP fournies par le serveur DHCP. L'attaque consiste à envoyer de nombreuses demandes DHCP avec des adresses MAC aléatoires pour épuiser les ressources du serveur. Ensuite, on vérifie si le serveur DHCP a échoué en envoyant une demande supplémentaire et en vérifiant si une réponse est reçue dans un certain délai. Si aucune réponse n'est reçue, cela indique que le serveur DHCP ne peut pas répondre correctement aux demandes, ce qui suggère que l'attaque a réussi.",
-    "constat": "Les attaques de saturation DHCP peuvent épuiser les adresses IP disponibles dans le pool DHCP, empêchant ainsi les nouveaux périphériques de se connecter au réseau.",
+    "constat": "Actuellement, votre système est vulnérables aux attaques de saturation DHCP peuvent épuiser les adresses IP disponibles dans le pool DHCP, empêchant ainsi les nouveaux périphériques de se connecter au réseau.",
     "remediation": "Pour prévenir les attaques de saturation DHCP, il est recommandé de surveiller et de limiter le nombre de demandes DHCP par périphérique, d'appliquer des stratégies de contrôle d'accès et de configurer des mécanismes de détection d'anomalies.",
     "criticite": "Modérée",
     "scoring": 2.5
@@ -49,61 +48,61 @@
   "check_tls": {
     "titre": "Robustesse des certificats web",
     "description": "Nous effectuons une vérification des algorithmes de chiffrement utilisés par les certificats des serveurs web afin de nous assurer que leur configuration est conforme aux normes en vigueur. Si un algorithme de chiffrement obsolète ou faible est détecté, cela est considéré comme un défaut de configuration. L'utilisation d'algorithmes de chiffrement forts et sécurisés est essentielle pour garantir la confidentialité et l'intégrité des communications entre les clients et les serveurs web. Des algorithmes de chiffrement obsolètes ou vulnérables peuvent exposer les échanges à des risques de compromission de la sécurité.",
-    "constat": "Une mauvaise configuration ou des vulnérabilités dans les protocoles TLS peuvent exposer les communications à des attaques telles que le détournement ou l'interception des données.",
+    "constat": "Votre système possède Une mauvaise configuration ou des vulnérabilités dans les protocoles TLS peuvent exposer les communications à des attaques telles que le détournement ou l'interception des données.",
     "remediation": "Pour renforcer la sécurité des communications TLS, il est essentiel de suivre les bonnes pratiques de configuration, de mettre à jour régulièrement les versions TLS et d'effectuer des tests de vulnérabilité pour détecter les éventuelles faiblesses dans la configuration du protocole.",
     "criticite": "Mineure",
     "scoring": 1
   },
   "banner": {
     "titre": "Découverte des bannières de services",
-    "description": "L'utilisation de Nmap nous permet d'explorer et de découvrir les services ouverts sur les machines du système d'information. Grâce à cette analyse, nous sommes en mesure de récupérer les bannières associées à ces services. Si un service a une bannière présente, cela peut être considéré comme un défaut de configuration, car cela peut révéler des informations sensibles sur le service ou sur la version utilisée.",
-    "constat": "Une mauvaise configuration ou des vulnérabilités dans les protocoles TLS peuvent exposer les communications à des attaques telles que le détournement ou l'interception des données.",
-    "remediation": "Pour renforcer la sécurité des communications TLS, il est essentiel de suivre les bonnes pratiques de configuration, de mettre à jour régulièrement les versions TLS et d'effectuer des tests de vulnérabilité pour détecter les éventuelles faiblesses dans la configuration du protocole.",
+    "description": "Une exploration des services de votre système a été effectuée pour identifier les bannières de services, qui peuvent exposer des informations détaillées sur les versions des services et les configurations système.",
+    "constat": "Votre système expose actuellement des bannières de services qui pourraient donner des informations précieuses à un attaquant potentiel. Ces informations peuvent inclure des détails sur les versions de logiciel, qui pourraient être utilisées pour identifier les vulnérabilités connues.",
+    "remediation": "Il est recommandé de configurer les services pour minimiser les informations exposées dans les bannières. Cela pourrait impliquer la désactivation de certaines bannières ou la modification des messages pour qu'ils divulguent moins d'informations sur le système.",
     "criticite": "Mineure",
     "scoring": 1
   },
   "netbios": {
     "titre": "Vérification du service NetBios",
-    "description": "Grâce à l'utilisation de Nmap, nous sommes en mesure de détecter la présence de NetBIOS sur les machines du réseau. Dans le cadre de bonnes pratiques de sécurité, la désactivation de NetBIOS est recommandée, et notre outil considérera la présence de NetBIOS comme un défaut de configuration. NetBIOS est un protocole de communication largement utilisé pour le partage de fichiers, l'impression et d'autres services réseau dans les environnements Windows. Cependant, en raison de certaines vulnérabilités et de ses fonctionnalités obsolètes, désactiver NetBIOS est souvent conseillé pour réduire les risques de sécurité associés à son utilisation.",
-    "constat": "Une mauvaise configuration ou des vulnérabilités dans les protocoles TLS peuvent exposer les communications à des attaques telles que le détournement ou l'interception des données.",
-    "remediation": "Pour renforcer la sécurité des communications TLS, il est essentiel de suivre les bonnes pratiques de configuration, de mettre à jour régulièrement les versions TLS et d'effectuer des tests de vulnérabilité pour détecter les éventuelles faiblesses dans la configuration du protocole.",
+    "description": "Une évaluation du service NetBIOS de votre système a été effectuée pour déterminer les possibles vulnérabilités et expositions",
+    "constat": "Votre système utilise actuellement le service NetBIOS. Bien que NetBIOS puisse être nécessaire pour certaines fonctions réseau, son utilisation peut également exposer le système à des risques de sécurité, tels que la divulgation d'informations sur le système ou la réalisation d'attaques de type 'man-in-the-middle'.",
+    "remediation": "Il est recommandé de désactiver le service NetBIOS si celui-ci n'est pas nécessaire pour les opérations du système. Si le service est nécessaire, des mesures de sécurité supplémentaires, telles que des pare-feux et des protocoles de sécurité renforcés, devraient être mises en place pour protéger le système",
     "criticite": "Mineure",
     "scoring": 1
   },
   "spanning-tree": {
     "titre": "Vérification de la configuration du protocole STP",
-    "description": "Le protocole STP (Spanning Tree Protocol) gère la structure du réseau pour éviter les problèmes de boucles de communication et optimiser les chemins entre les commutateurs. Cependant, il peut y avoir des configurations ou vulnérabilités qui compromettent la sécurité du réseau. Le test vise à évaluer la sécurité du protocole STP dans le réseau de l'entreprise en détectant les vulnérabilités et en évaluant les défenses contre les attaques. Pour ce faire, on utilise une méthode d'attaque qui consiste à envoyer de faux paquets STP pour manipuler les messages de configuration entre les commutateurs. L'objectif est de modifier la structure du réseau, perturber le calcul des chemins et prendre le contrôle en devenant le commutateur principal.",
-    "constat": "Une mauvaise configuration ou des vulnérabilités dans les protocoles TLS peuvent exposer les communications à des attaques telles que le détournement ou l'interception des données.",
-    "remediation": "Pour renforcer la sécurité des communications TLS, il est essentiel de suivre les bonnes pratiques de configuration, de mettre à jour régulièrement les versions TLS et d'effectuer des tests de vulnérabilité pour détecter les éventuelles faiblesses dans la configuration du protocole.",
+    "description": "Une évaluation de la configuration de votre STP a été effectuée pour déterminer les risques potentiels d'attaques visant à obtenir des privilèges root",
+    "constat": "Votre configuration actuelle du protocole STP pourrait être vulnérable à des attaques visant à obtenir un accès root. Un attaquant pourrait potentiellement manipuler le protocole STP pour devenir le pont racine, permettant ainsi de contrôler le trafic réseau.",
+    "remediation": "Il est recommandé de sécuriser la configuration du protocole STP pour prévenir ces attaques. Cela peut inclure la mise en œuvre de BPDU Guard pour bloquer les BPDUs indésirables, l'utilisation de Root Guard pour protéger le rôle du pont racine, et l'activation de STP Path Cost pour empêcher l'usurpation de la route STP par un attaquant.",
     "criticite": "Majeure",
     "scoring": 3
   },
   "mac-flooding": {
     "titre": "Saturation d'adresse MAC sur commutateur",
-    "description": "L'attaque MAC Flooding consiste à saturer les tables d'adresses MAC des commutateurs d'un réseau en envoyant de nombreux paquets avec des adresses MAC aléatoires. Cela provoque une surcharge des tables d'adresses MAC. Lorsque les tables sont pleines, les commutateurs transmettent tous les paquets à tous les périphériques du réseau, ce qui entraîne une diffusion générale des paquets et perturbe les communications normales. L'objectif de cette attaque est de causer un déni de service en épuisant les ressources du réseau ou de faciliter d'autres attaques en profitant de la confusion causée par la diffusion des paquets. Un outil est utilisé pour mesurer l'impact de l'attaque en comparant le nombre de paquets diffusés avant et après son exécution, afin de déterminer si le réseau est vulnérable à cette attaque.",
-    "constat": "Une mauvaise configuration ou des vulnérabilités dans les protocoles TLS peuvent exposer les communications à des attaques telles que le détournement ou l'interception des données.",
-    "remediation": "Pour renforcer la sécurité des communications TLS, il est essentiel de suivre les bonnes pratiques de configuration, de mettre à jour régulièrement les versions TLS et d'effectuer des tests de vulnérabilité pour détecter les éventuelles faiblesses dans la configuration du protocole.",
+    "description": "Une évaluation de votre système a été effectuée pour déterminer la susceptibilité à une attaque par inondation MAC, qui pourrait submerger la table d'adresses MAC de votre switch et permettre à un attaquant de traverser le trafic dans votre réseau.",
+    "constat": "Votre réseau actuel semble vulnérable à une attaque par inondation MAC. Sans une protection adéquate, un attaquant pourrait potentiellement surcharger la table d'adresses MAC de votre switch, forçant celui-ci à envoyer tout le trafic à toutes les ports, ce qui pourrait permettre à un attaquant de sniffer le trafic réseau",
+    "remediation": "Il est recommandé d'implémenter des mesures de protection pour prévenir les attaques par inondation MAC. Cela pourrait inclure la configuration de votre switch pour limiter le nombre d'adresses MAC qui peuvent être apprises sur chaque port, et l'activation de fonctionnalités de sécurité comme le port security sur les switches pour contrôler l'accès au réseau.",
     "criticite": "Majeure",
     "scoring": 3
   },
   "web_vuln": {
     "titre": "Vérification du protocole web",
-    "description": "L'attaque MAC Flooding consiste à saturer les tables d'adresses MAC des commutateurs d'un réseau en envoyant de nombreux paquets avec des adresses MAC aléatoires. Cela provoque une surcharge des tables d'adresses MAC. Lorsque les tables sont pleines, les commutateurs transmettent tous les paquets à tous les périphériques du réseau, ce qui entraîne une diffusion générale des paquets et perturbe les communications normales. L'objectif de cette attaque est de causer un déni de service en épuisant les ressources du réseau ou de faciliter d'autres attaques en profitant de la confusion causée par la diffusion des paquets. Un outil est utilisé pour mesurer l'impact de l'attaque en comparant le nombre de paquets diffusés avant et après son exécution, afin de déterminer si le réseau est vulnérable à cette attaque.",
-    "constat": "Une mauvaise configuration ou des vulnérabilités dans les protocoles TLS peuvent exposer les communications à des attaques telles que le détournement ou l'interception des données.",
-    "remediation": "Pour renforcer la sécurité des communications TLS, il est essentiel de suivre les bonnes pratiques de configuration, de mettre à jour régulièrement les versions TLS et d'effectuer des tests de vulnérabilité pour détecter les éventuelles faiblesses dans la configuration du protocole.",
+    "description": "Une évaluation de votre système a été effectuée pour identifier l'utilisation du protocole HTTP, qui pourrait exposer des informations sensibles en raison de son manque de chiffrement.",
+    "constat": "Votre système utilise actuellement le protocole HTTP pour certaines communications, qui ne sont pas chiffrées. Cela peut exposer des informations sensibles à des personnes malveillantes qui pourraient être en mesure d'intercepter ces communications.",
+    "remediation": "Il est fortement recommandé de passer à l'utilisation du protocole HTTPS, qui chiffre les communications pour protéger les informations sensibles. Assurez-vous également de rediriger tout le trafic HTTP vers HTTPS pour prévenir les fuites d'informations.",
     "criticite": "Modérée",
     "scoring": 2.5
   },
   "telnet": {
     "titre": "Vérification du protocole Telnet",
-    "description": "L'attaque MAC Flooding consiste à saturer les tables d'adresses MAC des commutateurs d'un réseau en envoyant de nombreux paquets avec des adresses MAC aléatoires. Cela provoque une surcharge des tables d'adresses MAC. Lorsque les tables sont pleines, les commutateurs transmettent tous les paquets à tous les périphériques du réseau, ce qui entraîne une diffusion générale des paquets et perturbe les communications normales. L'objectif de cette attaque est de causer un déni de service en épuisant les ressources du réseau ou de faciliter d'autres attaques en profitant de la confusion causée par la diffusion des paquets. Un outil est utilisé pour mesurer l'impact de l'attaque en comparant le nombre de paquets diffusés avant et après son exécution, afin de déterminer si le réseau est vulnérable à cette attaque.",
-    "constat": "Une mauvaise configuration ou des vulnérabilités dans les protocoles TLS peuvent exposer les communications à des attaques telles que le détournement ou l'interception des données.",
-    "remediation": "Pour renforcer la sécurité des communications TLS, il est essentiel de suivre les bonnes pratiques de configuration, de mettre à jour régulièrement les versions TLS et d'effectuer des tests de vulnérabilité pour détecter les éventuelles faiblesses dans la configuration du protocole.",
+    "description": "Une évaluation de votre système a été effectuée pour identifier l'utilisation du protocole Telnet, qui est connu pour son manque de chiffrement des données transmises.",
+    "constat": "Votre système utilise actuellement le protocole Telnet pour certaines communications. Telnet transmet des informations en texte clair, ce qui peut exposer des données sensibles, y compris les identifiants, à des attaquants capables d'intercepter ces communications.",
+    "remediation": "Il est fortement recommandé de désactiver l'utilisation de Telnet et de passer à des méthodes de communication plus sécurisées, telles que SSH, qui chiffrent les informations transmises. Si Telnet doit être utilisé pour des raisons spécifiques, des mesures de sécurité supplémentaires, telles que l'utilisation de VPNs, devraient être mises en place pour protéger les données transmises.",
     "criticite": "Majeure",
     "scoring": 4
   },
   "no_result": {
-    "constat": "Nous n'avons détecté aucune vulnérabilité avec ce test."
+    "constat": "Suite à notre évaluation, nous sommes heureux de rapporter que nous n'avons détecté aucune vulnérabilité dans le cadre de ce test spécifique. Cela indique que les mesures de sécurité en place pour cette partie de votre système sont efficaces."
   }
 }
 
