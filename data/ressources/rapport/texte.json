@@ -11,7 +11,8 @@
     "titre": "Détection de Vulnérabilités répertoriées",
     "description": "Une analyse approfondie des services et versions de votre système a été effectuée pour déterminer la présence de vulnérabilités CVE (Common Vulnerabilities and Exposures) connues.",
     "constat": "Plusieurs services actuellement utilisés dans votre système sont associés à des vulnérabilités CVE connues. Ces vulnérabilités, liées aux versions spécifiques des services, pourraient permettre à des attaquants d'exploiter les failles pour compromettre vos données.",
-    "remediation": "Il est fortement recommandé de mettre à jour ces services vers les versions les plus récentes et sécurisées pour éliminer ces vulnérabilités. Des mises à jour régulières et une surveillance constante des bulletins de sécurité aideront à atténuer ces risques.", "criticite": "Modérée",
+    "remediation": "Il est fortement recommandé de mettre à jour ces services vers les versions les plus récentes et sécurisées pour éliminer ces vulnérabilités. Des mises à jour régulières et une surveillance constante des bulletins de sécurité aideront à atténuer ces risques.",
+    "criticite": "Modérée",
     "scoring": 2
   },
   "ssh_bf": {
