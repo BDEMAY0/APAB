@@ -1,9 +1,9 @@
 {
   "entete_web": {
     "titre": "Vérification des en-têtes web",
-    "description": "Une requête sur les serveurs web du système d'information est effectuée pour vérifier la présence éventuelle de champs d'en-tête qui devraient être supprimés, car cela est considéré comme un défaut de configuration (X-PoweredBy, X-Frame-Options…).",
-    "constat": "Un mauvais en-tête HTTP peut exposer des informations sensibles ou permettre des attaques telles que l'injection de scripts.",
-    "remediation": "Pour remédier à ce problème, assurez-vous de configurer correctement l'en-tête HTTP en appliquant les directives de sécurité recommandées.",
+    "description": "Une requête a été effectuée sur les serveurs web de votre système pour vérifier la présence éventuelle de champs d'en-tête inappropriés. Ces en-têtes pourraient être considérés comme des défauts de configuration (par exemple, X-PoweredBy, X-Frame-Options, etc.).",
+    "constat": "Il a été découvert que votre système expose des en-têtes HTTP inappropriés. Ces en-têtes peuvent divulguer des informations sensibles et permettre des attaques telles que l'injection de scripts.",
+    "remediation": "Pour résoudre ce problème, il est recommandé de configurer correctement les en-têtes HTTP. Cela peut inclure la suppression de certains en-têtes ou la modification des informations qu'ils divulguent. Des directives de sécurité appropriées devraient être suivies pour assurer une configuration sécurisée.",
     "criticite": "Mineure",
     "scoring": 1
   },
