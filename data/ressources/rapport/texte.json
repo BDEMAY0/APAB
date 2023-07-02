@@ -42,6 +42,7 @@
   "wifi": {
     "titre": "Faiblesse du mot de passe WiFi",
     "description": "Le test de robustesse des mots de passe des points d'accès Wi-Fi évalue la sécurité des mots de passe utilisés pour les protéger. Il consiste à écouter le réseau pour repérer les points d'accès Wi-Fi disponibles. Ensuite, on force les utilisateurs connectés à se reconnecter afin de capturer l'échange de messages entre leur appareil et le point d'accès, appelé handshake. En analysant ce handshake, on extrait les informations nécessaires pour mener une attaque par dictionnaire sur le mot de passe du point d'accès. Un dictionnaire spécialement conçu est utilisé pour tester la solidité du mot de passe.",
+    "constat": "Suite à notre test, il a été constaté que le mot de passe de votre réseau Wi-Fi n'est pas suffisamment robuste. Un attaquant pourrait potentiellement utiliser une attaque par dictionnaire pour déchiffrer le mot de passe, mettant ainsi votre réseau en danger.",
     "remediation": "Pour remédier aux vulnérabilités liées aux mots de passe faibles sur les réseaux Wi-Fi, vous pouvez : utiliser des mots de passe forts, changer régulièrement les mots de passe, utiliser des protocoles de sécurité plus forts, limiter l'accès aux réseaux et surveiller régulièrement la sécurité des réseaux.",
     "criticite": "Majeure",
     "scoring": 3
