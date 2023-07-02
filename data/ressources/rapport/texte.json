@@ -1,6 +1,6 @@
 {
   "entete_web": {
-    "titre": "Vérification des entêtes web",
+    "titre": "Vérification des en-têtes web",
     "description": "Une requête sur les serveurs web du système d'information est effectuée pour vérifier la présence éventuelle de champs d'en-tête qui devraient être supprimés, car cela est considéré comme un défaut de configuration (X-PoweredBy, X-Frame-Options…).",
     "constat": "Un mauvais en-tête HTTP peut exposer des informations sensibles ou permettre des attaques telles que l'injection de scripts.",
     "remediation": "Pour remédier à ce problème, assurez-vous de configurer correctement l'en-tête HTTP en appliquant les directives de sécurité recommandées.",
