@@ -9,6 +9,7 @@ from reportlab.pdfgen import canvas
 from reportlab.platypus import Frame, PageTemplate, BaseDocTemplate
 from copy import deepcopy
 from datetime import date
+from locale import setlocale, LC_TIME
 import json
 import os
 import time
@@ -66,6 +67,11 @@ table_style = TableStyle([
       ('GRID', (0, 0), (-1, -1), 1, colors.HexColor("#FFFFFF"))
   ])
 #Fonctions 
+def month_in_french(month):
+  months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+              'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
+  return months[month-1]
+
 def parse_data_ressources():
     global audit
 
@@ -100,7 +106,6 @@ def scoring():
 
     ip_counts = {}
     scoring_count = 0	
-    scoring_max = 0
     nb_ip = 0
     nb_ip = len(audit)
       
@@ -113,12 +118,11 @@ def scoring():
             ip_counts[attack_name] = round(len(ip_addresses)  / nb_ip * 100)
             ip_counts[attack_name] = ip_counts[attack_name]
             scoring_count += ip_counts[attack_name] * texte[test]["scoring"] 
-            scoring_max += 1
 
     if scoring_count == 0:
       pass
     else :
-      scoring_count = round(scoring_count / scoring_max , 2)
+      scoring_count = round((scoring_count))
 
     return ip_counts, scoring_count, nb_ip
   
@@ -130,7 +134,7 @@ def synthese():
     # Synthese des resultats
   results = Paragraph("Synthèse des resultats", header_style2)
   elements.extend([results, Spacer(1, 0.5 * 50)])
-  synthese = Paragraph(f'L’audit a permis de déterminer un niveau de sécurité :<BR/><BR/> \
+  synthese = Paragraph(f'L’audit a permis de déterminer le niveau de sécurité suivant :<BR/><BR/> \
   ', normal_style)
   elements.extend([synthese, Spacer(1, 0.5 * 50)])
   
@@ -537,9 +541,9 @@ def main_rapport():
   directory_export = os.path.join(current_dir, "..", "rapport")
   output_file = f"{directory_export}/Rapport_APAB{nom_entreprise}_{timestamp}.pdf"
   doc = BaseDocTemplate(output_file, pagesize=letter)
-  
+
   today = date.today()
-  auj = today.strftime("%d %B %Y")
+  auj = today.strftime("%d ") + month_in_french(today.month) + today.strftime(" %Y")
   
   # Page de couverture
   nom_entreprise = nom_entreprise.replace("_", " ")
@@ -608,11 +612,10 @@ def main_rapport():
   elements.extend([intro, Spacer(1, 0.5 * 50)])
   introduction = Paragraph(f'<b>Objet du document :</b><BR/><BR/>\
        L’entreprise{nom_entreprise.replace("_", " ")} à souhaiter auditer ses systèmes et réseaux afin d’évaluer le niveau de sécurité de ceux-ci. <BR/><BR/> \
-       Ce document présente les différents résultats obtenus par les auditeurs lors du test d’intrusion et leurs recommandations de remédiation. <BR/><BR/>\
+       Ce document présente les différents résultats obtenus lors du test d’intrusion ainsi que des recommandations de remédiation. <BR/><BR/>\
        Le travail de l’équipe d’audit essaye d’être le plus exhaustif possible, mais ne peut pas garantir la détection de toutes les vulnérabilités présentes sur le périmètre.<BR/><BR/><BR/>\
     <b>Contexte et périmètre de l’audit : </b><BR/><BR/>\
        L’audit a été mené depuis les locaux de{nom_entreprise.replace("_", " ")} le {auj}.<BR/><BR/> \
-       L’audit a été effectuée avec une approche boite noire|boite grise|boite blanche, c’est-à-dire que les auditeurs disposaient (ou non) de compte d’accès sur l’application, du code source, etc.<BR/><BR/> \
        L’audit portait sur le périmètre suivant : {ip} /{masque_sous_reseau}<BR/> \
   ', normal_style)
   elements.extend([introduction, PageBreak()])
