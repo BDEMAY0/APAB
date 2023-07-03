@@ -197,7 +197,7 @@ def synthese():
   table_synth_vuln.setStyle(table_style_synth)
 
   # Mise en place du tableau Score total
-  data_score_total = [["Score Total", f"{count[1]} %"]]
+  data_score_total = [["Score Total", f"{count[1]}/100"]]
   table_score_total = Table(data_score_total)
   table_score_total.setStyle(table_style)
 
