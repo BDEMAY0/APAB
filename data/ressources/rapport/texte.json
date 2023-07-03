@@ -37,7 +37,7 @@
     "constat": "Actuellement, votre système est vulnérables aux attaques de saturation DHCP peuvent épuiser les adresses IP disponibles dans le pool DHCP, empêchant ainsi les nouveaux périphériques de se connecter au réseau.",
     "remediation": "Pour prévenir les attaques de saturation DHCP, il est recommandé de surveiller et de limiter le nombre de demandes DHCP par périphérique, d'appliquer des stratégies de contrôle d'accès et de configurer des mécanismes de détection d'anomalies.",
     "criticite": "Modérée",
-    "scoring": 2.5
+    "scoring": 0
   },
   "wifi": {
     "titre": "Faiblesse du mot de passe WiFi",
@@ -45,7 +45,7 @@
     "constat": "Suite à notre test, il a été constaté que le mot de passe de votre réseau Wi-Fi n'est pas suffisamment robuste. Un attaquant pourrait potentiellement utiliser une attaque par dictionnaire pour déchiffrer le mot de passe, mettant ainsi votre réseau en danger.",
     "remediation": "Pour remédier aux vulnérabilités liées aux mots de passe faibles sur les réseaux Wi-Fi, vous pouvez : utiliser des mots de passe forts, changer régulièrement les mots de passe, utiliser des protocoles de sécurité plus forts, limiter l'accès aux réseaux et surveiller régulièrement la sécurité des réseaux.",
     "criticite": "Majeure",
-    "scoring": 3
+    "scoring": 0
   },
   "check_tls": {
     "titre": "Robustesse des certificats web",
@@ -77,7 +77,7 @@
     "constat": "Votre configuration actuelle du protocole STP pourrait être vulnérable à des attaques visant à obtenir un accès root. Un attaquant pourrait potentiellement manipuler le protocole STP pour devenir le pont racine, permettant ainsi de contrôler le trafic réseau.",
     "remediation": "Il est recommandé de sécuriser la configuration du protocole STP pour prévenir ces attaques. Cela peut inclure la mise en œuvre de BPDU Guard pour bloquer les BPDUs indésirables, l'utilisation de Root Guard pour protéger le rôle du pont racine, et l'activation de STP Path Cost pour empêcher l'usurpation de la route STP par un attaquant.",
     "criticite": "Majeure",
-    "scoring": 0.6
+    "scoring": 0
   },
   "mac-flooding": {
     "titre": "Saturation d'adresse MAC sur commutateur",
@@ -85,7 +85,7 @@
     "constat": "Votre réseau actuel semble vulnérable à une attaque par inondation MAC. Sans une protection adéquate, un attaquant pourrait potentiellement surcharger la table d'adresses MAC de votre switch, forçant celui-ci à envoyer tout le trafic à toutes les ports, ce qui pourrait permettre à un attaquant de sniffer le trafic réseau",
     "remediation": "Il est recommandé d'implémenter des mesures de protection pour prévenir les attaques par inondation MAC. Cela pourrait inclure la configuration de votre switch pour limiter le nombre d'adresses MAC qui peuvent être apprises sur chaque port, et l'activation de fonctionnalités de sécurité comme le port security sur les switches pour contrôler l'accès au réseau.",
     "criticite": "Majeure",
-    "scoring": 3
+    "scoring": 0
   },
   "web_vuln": {
     "titre": "Vérification du protocole web",
