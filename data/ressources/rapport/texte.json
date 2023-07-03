@@ -5,7 +5,7 @@
     "constat": "Il a été découvert que votre système expose des en-têtes HTTP inappropriés. Ces en-têtes peuvent divulguer des informations sensibles et permettre des attaques telles que l'injection de scripts.",
     "remediation": "Pour résoudre ce problème, il est recommandé de configurer correctement les en-têtes HTTP. Cela peut inclure la suppression de certains en-têtes ou la modification des informations qu'ils divulguent. Des directives de sécurité appropriées devraient être suivies pour assurer une configuration sécurisée.",
     "criticite": "Mineure",
-    "scoring": 1
+    "scoring": 0.2
   },
   "cve": {
     "titre": "Détection de Vulnérabilités répertoriées",
@@ -13,7 +13,7 @@
     "constat": "Plusieurs services actuellement utilisés dans votre système sont associés à des vulnérabilités CVE connues. Ces vulnérabilités, liées aux versions spécifiques des services, pourraient permettre à des attaquants d'exploiter les failles pour compromettre vos données.",
     "remediation": "Il est fortement recommandé de mettre à jour ces services vers les versions les plus récentes et sécurisées pour éliminer ces vulnérabilités. Des mises à jour régulières et une surveillance constante des bulletins de sécurité aideront à atténuer ces risques.",
     "criticite": "Modérée",
-    "scoring": 2
+    "scoring": 0.4
   },
   "ssh_bf": {
     "titre": "Attaque par dictionnaire sur SSH",
@@ -21,7 +21,7 @@
     "constat": "Dans votre infrastructure nous avons detecté des services SSH avec des mots de passes faibles.",
     "remediation": "Pour corriger la vulnérabilité de mot de passe faible sur SSH, vous pouvez mettre en place une politique de complexité de mot de passe, utiliser des outils de gestion de mots de passe, mettre en place la double authentification, limiter l'accès aux comptes utilisateurs et surveiller l'activité du compte utilisateur. En appliquant ces mesures, vous pouvez renforcer la sécurité de votre système SSH et prévenir les attaques par force brute.",
     "criticite": "Majeure",
-    "scoring": 5
+    "scoring": 1.2
   },
   "smb_scanner": {
     "titre": "Découverte de partages de fichiers publics",
@@ -29,7 +29,7 @@
     "constat": "Votre système permet actuellement le partage de fichiers avec des connexions anonymes. Cela peut exposer vos fichiers à des utilisateurs non authentifiés, potentiellement donnant accès à des informations sensibles à des personnes non autorisées",
     "remediation": "Il est important de restreindre l'accès aux partages de fichiers en utilisant des autorisations appropriées, des mots de passe forts et en limitant les droits d'accès des utilisateurs.",
     "criticite": "Modérée",
-    "scoring": 2
+    "scoring": 0.4
   },
   "dhcp_starvation": {
     "titre": "Epuisement de ressources DHCP",
@@ -53,7 +53,7 @@
     "constat": "Votre système possède Une mauvaise configuration ou des vulnérabilités dans les protocoles TLS peuvent exposer les communications à des attaques telles que le détournement ou l'interception des données.",
     "remediation": "Pour renforcer la sécurité des communications TLS, il est essentiel de suivre les bonnes pratiques de configuration, de mettre à jour régulièrement les versions TLS et d'effectuer des tests de vulnérabilité pour détecter les éventuelles faiblesses dans la configuration du protocole.",
     "criticite": "Mineure",
-    "scoring": 1
+    "scoring": 0.2
   },
   "banner": {
     "titre": "Découverte des bannières de services",
@@ -61,7 +61,7 @@
     "constat": "Votre système expose actuellement des bannières de services qui pourraient donner des informations précieuses à un attaquant potentiel. Ces informations peuvent inclure des détails sur les versions de logiciel, qui pourraient être utilisées pour identifier les vulnérabilités connues.",
     "remediation": "Il est recommandé de configurer les services pour minimiser les informations exposées dans les bannières. Cela pourrait impliquer la désactivation de certaines bannières ou la modification des messages pour qu'ils divulguent moins d'informations sur le système.",
     "criticite": "Mineure",
-    "scoring": 1
+    "scoring": 0.2
   },
   "netbios": {
     "titre": "Vérification du service NetBios",
@@ -69,7 +69,7 @@
     "constat": "Votre système utilise actuellement le service NetBIOS. Bien que NetBIOS puisse être nécessaire pour certaines fonctions réseau, son utilisation peut également exposer le système à des risques de sécurité, tels que la divulgation d'informations sur le système ou la réalisation d'attaques de type 'man-in-the-middle'.",
     "remediation": "Il est recommandé de désactiver le service NetBIOS si celui-ci n'est pas nécessaire pour les opérations du système. Si le service est nécessaire, des mesures de sécurité supplémentaires, telles que des pare-feux et des protocoles de sécurité renforcés, devraient être mises en place pour protéger le système",
     "criticite": "Mineure",
-    "scoring": 1
+    "scoring": 0.2
   },
   "spanning-tree": {
     "titre": "Vérification de la configuration du protocole STP",
@@ -77,7 +77,7 @@
     "constat": "Votre configuration actuelle du protocole STP pourrait être vulnérable à des attaques visant à obtenir un accès root. Un attaquant pourrait potentiellement manipuler le protocole STP pour devenir le pont racine, permettant ainsi de contrôler le trafic réseau.",
     "remediation": "Il est recommandé de sécuriser la configuration du protocole STP pour prévenir ces attaques. Cela peut inclure la mise en œuvre de BPDU Guard pour bloquer les BPDUs indésirables, l'utilisation de Root Guard pour protéger le rôle du pont racine, et l'activation de STP Path Cost pour empêcher l'usurpation de la route STP par un attaquant.",
     "criticite": "Majeure",
-    "scoring": 3
+    "scoring": 0.6
   },
   "mac-flooding": {
     "titre": "Saturation d'adresse MAC sur commutateur",
@@ -93,7 +93,7 @@
     "constat": "Votre système utilise actuellement le protocole HTTP pour certaines communications, qui ne sont pas chiffrées. Cela peut exposer des informations sensibles à des personnes malveillantes qui pourraient être en mesure d'intercepter ces communications.",
     "remediation": "Il est fortement recommandé de passer à l'utilisation du protocole HTTPS, qui chiffre les communications pour protéger les informations sensibles. Assurez-vous également de rediriger tout le trafic HTTP vers HTTPS pour prévenir les fuites d'informations.",
     "criticite": "Modérée",
-    "scoring": 2.5
+    "scoring": 0.5
   },
   "telnet": {
     "titre": "Vérification du protocole Telnet",
@@ -101,7 +101,7 @@
     "constat": "Votre système utilise actuellement le protocole Telnet pour certaines communications. Telnet transmet des informations en texte clair, ce qui peut exposer des données sensibles, y compris les identifiants, à des attaquants capables d'intercepter ces communications.",
     "remediation": "Il est fortement recommandé de désactiver l'utilisation de Telnet et de passer à des méthodes de communication plus sécurisées, telles que SSH, qui chiffrent les informations transmises. Si Telnet doit être utilisé pour des raisons spécifiques, des mesures de sécurité supplémentaires, telles que l'utilisation de VPNs, devraient être mises en place pour protéger les données transmises.",
     "criticite": "Majeure",
-    "scoring": 4
+    "scoring": 0.8
   },
   "no_result": {
     "constat": "Suite à notre évaluation, nous sommes heureux de rapporter que nous n'avons détecté aucune vulnérabilité dans le cadre de ce test spécifique. Cela indique que les mesures de sécurité en place pour cette partie de votre système sont efficaces."
